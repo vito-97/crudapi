@@ -1,0 +1,13 @@
+<?php
+/**
+ * Created by Command.
+ * User: Vito
+ */
+
+declare (strict_types = 1);
+
+namespace {%namespace%};
+
+class {%className%} extends BaseModel
+{
+}

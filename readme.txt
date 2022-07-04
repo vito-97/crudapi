@@ -1,0 +1,17 @@
+监听设备控制队列：
+设备控制
+php think queue:listen --queue device_control
+设备延时控制
+php think queue:listen --queue device_control_later
+设备操作检测
+php think queue:listen --queue device_control_check
+重启
+php think queue:listen --queue device_restart
+订单退款
+php think queue:listen --queue order_refund
+
+监听mqtt消息
+php think mqtt
+
+监听设备控制超时
+php think device_control_timeout

@@ -1,0 +1,25 @@
+<?php
+/**
+ * Created by Command.
+ * User: Vito
+ */
+
+declare (strict_types = 1);
+
+namespace {%namespace%};
+
+use {%app_namespace%}\{%app%}\controller\BaseController;
+use app\logic\{%className%}Logic;
+
+class {%className%} extends BaseController
+{
+
+    /**
+     * 初始化
+     */
+    protected function initialize()
+    {
+        $this->logic = new {%className%}Logic();
+    }
+
+}
