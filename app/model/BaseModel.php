@@ -264,7 +264,6 @@ class BaseModel extends Model
      */
     public function updateByID($id, $data = [], $args = [])
     {
-
         $together = $args['together'] ?? [];
 
         if (is_object($id)) {
@@ -658,6 +657,26 @@ class BaseModel extends Model
     }
 
     /**
+     * 商户查询范围
+     * @param Query $query
+     * @param $id
+     */
+    public function scopeCouponUser(Query $query, $id)
+    {
+        $this->scopeFiled($query, 'coupon_user_id', $id);
+    }
+
+    /**
+     * 取水客户查询范围
+     * @param Query $query
+     * @param $id
+     */
+    public function scopeCustomer(Query $query, $id)
+    {
+        $this->scopeFiled($query, 'customer', $id);
+    }
+
+    /**
      * 指定字段需要查询范围
      * @param Query $query
      * @param $field
@@ -668,19 +687,6 @@ class BaseModel extends Model
         $fields = $query->getTableFields();
         if (in_array($field, $fields)) {
             $query->where($field, $value);
-        }
-    }
-
-    /**
-     * 商户查询范围
-     * @param Query $query
-     * @param $id
-     */
-    public function scopeCouponUser(Query $query, $id)
-    {
-        $fields = $query->getTableFields();
-        if (in_array('coupon_user_id', $fields)) {
-            $query->where('coupon_user_id', $id);
         }
     }
 

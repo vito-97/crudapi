@@ -64,4 +64,13 @@ class DashboardLogic extends BaseLogic
 
         return $obj->toArray();
     }
+
+    public function customer()
+    {
+        $obj = new ArrayObject();
+
+        Event::trigger(EventName::CUSTOMER_DASHBOARD, $obj);
+
+        return $obj->toArray();
+    }
 }

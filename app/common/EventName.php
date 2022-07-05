@@ -27,6 +27,7 @@ class EventName
     const WATER_COMPANY_DASHBOARD = 'water_company_dashboard';
     const REPAIR_USER_DASHBOARD = 'repair_user_dashboard';
     const WATERWORKS_DASHBOARD = 'waterworks_dashboard';
+    const CUSTOMER_DASHBOARD = 'customer_dashboard';
 
     /**
      * 后台用户登录

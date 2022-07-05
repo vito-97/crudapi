@@ -8,9 +8,8 @@ declare (strict_types=1);
 
 namespace app\waterworks\controller\v1;
 
-use app\waterworks\controller\BaseController;
 use app\logic\AdvertsLogic;
-use app\logic\DeviceLogic;
+use app\waterworks\controller\BaseController;
 
 class Adverts extends BaseController
 {

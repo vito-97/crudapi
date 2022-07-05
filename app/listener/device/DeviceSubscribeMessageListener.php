@@ -64,7 +64,7 @@ class DeviceSubscribeMessageListener
 
         if (Env::get('APP_DEBUG') || Env::get('MQTT_DEBUG')) {
             $date = date('Y-m-d H:i:s');
-            dump("[{$date}]{$deviceNo}:{$hex}");
+            dump("[{$date}][{$deviceNo}]{$hex}");
         }
 
         foreach ($this->method as $start => $name) {
@@ -137,6 +137,8 @@ class DeviceSubscribeMessageListener
     public function online($deviceNo, $hex)
     {
         $this->e('上线');
+        $logic = new DeviceLogic();
+        $logic->online($this->imei);
     }
 
     public function start(\app\Request $request, $deviceNo, $hex)

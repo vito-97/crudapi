@@ -17,6 +17,8 @@ Route::group('<api_version>', function () {
     Route::resource('device', 'Device');
     //设备报修
     Route::resource('device_repair', 'DeviceRepair');
+    //广告
+    Route::resource('adverts', 'Adverts');
     //用户
     Route::resource('user', 'User');
     //运维用户
@@ -33,11 +35,8 @@ Route::group('<api_version>', function () {
         //历史数据
         Route::get('history', 'history');
     })->prefix('Order/');
-
+    //订单
     Route::resource('order', 'Order');
-
-    //服务费
-    Route::resource('service_charge', 'ServiceCharge');
     //服务费
     Route::resource('service_charge', 'ServiceCharge')->only(['index', 'read']);
     //仪表盘

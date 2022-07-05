@@ -90,7 +90,7 @@ class Test extends BaseController
             return error(1, 'IMEI号未添加到数据库');
         }
 
-        $controlService = new DeviceControlService(new MqttService());
+        $controlService = new DeviceControlService();
 
         $controlService->setImei($imei);
 

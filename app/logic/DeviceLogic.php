@@ -19,9 +19,11 @@ use app\exception\ValidateException;
 use app\model\Device;
 use app\model\DeviceControl;
 use app\service\DeviceService;
+use app\service\user\UserService;
 use app\validate\DeviceValidate;
 use app\validate\IDMustBeIntArrayValidate;
 use think\facade\Event;
+use think\facade\Request;
 
 class DeviceLogic extends BaseLogic
 {
@@ -232,6 +234,21 @@ class DeviceLogic extends BaseLogic
         $data = $this->getModel()->where('imei', $imei)->find();
 
         if ($data) {
+            $deviceService = new DeviceService();
+            $last          = $deviceService->deviceLastControl($data->device_no);
+
+            if ($last && in_array($last->state, [DeviceControl::STATE_WAIT, DeviceControl::STATE_START, DeviceControl::STATE_PAUSE])) {
+                if (Request::isCli()) {
+                    $date = date('Y-m-d H:i:s');
+                    dump("[$date][{$data->device_no}]异常上线，初始化状态并结算");
+                }
+                $params = ['device' => $data, 'control' => $last];
+                Event::trigger(EventName::DEVICE_UPDATE_FLOW, $params);
+
+                Request::setUser(new UserService($last->user, md5(uniqid())));
+                $this->finish($data);
+            }
+
             return $data;
         }
 

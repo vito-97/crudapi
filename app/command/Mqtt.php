@@ -94,6 +94,13 @@ class Mqtt extends Command
                 } else {
 
                     if ($hex === Enum::DEVICE_ONLINE_CODE) {
+                        //允许上线的白名单
+                        $white = [];
+                        if (is_dev() && !in_array($imei, $white)) {
+                            $this->output->writeln('本地测试不进行上线，需要上线请添加到白名单 IMEI:' . $imei);
+                            return;
+                        }
+
                         $logic = new DeviceLogic();
 
                         $device = $logic->online($imei);
