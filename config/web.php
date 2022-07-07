@@ -19,11 +19,13 @@ if ($isDev) {
 }
 
 return [
-    'is_dev'         => $isDev,
+    'is_dev'           => $isDev,
+    //系统访问日志是否启用延时队列去记录
+    'system_log_queue' => false,
     //授权登录的KEY
-    'auth_token_key' => 'access-token',
+    'auth_token_key'   => 'access-token',
     //默认支付驱动
-    'payment'        => [
+    'payment'          => [
         'default' => 'allInPay',
     ],
 

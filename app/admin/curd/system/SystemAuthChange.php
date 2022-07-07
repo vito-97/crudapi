@@ -12,7 +12,7 @@ use think\Model;
 
 class SystemAuthChange extends Change
 {
-    use CheckSystemRoleTrait;
+    use SystemRoleTrait;
 
     //允许修改的字段
     protected $field = ['status'];

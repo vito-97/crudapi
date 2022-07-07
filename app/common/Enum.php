@@ -51,7 +51,11 @@ class Enum
     const JOB_DEVICE_RESTART = 'device_restart';
     const JOB_DEVICE_CONTROL_CHECK = 'device_control_check';
 
+    //订单退款
     const JOB_ORDER_REFUND = 'order_refund';
+
+    //记录日志
+    const JOB_SYSTEM_LOG = 'system_log';
 
     const DEVICE_INIT_ON_CODE = '0103000A0001';//已下发初始化状态
     const DEVICE_INIT_OFF_CODE = '0103000A0000';//未下发初始化状态
@@ -62,4 +66,16 @@ class Enum
     const DEVICE_PAUSE_ON_CODE = '0103000E0001';//暂停中
     const DEVICE_PAUSE_OFF_CODE = '0103000E0000';//结束暂停
     const DEVICE_STOP_CODE = '010300090001';//已结束
+
+    const MODULE = [
+        'api'           => '接口',
+        'admin'         => '后台',
+        'agent'         => '运营商',
+        'coupon_user'   => '商户',
+        'repair_user'   => '运营商维护员',
+        'water_company' => '水务公司',
+        'customer'      => '取水客户',
+        'waterworks'    => '水厂',
+        'water_fetcher' => '取水员',
+    ];
 }

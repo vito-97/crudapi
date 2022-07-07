@@ -15,7 +15,7 @@ use think\Model;
 
 class SystemRoleUpdate extends Update
 {
-    use CheckSystemRoleTrait;
+    use SystemRoleTrait;
 
     //验证器
     protected $validate = [

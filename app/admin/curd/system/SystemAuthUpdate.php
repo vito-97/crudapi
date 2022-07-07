@@ -12,7 +12,7 @@ use think\Model;
 
 class SystemAuthUpdate extends Update
 {
-    use CheckSystemRoleTrait;
+    use SystemRoleTrait;
     //验证器
     protected $validate = [];
     //允许新增的数据字段

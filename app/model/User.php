@@ -152,6 +152,12 @@ class User extends BaseModel
         return $query->whereLike('nickname', '%' . $value . '%', 'OR');
     }
 
+    /**
+     * 搜索
+     * @param Query $query
+     * @param $value
+     * @return Query
+     */
     public function searchIndexAttr(Query $query, $value)
     {
         return $query->where('username|nickname|tel', 'like', '%' . $value . '%');

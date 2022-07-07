@@ -8,16 +8,75 @@
 
 namespace app\model;
 
+use app\common\Enum;
+use app\model\traits\IpTrait;
+use app\model\traits\UserTrait;
+use think\db\Query;
 
 class SystemLog extends BaseModel
 {
-    const ADMIN_TYPE = 1;
-    const AGENT_TYPE = 2;
-    const USER_TYPE = 3;
+    use UserTrait;
+    use IpTrait;
 
-    protected $typeEnum = [
-        self::ADMIN_TYPE => '管理端',
-        self::AGENT_TYPE => '代理端',
-        self::USER_TYPE => '客户端',
+    protected $moduleEnum = Enum::MODULE;
+
+    protected $methodEnum = [
+        'GET'    => 'GET',
+        'POST'   => 'POST',
+        'PUT'    => 'PUT',
+        'DELETE' => 'DELETE',
     ];
+
+    protected $append = [];
+
+    protected $userField = 'id,username,nickname';
+
+    /**
+     * 关联管理员
+     * @return \think\model\relation\BelongsTo
+     */
+    public function admin()
+    {
+        return $this->belongsTo('Admin', 'user_id')->field($this->adminField ?? 'id,username,nickname');
+    }
+
+    /**
+     * 是否为后台模块
+     * @return bool
+     */
+    public function isAdminModule()
+    {
+        return $this->getData('module') === 'admin';
+    }
+
+    /**
+     * IP修改器
+     * @param $value
+     * @return false|int|mixed|string
+     */
+    public function setIpAttr($value)
+    {
+        return $this->_setIpAttr($value);
+    }
+
+    /**
+     * IP获取器
+     * @param $value
+     * @return mixed|string
+     */
+    public function getIpAttr($value)
+    {
+        return $this->_getIpAttr($value);
+    }
+
+    /**
+     * 列表搜索器
+     * @param Query $query
+     * @param $value
+     * @return Query
+     */
+    public function searchIndexAttr(Query $query, $value)
+    {
+        return $query->where('title|url', 'like', '%' . $value . '%');
+    }
 }

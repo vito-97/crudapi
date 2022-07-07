@@ -600,6 +600,17 @@ abstract class BaseCurd
     }
 
     /**
+     * 获取当前登录用户的角色
+     * @return mixed
+     */
+    protected function getUserRole()
+    {
+        $role = $this->user->getUserInfo()->role;
+
+        return $role;
+    }
+
+    /**
      * 设置label
      * @param string $key
      * @param string $name

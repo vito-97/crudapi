@@ -7,6 +7,7 @@
 namespace app\admin\curd\system;
 
 use app\common\curd\Index;
+use app\common\Util;
 
 class SystemRoleIndex extends Index
 {
@@ -14,7 +15,7 @@ class SystemRoleIndex extends Index
      * 关键词查询指定字段
      * @var string[]
      */
-    protected $keywordQueryArgs = [];
+    protected $keywordQueryArgs = ['index'];
     //追加数据
     protected $appendCallback = [];
     //查询条件
@@ -27,6 +28,10 @@ class SystemRoleIndex extends Index
     protected $with = [];
 
     protected $append = ['auth'];
+
+    protected $middleware = [
+        'queryMiddleware',
+    ];
 
     /**
      * 三级类初始化
@@ -44,6 +49,19 @@ class SystemRoleIndex extends Index
 
         $this->where = array_merge($this->where, $map);
         $response    = $next();
+        return $response;
+    }
+
+    public function queryMiddleware($next)
+    {
+        $response = $next();
+
+        $list = $this->getData('list');
+
+        $list = Util::tree($list);
+
+        $this->setData('list', $list);
+
         return $response;
     }
 }

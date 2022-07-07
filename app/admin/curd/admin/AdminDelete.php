@@ -15,6 +15,8 @@ use think\Model;
 
 class AdminDelete extends Delete
 {
+    use AdminTrait;
+
     //排除的数据
     protected $exclude = [];
     //条件
@@ -22,7 +24,7 @@ class AdminDelete extends Delete
 
     protected function deleteMiddleware($next, Model $model)
     {
-        if ($model->id == 1) {
+        if ($this->isSuperAdmin($model)) {
             throw new DataCannotBeDeletedException('不可删除超级管理员');
         }
 

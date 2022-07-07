@@ -11,7 +11,7 @@ use app\exception\MessageException;
 
 class SystemAuthEdit extends Edit
 {
-    use CheckSystemRoleTrait;
+    use SystemRoleTrait;
 
     //显示的字段
     protected $field = [];

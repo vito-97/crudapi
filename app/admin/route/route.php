@@ -8,7 +8,6 @@
 
 use \think\facade\Route;
 use \app\admin\middleware\AdminAuthTokenMiddleware;
-use \app\admin\middleware\AdminLogMiddleware;
 $rest = Route::getRest();
 //卸载掉create资源路由
 unset($rest['create']);
@@ -19,6 +18,6 @@ Route::rest('change', ['PUT', '/<id>/change', 'change']);
 //登录
 Route::post('login', 'Login/login');
 //登出
-Route::post('logout', 'Login/logout')->middleware([AdminAuthTokenMiddleware::class, AdminLogMiddleware::class]);
+Route::post('logout', 'Login/logout')->middleware([AdminAuthTokenMiddleware::class]);
 
 Route::get('test','Test/index');

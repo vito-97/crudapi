@@ -12,11 +12,13 @@ use app\validate\SystemLogValidate;
 
 class SystemLogIndex extends Index
 {
+    use SystemLogTrait;
+
     /**
      * 关键词查询指定字段
      * @var string[]
      */
-    protected $keywordQueryArgs = [];
+    protected $keywordQueryArgs = ['index'];
     //追加数据
     protected $appendCallback = [];
     //查询条件
@@ -28,13 +30,29 @@ class SystemLogIndex extends Index
     //关联
     protected $with = [];
 
-    protected $queryField = ['user_id', 'type'];
+    protected $queryField = ['user_id', 'module', 'method'];
 
     protected $labelCallback = [
-        'get_type_enum' => ['name' => '类型'],
+        'get_module_enum' => ['name' => '模块'],
+        'get_method_enum' => ['name' => '请求方式'],
     ];
+
+    protected $middleware = ['queryMiddleware'];
 
     protected $validate = [
         SystemLogValidate::class => Enum::VALID_LIST_SCENE,
     ];
+
+    public function queryMiddleware($next)
+    {
+        $response = $next();
+
+        $list = $this->getData('list');
+
+        foreach ($list as $item) {
+            $this->withUser($item);
+        }
+
+        return $response;
+    }
 }

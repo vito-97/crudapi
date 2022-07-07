@@ -13,7 +13,7 @@ use app\logic\SystemAuthLogic;
 
 class SystemRoleEdit extends Edit
 {
-    use CheckSystemRoleTrait;
+    use SystemRoleTrait;
 
     //显示的字段
     protected $field = [];
@@ -56,7 +56,7 @@ class SystemRoleEdit extends Edit
 
         //非超管则只可以设置自己有的权限
         if (!$role->isSuper()) {
-            $ids             = $this->user->role->auth_ids;
+            $ids             = $role->auth_ids;
             $args['where'][] = ['id', 'IN', $ids];
         }
 

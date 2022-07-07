@@ -38,6 +38,7 @@ class SystemRoleSave extends Save
 
             $params['auth_ids'] = $allowId;
             $params['admin_id'] = $this->user->uid();
+            $params['pid']      = $this->user->role_id();
         }
 
         return $next($params);

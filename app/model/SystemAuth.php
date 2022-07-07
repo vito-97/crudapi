@@ -9,6 +9,7 @@
 namespace app\model;
 
 
+use app\common\Enum;
 use think\db\Query;
 
 class SystemAuth extends BaseModel
@@ -17,13 +18,7 @@ class SystemAuth extends BaseModel
 
     protected $append = [];
 
-    protected $moduleEnum = [
-        'api'         => '接口',
-        'admin'       => '后台',
-        'agent'       => '运营商',
-        'coupon_user' => '商户',
-        'repair_user' => '运营商维护员',
-    ];
+    protected $moduleEnum = Enum::MODULE;
 
     /**
      * 获取权限集合

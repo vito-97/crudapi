@@ -9,9 +9,11 @@
 namespace app\model;
 
 
+use think\db\Query;
+
 class SystemRole extends BaseModel
 {
-    protected $hidden = ['create_time', 'update_time', 'delete_time'];
+    protected $hidden = ['delete_time'];
 
     protected $superAdmin = 'admin';
 
@@ -24,11 +26,20 @@ class SystemRole extends BaseModel
         return $this->getData('key') === $this->superAdmin;
     }
 
+    /**
+     * 权限获取器
+     * @return array
+     */
     protected function getAuthAttr()
     {
         return $this->getAuth();
     }
 
+    /**
+     * 获取所有权限
+     * @param array $append
+     * @return array
+     */
     public function getAuth($append = [])
     {
         static $auth = [];
@@ -60,6 +71,10 @@ class SystemRole extends BaseModel
         return $menu[$this->id];
     }
 
+    /**
+     * 获取权限ID数组
+     * @return array|false|string[]
+     */
     protected function getAuthIdsArrayAttr()
     {
         $ids = $this->getData('auth_ids');
@@ -67,8 +82,24 @@ class SystemRole extends BaseModel
         return $ids ? explode(',', $ids) : [];
     }
 
+    /**
+     * 权限ID修改器
+     * @param $value
+     * @return string
+     */
     protected function setAuthIdsAttr($value)
     {
         return $this->setArrayToStringAttr($value);
+    }
+
+    /**
+     * 列表搜索器
+     * @param Query $query
+     * @param $value
+     * @return Query
+     */
+    public function searchIndexAttr(Query $query, $value)
+    {
+        return $query->where('name|key', 'like', '%' . $value . '%');
     }
 }

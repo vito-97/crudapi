@@ -12,7 +12,7 @@ use think\Model;
 
 class SystemAuthDelete extends Delete
 {
-    use CheckSystemRoleTrait;
+    use SystemRoleTrait;
 
     //排除的数据
     protected $exclude = [];

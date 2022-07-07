@@ -8,10 +8,8 @@
 
 namespace app\logic;
 
-
 use app\model\SystemAuth;
 use app\service\AuthRouteService;
-use think\facade\Cache;
 use think\helper\Str;
 
 class SystemAuthLogic extends BaseLogic

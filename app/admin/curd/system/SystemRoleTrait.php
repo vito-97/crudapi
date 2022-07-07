@@ -10,8 +10,10 @@ namespace app\admin\curd\system;
 
 
 use app\exception\DataInoperableException;
+use app\exception\MessageException;
+use app\logic\AdminLogic;
 
-trait CheckSystemRoleTrait
+trait SystemRoleTrait
 {
     /**
      * 禁止删除超管角色
@@ -29,13 +31,34 @@ trait CheckSystemRoleTrait
     }
 
     /**
+     * 判断是否可以删除角色
+     * @param $model
+     * @return $this
+     * @throws MessageException
+     */
+    protected function canDelete($model)
+    {
+        $id    = $model->id;
+        $logic = new AdminLogic();
+
+        $count = $logic->where('role_id', $id)->count();
+
+        if ($count) {
+            throw new MessageException(sprintf('该角色下有%d个管理员，请将该角色的管理员更换成其他角色才能删除', $count));
+        }
+
+        return $this;
+    }
+
+    /**
      * 是否有权限删除角色
      * @param $model
      * @return bool
      */
     protected function hasRoleToDo($model)
     {
-        $role   = $this->user->getUserInfo()->role;
+        $role = $this->getUserRole();
+
         $userID = $this->user->uid();
 
         if (!$role->isSuper()) {
@@ -45,9 +68,13 @@ trait CheckSystemRoleTrait
         return true;
     }
 
+    /**
+     * 获取自身有的权限ID集合
+     * @return bool|array
+     */
     protected function getHasAuthId()
     {
-        $role = $this->user->getUserInfo()->role;
+        $role = $this->getUserRole();
 
         if (!$role->isSuper()) {
             return $role->auth_ids_array;

@@ -10,6 +10,9 @@ php think queue:listen --queue device_restart
 订单退款
 php think queue:listen --queue order_refund
 
+系统访问日志
+php think queue:listen --queue system_log
+
 监听mqtt消息
 php think mqtt
 

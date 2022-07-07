@@ -8,7 +8,6 @@
 
 use app\admin\middleware\AdminAuthTokenMiddleware;
 use app\admin\middleware\AdminCheckAuthMiddleware;
-use app\admin\middleware\AdminLogMiddleware;
 use app\common\ErrorCode;
 use think\facade\Route;
 
@@ -105,7 +104,7 @@ Route::group('<api_version>', function () {
     //提现
     Route::resource('withdrawal', 'Withdrawal');
 
-})->prefix('<api_version>.')->allowCrossDomain()->middleware([AdminAuthTokenMiddleware::class, AdminCheckAuthMiddleware::class, AdminLogMiddleware::class]);
+})->prefix('<api_version>.')->middleware([AdminAuthTokenMiddleware::class, AdminCheckAuthMiddleware::class]);
 
 //miss路由
 Route::miss(function () {

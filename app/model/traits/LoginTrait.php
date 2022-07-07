@@ -13,6 +13,7 @@ use app\common\Hash;
 
 trait LoginTrait
 {
+    use IpTrait;
     /**
      * 上次登录时间格式
      * @var string
@@ -93,35 +94,5 @@ trait LoginTrait
         }
 
         return null;
-    }
-
-    /**
-     * 获取IP
-     * @param $value
-     * @return mixed|string
-     */
-    protected function _getIpAttr($value)
-    {
-        if ($value) {
-            $value = long2ip($value);
-        }
-
-        return $value;
-    }
-
-    /**
-     * 设置IP
-     * @param $value
-     * @return false|int|mixed|string
-     */
-    protected function _setIpAttr($value)
-    {
-        if ($value) {
-            if (!is_numeric($value)) {
-                $value = ip2long($value);
-            }
-        }
-
-        return $value;
     }
 }

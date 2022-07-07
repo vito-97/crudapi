@@ -11,7 +11,7 @@ use app\exception\MessageException;
 
 class SystemRoleRead extends Read
 {
-    use CheckSystemRoleTrait;
+    use SystemRoleTrait;
 
     //需要展示的字段
     protected $field = [];

@@ -13,7 +13,7 @@ use think\Model;
 
 class SystemRoleDelete extends Delete
 {
-    use CheckSystemRoleTrait;
+    use SystemRoleTrait;
 
     //排除的数据
     protected $exclude = [];
@@ -27,6 +27,8 @@ class SystemRoleDelete extends Delete
         if (!$this->hasRoleToDo($model)) {
             throw new MessageException('无权限删除该角色');
         }
+
+        $this->canDelete($model);
 
         return $next($model);
     }

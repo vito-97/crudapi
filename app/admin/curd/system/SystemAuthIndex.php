@@ -12,7 +12,7 @@ use think\helper\Str;
 
 class SystemAuthIndex extends Index
 {
-    use CheckSystemRoleTrait;
+    use SystemRoleTrait;
 
     /**
      * 关键词查询指定字段
