@@ -39,7 +39,7 @@ class SystemRoleIndex extends Index
 
         //非超管只能获取自己添加的角色
         if (!$role->isSuper()) {
-            $map[] = ['admin_id', 'EQ', $this->user->uid()];
+            $map[] = ['admin_id', '=', $this->user->uid()];
         }
 
         $this->where = array_merge($this->where, $map);

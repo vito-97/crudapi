@@ -38,7 +38,9 @@ class SystemAuth extends BaseModel
         if (!$role->isSuper()) {
             $where[] = ['id', 'IN', $role->auth_ids_array];
         }
+
         $field = array_merge(['id', 'name', 'route', 'url'], $append);
+
         return $this->where($where)->field($field)->select();
     }
 

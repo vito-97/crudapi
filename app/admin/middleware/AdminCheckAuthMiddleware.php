@@ -43,7 +43,6 @@ class AdminCheckAuthMiddleware
         $adminService = $request->getUser();
         $admin        = $adminService->getUserInfo();
         $role_id      = $adminService->role_id();
-
         $route = get_route();
 
         $service     = new AuthRouteService();
@@ -61,7 +60,6 @@ class AdminCheckAuthMiddleware
             //检测权限
             $logic  = new SystemRoleLogic();
             $status = $logic->check($role_id, get_route_without_version(true));
-
             //没有权限
             if (!$status) {
                 //触发事件

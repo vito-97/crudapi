@@ -60,7 +60,7 @@ class SystemRole extends BaseModel
         return $menu[$this->id];
     }
 
-    protected function getIdsArrayAttr()
+    protected function getAuthIdsArrayAttr()
     {
         $ids = $this->getData('auth_ids');
 

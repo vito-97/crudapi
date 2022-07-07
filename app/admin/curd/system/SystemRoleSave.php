@@ -24,10 +24,10 @@ class SystemRoleSave extends Save
 
     protected function saveMiddleware($next, $params)
     {
-        $role = $this->user->role;
+        $role = $this->user->getUserInfo()->role;
 
         if (!$role->isSuper()) {
-            $ids    = $this->user->role->auth_ids_array;
+            $ids    = $role->auth_ids_array;
             $authId = $params['auth_ids'];
             if (is_string($authId)) {
                 $authId = explode(',', $authId);

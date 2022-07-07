@@ -209,7 +209,7 @@ class Index extends BaseCurd
             $value = $this->request->param($field);
             $key   = is_string($alias) ? $alias : $field;
             if (!is_null($value) && '' !== $value)
-                $this->where[$key] = $value;
+                $this->where[] = [$key, '=', $value];
         }
 
         return $this;

@@ -46,7 +46,7 @@ class SystemAuthIndex extends Index
     {
         $ids = $this->getHasAuthId();
 
-        //只获取自身有的权限
+        //获取自身有的权限
         if (is_array($ids)) {
             $this->where[] = ['id', 'IN', $ids,];
         }
