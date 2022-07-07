@@ -126,17 +126,25 @@ class Test extends BaseController
             $n = $this->request->param('pulse', rand(1, 30), 'intval');
             $controlService->writePulse($n);
             return success('已设置脉冲参数' . $n);
+        } elseif ('open' == $mode) {
+            $controlService->open();
+            return success('已强制开启');
+        } elseif ('close' == $mode) {
+            $controlService->close();
+            return success('已强制结束');
         } else {
             return success('未知操作');
         }
     }
 
-    public function mqttLog()
+    public
+    function mqttLog()
     {
 
     }
 
-    public function setFlow()
+    public
+    function setFlow()
     {
         $service = new DeviceControlService(new MqttService());
 
@@ -158,12 +166,14 @@ class Test extends BaseController
         return 'ok';
     }
 
-    public function count()
+    public
+    function count()
     {
         dump(strlen('01030004000285CA01030400B40000BA15') / 2);
     }
 
-    public function mqttSend(MqttService $mqttService)
+    public
+    function mqttSend(MqttService $mqttService)
     {
 //        $data = $this->getHex(self::OPEN_LOCK);
 //        $data = hex2str(str_replace(' ', ' ', 'EE B1 10 00 02 68 74 74 70 3a 2f 2f 68 35 2e 61 69 6a 6b 6c 2e 63 6f 6d 2f 3f 64 65 76 69 63 65 5f 6e 6f 3d 38 36 39 32 39 38 30 35 33 35 39 38 34 33 39 FF FC FF FF'));
@@ -176,7 +186,8 @@ class Test extends BaseController
         return 'ok';
     }
 
-    protected function getHex($hex)
+    protected
+    function getHex($hex)
     {
         $head = str2hex('star');
         $foot = str2hex('endo');
@@ -187,12 +198,14 @@ class Test extends BaseController
         return $data;
     }
 
-    protected function crc()
+    protected
+    function crc()
     {
         dump(crc16('01050FA20000'));
     }
 
-    protected function sub()
+    protected
+    function sub()
     {
         $string = '01030004000285CA01030400C800007BCD';
 
@@ -204,7 +217,8 @@ class Test extends BaseController
         dump(substr($string, $i, 8));
     }
 
-    protected function clearDeviceControl()
+    protected
+    function clearDeviceControl()
     {
         Db::query('TRUNCATE water_device_control');
 
@@ -220,7 +234,8 @@ class Test extends BaseController
 
     }
 
-    protected function e($msg)
+    protected
+    function e($msg)
     {
         echo $msg . '<br>';
     }

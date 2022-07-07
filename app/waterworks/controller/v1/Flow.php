@@ -12,10 +12,7 @@ use app\logic\CustomerLogic;
 use app\logic\DeviceLogic;
 use app\logic\FlowLogic;
 use app\logic\OrderLogic;
-use app\logic\WaterworksLogic;
-use app\model\Waterworks as WaterworksModel;
 use app\validate\PaginateValidate;
-use app\validate\SurplusFlowStatisticsValidate;
 use app\validate\TimeTypeValidate;
 use app\validate\UsedFlowStatisticsValidate;
 use app\water_company\controller\BaseController;
@@ -24,11 +21,7 @@ use think\helper\Str;
 
 class Flow extends BaseController
 {
-    protected $name = '流量';
-
-    protected $registerCurd = true;
-
-    protected $registerCurdDir = true;
+    protected $name = '取水记录';
 
     protected function initialize()
     {

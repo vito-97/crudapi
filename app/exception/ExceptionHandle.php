@@ -109,6 +109,7 @@ class ExceptionHandle extends Handle
         }
 
         if (env('app_debug') && !$request->isAjax() && !$request->isOptions() && !$e instanceof BaseException) {
+            Log::write($e->getMessage(), 'error');
             return parent::render($request, $e);
         }
 

@@ -26,6 +26,8 @@ class Edit extends BaseCurd
         'labelCallbackMiddleware',
     ];
 
+    protected $editMiddleware = ['editMiddleware'];
+
     protected function query()
     {
         //ID有传则获取数据
@@ -38,11 +40,26 @@ class Edit extends BaseCurd
 
             $this->formatModel($obj);
 
+            $this->then($this->editMiddleware, function ($obj) {
+                return $obj;
+            }, $obj);
+
             $this->setData('detail', $obj);
         } else {
             $this->setData('detail', []);
         }
 
         return true;
+    }
+
+    /**
+     * 调用保存中间件
+     * @param $next
+     * @param $model
+     * @return mixed
+     */
+    protected function editMiddleware($next, $model)
+    {
+        return $next($model);
     }
 }

@@ -38,10 +38,7 @@ class BaseController extends \app\BaseController
     {
         Contract::setScope(['customer' => $this->uid()]);
         WaterFetcher::setScope(['user' => $this->uid()]);
-        Flow::setScope(['customer_water_fetcher' => '']);
-        Flow::macro('scopeCustomerWaterFetcher', function (Query $query) {
-            $query->where('user_id', 'EXP', WaterFetcher::field('id')->where('user_id', $this->uid())->buildSql());
-        });
+        Flow::setScope(['customer_water_fetcher' => $this->uid()]);
 
         return $this;
     }

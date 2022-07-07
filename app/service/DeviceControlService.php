@@ -26,8 +26,12 @@ class DeviceControlService
         'start'               => '00060001',//启动按键
         'pause'               => '00070001',//暂停按键
         'finish'              => '00080001',//结算按键
-        'open'                => '00500001',//开机
-        'close'               => '00500000',//关机
+//        'open'                => '00500001',//开机
+//        'close'               => '00500000',//关机
+        'open'                => '010600140001080E',//强制开启
+        'close'               => '010600140000C9CE',//强制结束
+        'open2'               => '01050000FF8C3A',
+        'close2'              => '0105000000CDCA',
         'set_pulse'           => '00c800',//设置脉冲
         'set_temperature'     => '020200',//设置温度
         'set_qrcode_url'      => '0500000D1A',//设置二维码地址
@@ -90,7 +94,7 @@ class DeviceControlService
             $data = $func($data);
         }
 
-        $this->mqtt->publish($this->getSendTopic(), $data, MqttClient::QOS_AT_LEAST_ONCE);
+        $this->mqtt->publish($this->getSendTopic(), $data, MqttClient::QOS_EXACTLY_ONCE);
     }
 
     public function init()
@@ -98,6 +102,24 @@ class DeviceControlService
         $address = self::ADDRESS['init'];
 
         $this->writeLog('初始化', $address);
+
+        return $this->writePush($address, false);
+    }
+
+    public function open($type = '')
+    {
+        $address = self::ADDRESS['open' . $type];
+
+        $this->writeLog('强制开启', $address);
+
+        return $this->writePush($address, false);
+    }
+
+    public function close($type = '')
+    {
+        $address = self::ADDRESS['close'];
+
+        $this->writeLog('强制结束', $address);
 
         return $this->writePush($address, false);
     }

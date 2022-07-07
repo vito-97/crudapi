@@ -16,6 +16,10 @@ class Order extends BaseController
 
     protected $registerCurdDir = true;
 
+    protected $methodName = [
+        'refund' => '退款',
+    ];
+
     protected function initialize()
     {
         $this->logic = new OrderLogic();

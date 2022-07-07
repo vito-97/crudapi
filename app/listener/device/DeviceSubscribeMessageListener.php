@@ -8,7 +8,6 @@
 
 namespace app\listener\device;
 
-
 use app\common\Enum;
 use app\common\EventName;
 use app\job\DeviceRestartJob;
@@ -63,8 +62,7 @@ class DeviceSubscribeMessageListener
         $this->date     = date('Y-m-d H:i:s');
 
         if (Env::get('APP_DEBUG') || Env::get('MQTT_DEBUG')) {
-            $date = date('Y-m-d H:i:s');
-            dump("[{$date}][{$deviceNo}]{$hex}");
+            $this->e($hex);
         }
 
         foreach ($this->method as $start => $name) {
@@ -256,6 +254,7 @@ class DeviceSubscribeMessageListener
 
     private function e($msg)
     {
+        $this->date = date('Y-m-d H:i:s');
         dump('[' . $this->date . '][' . $this->deviceNo . ']' . $msg);
     }
 }

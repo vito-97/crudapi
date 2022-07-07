@@ -27,4 +27,23 @@ class SystemRoleIndex extends Index
     protected $with = [];
 
     protected $append = ['auth'];
+
+    /**
+     * 三级类初始化
+     */
+    protected function init($next)
+    {
+        $map = [];
+
+        $role = $this->user->getUserInfo()->role;
+
+        //非超管只能获取自己添加的角色
+        if (!$role->isSuper()) {
+            $map[] = ['admin_id', 'EQ', $this->user->uid()];
+        }
+
+        $this->where = array_merge($this->where, $map);
+        $response    = $next();
+        return $response;
+    }
 }

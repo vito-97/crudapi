@@ -14,6 +14,10 @@ class Device extends BaseController
 
     protected $registerCurdDir = true;
 
+    protected $methodName = [
+        'state' => '获取设备使用状态',
+    ];
+
     protected function initialize()
     {
         $this->logic = new DeviceLogic();

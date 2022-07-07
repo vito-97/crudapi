@@ -9,6 +9,8 @@
 namespace app\model;
 
 
+use think\db\Query;
+
 class SystemAuth extends BaseModel
 {
     protected $hidden = ['delete_time'];
@@ -34,7 +36,7 @@ class SystemAuth extends BaseModel
         $where = [];
 
         if (!$role->isSuper()) {
-            $where[] = ['id', 'IN', $role->ids_array];
+            $where[] = ['id', 'IN', $role->auth_ids_array];
         }
         $field = array_merge(['id', 'name', 'route', 'url'], $append);
         return $this->where($where)->field($field)->select();
@@ -58,11 +60,22 @@ class SystemAuth extends BaseModel
         ];
 
         if (!$role->isSuper()) {
-            $where[] = ['id', 'IN', $role->ids_array];
+            $where[] = ['id', 'IN', $role->auth_ids_array];
         }
 
         $result = $this->field(['id', 'name', 'route', 'icon', 'url', 'pid'])->where($where)->order('sort', 'asc')->select();
 
         return $result;
+    }
+
+    /**
+     * 搜索
+     * @param Query $query
+     * @param $value
+     * @return Query
+     */
+    public function searchIndexAttr(Query $query, $value)
+    {
+        return $query->where('name|route|url', 'like', '%' . $value . '%');
     }
 }

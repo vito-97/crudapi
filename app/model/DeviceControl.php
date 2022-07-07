@@ -54,7 +54,7 @@ class DeviceControl extends BaseModel
      * 允许暂停的时间
      * 到时间则强制结束
      */
-    const PAUSE_TIMEOUT = 240;
+    const PAUSE_TIMEOUT = 300;
 
     /**
      * 允许启动的最大时间

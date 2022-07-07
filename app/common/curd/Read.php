@@ -28,6 +28,8 @@ class Read extends BaseCurd
     //数据场景
     protected $scene = '';
 
+    protected $readMiddleware = ['readMiddleware'];
+
     /**
      * 获取数据详情
      * @return bool
@@ -46,8 +48,23 @@ class Read extends BaseCurd
 
         $this->formatModel($obj);
 
+        $this->then($this->readMiddleware, function ($obj) {
+            return $obj;
+        }, $obj);
+
         $this->setData('detail', $obj);
 
         return true;
+    }
+
+    /**
+     * 调用保存中间件
+     * @param $next
+     * @param $model
+     * @return mixed
+     */
+    protected function readMiddleware($next, $model)
+    {
+        return $next($model);
     }
 }

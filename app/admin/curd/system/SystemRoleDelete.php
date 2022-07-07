@@ -8,10 +8,13 @@ namespace app\admin\curd\system;
 
 use app\common\curd\Delete;
 use app\exception\DataCannotBeDeletedException;
+use app\exception\MessageException;
 use think\Model;
 
 class SystemRoleDelete extends Delete
 {
+    use CheckSystemRoleTrait;
+
     //排除的数据
     protected $exclude = [];
     //条件
@@ -19,8 +22,10 @@ class SystemRoleDelete extends Delete
 
     protected function deleteMiddleware($next, Model $model)
     {
-        if ($model->isSuper()) {
-            throw new DataCannotBeDeletedException('超级管理员权限不可删除');
+        $this->disabledModifySuperAdmin($model);
+
+        if (!$this->hasRoleToDo($model)) {
+            throw new MessageException('无权限删除该角色');
         }
 
         return $next($model);

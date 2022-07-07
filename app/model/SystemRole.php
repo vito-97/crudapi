@@ -66,4 +66,9 @@ class SystemRole extends BaseModel
 
         return $ids ? explode(',', $ids) : [];
     }
+
+    protected function setAuthIdsAttr($value)
+    {
+        return $this->setArrayToStringAttr($value);
+    }
 }

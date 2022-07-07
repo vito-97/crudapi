@@ -8,10 +8,13 @@ namespace app\admin\curd\system;
 
 use app\common\curd\Change;
 use app\exception\DataInoperableException;
+use app\exception\MessageException;
 use think\Model;
 
 class SystemRoleChange extends Change
 {
+    use CheckSystemRoleTrait;
+
     //允许修改的字段
     protected $field = ['status'];
     //排除的数据
@@ -21,8 +24,10 @@ class SystemRoleChange extends Change
 
     protected function saveMiddleware($next, Model $model, array $params)
     {
-        if ($model->id == 1) {
-            throw new DataInoperableException('超级管理员数据不可修改');
+        $this->disabledModifySuperAdmin($model);
+
+        if (!$this->hasRoleToDo($model)) {
+            throw new MessageException('没有权限修改角色');
         }
 
         return parent::saveMiddleware($next, $model, $params);

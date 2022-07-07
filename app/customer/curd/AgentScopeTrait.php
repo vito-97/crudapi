@@ -15,6 +15,6 @@ trait AgentScopeTrait
 
     protected function globalScope()
     {
-        return ['agent' => $this->request->user->uid()];
+//        return ['agent' => $this->request->user->uid()];
     }
 }

@@ -18,7 +18,7 @@ class SystemRole extends BaseController
 
     protected $methodName = [
         'menu' => '获取菜单',
-        'auth' => '获取权限',
+        'role' => '获取角色',
     ];
 
     protected function initialize()

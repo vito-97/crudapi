@@ -562,6 +562,21 @@ class BaseModel extends Model
     }
 
     /**
+     * 数组转字符串
+     * @param $value
+     * @param string $char
+     * @return string
+     */
+    protected function setArrayToStringAttr($value, $char = ',')
+    {
+        if (!is_string($value)) {
+            $value = join($char, $value);
+        }
+
+        return $value;
+    }
+
+    /**
      * 获取时间
      * @param $value
      * @param string $format

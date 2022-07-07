@@ -30,7 +30,7 @@ class Enum
     const PRICE_ZERO_DEFAULT = 0.01;
 
     //设备推送的主题
-    const DEVICE_SEND_TOPIC = 'rep/%s';
+    const DEVICE_SEND_TOPIC = '%s';
     //设备接收的主题
     const DEVICE_SUBSCRIBE_TOPIC = 'sed/#';
     //发送客户端ID

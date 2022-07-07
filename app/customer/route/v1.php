@@ -21,6 +21,7 @@ Route::group('<api_version>', function () {
         Route::get('history', 'history');
         Route::get('used', 'used');
     })->prefix('Flow/');
+    Route::resource('flow', 'Flow')->only(['index', 'read']);
     //合同
     Route::group('contract', function () {
         Route::get('history', 'history');

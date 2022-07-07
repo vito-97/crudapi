@@ -24,7 +24,7 @@ use think\helper\Str;
 
 class Flow extends BaseController
 {
-    protected $name = '流量';
+    protected $name = '取水记录';
 
     protected $registerCurd = true;
 

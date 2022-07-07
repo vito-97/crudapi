@@ -8,25 +8,19 @@
 
 namespace app\customer\controller\v1;
 
-use app\logic\CustomerLogic;
-use app\logic\DeviceLogic;
+use app\customer\controller\BaseController;
 use app\logic\FlowLogic;
-use app\logic\OrderLogic;
-use app\logic\CustomerLogic;
-use app\model\Customer as CustomerModel;
+use app\logic\WaterFetcherLogic;
 use app\validate\PaginateValidate;
-use app\validate\SurplusFlowStatisticsValidate;
 use app\validate\TimeTypeValidate;
 use app\validate\UsedFlowStatisticsValidate;
-use app\customer\controller\BaseController;
-use think\facade\Db;
 use think\helper\Str;
 
 class Flow extends BaseController
 {
-    protected $name = '流量';
+    protected $name = '取水记录';
 
-    protected $registerCurd = true;
+    protected $registerCurd = ['index', 'read'];
 
     protected $registerCurdDir = true;
 
@@ -40,41 +34,19 @@ class Flow extends BaseController
         TimeTypeValidate::batchCheck(['type' => $type]);
         PaginateValidate::batchCheck();
 
-        $limit      = $this->getHistoryLimit($limit, $type);
-        $orderLogic = new OrderLogic();
-
-        //获取水厂的所有设备ID
-        $devices = $this->getDeviceIdSql();
-
-        $where = [
-            ['device_id', 'EXP', Db::raw('IN' . $devices)],
-        ];
-
-        $orderWhere = array_merge($orderLogic->statisticsWhere(),
-            [
-                ['agent_id', '=', $this->uid()],
-            ]
-        );
+        $limit = $this->getHistoryLimit($limit, $type);
 
         $sumMethod = 'sumBy' . ucfirst($type);
         $args      = ['page' => $page, 'num' => $limit, 'fetch_sql' => false];
 
-        $flow  = $this->logic->$sumMethod('flow', $where, $args);
-        $money = $orderLogic->$sumMethod('`pay_price` - `refund_money`', $orderWhere, $args);
+        $flow = $this->logic->$sumMethod('flow', $where, $args);
 
         $result = $flow;
-
-        foreach ($result['list'] as $key => $item) {
-            $result['list'][$key] = [
-                'flow'  => $item,
-                'money' => $money['list'][$key],
-            ];
-        }
 
         return $this->success($result);
     }
 
-    public function used($page = 1, $limit = 15, $type = 'device')
+    public function used($page = 1, $limit = 15, $type = 'water_fetcher')
     {
         UsedFlowStatisticsValidate::batchCheck('flow');
         PaginateValidate::batchCheck();
@@ -90,15 +62,12 @@ class Flow extends BaseController
         return $this->success($result);
     }
 
-    protected function usedDevice($page, $limit)
+    protected function usedWaterFetcher($page, $limit)
     {
-        $logic = new DeviceLogic();
+        $logic = new WaterFetcherLogic();
 
         $args = [
-            'field'    => ['id', 'name', 'device_no', 'imei', 'used_flow'],
-            'where'    => [
-                ['id', 'Exp', Db::raw('IN' . $this->getDeviceIdSql())],
-            ],
+            'field'    => ['id', 'nickname', 'username', 'flow', 'used_flow'],
             'order'    => [
                 'used_flow' => 'desc',
             ],
@@ -108,35 +77,5 @@ class Flow extends BaseController
         ];
 
         return $logic->getAll($args)->append([]);
-    }
-
-    protected function _usedCustomer($page, $limit)
-    {
-        $logic = new CustomerLogic();
-
-        $args = [
-            'field'    => ['id', 'nickname', 'username', 'used_flow'],
-            'where'    => [
-                ['user_id', '=', $this->getUserinfo()->user_id],
-            ],
-            'order'    => [
-                'used_flow' => 'desc',
-            ],
-            'page'     => $page,
-            'limit'    => $limit,
-            'paginate' => true,
-        ];
-
-        return $logic->getAll($args)->append([]);
-    }
-
-    protected function getDeviceIdSql()
-    {
-        $deviceLogic = new DeviceLogic();
-
-        //获取水厂的所有设备ID
-        $devices = $deviceLogic->where('agent_id', $this->uid())->field('id')->buildSql();
-
-        return $devices;
     }
 }

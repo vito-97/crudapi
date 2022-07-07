@@ -297,10 +297,14 @@ abstract class BaseValidate extends Validate
      */
     protected function checkIds($value, $rule)
     {
-        $values = explode(',', $value);
+        if (!is_array($value)) {
+            $values = explode(',', $value);
+        } else {
+            $values = $value;
+        }
 
         if (empty($values)) {
-            return ':attribute不能为空';
+            return ':attribute不能为空1';
         }
 
         foreach ($values as $id) {
