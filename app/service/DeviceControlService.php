@@ -28,8 +28,8 @@ class DeviceControlService
         'finish'              => '00080001',//结算按键
 //        'open'                => '00500001',//开机
 //        'close'               => '00500000',//关机
-        'open'                => '010600140001080E',//强制开启
-        'close'               => '010600140000C9CE',//强制结束
+        'open1'               => '010600140001080E',//强制开启
+        'close1'              => '010600140000C9CE',//强制结束
         'open2'               => '01050000FF8C3A',
         'close2'              => '0105000000CDCA',
         'set_pulse'           => '00c800',//设置脉冲
@@ -41,6 +41,7 @@ class DeviceControlService
         'clear_flow'          => '010600020000280a',//清除使用流量
         'adverts_light_open'  => '00cc0001',
         'adverts_light_close' => '00cc0000',
+        'pause_timing'        => '010600D309607E4B',
     ];
 
     protected static $lastControlTime = 0;
@@ -106,7 +107,7 @@ class DeviceControlService
         return $this->writePush($address, false);
     }
 
-    public function open($type = '')
+    public function open($type = 1)
     {
         $address = self::ADDRESS['open' . $type];
 
@@ -115,9 +116,9 @@ class DeviceControlService
         return $this->writePush($address, false);
     }
 
-    public function close($type = '')
+    public function close($type = 1)
     {
-        $address = self::ADDRESS['close'];
+        $address = self::ADDRESS['close' . $type];
 
         $this->writeLog('强制结束', $address);
 

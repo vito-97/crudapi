@@ -48,6 +48,16 @@ class Device extends BaseModel
         self::STATUS_FAULT => Message::STATUS_FAULT,
     ];
 
+    //屏幕类型
+    const SCREEN_TYPE = 1;
+    //简易类型
+    const EASY_TYPE = 2;
+
+    protected $typeEnum = [
+        self::SCREEN_TYPE => '屏幕',
+        self::EASY_TYPE   => '简易',
+    ];
+
     const FREE_STATE = 0;
     const WAIT_STATE = DeviceControl::STATE_WAIT;
     const START_STATE = DeviceControl::STATE_START;
@@ -165,6 +175,17 @@ class Device extends BaseModel
     protected function getPhoneAttr()
     {
         return Agent::where('id', $this->agent_id)->cache(60)->value('phone');
+    }
+
+    /**
+     * 上线否是否需要设置
+     * @param $value
+     * @param $data
+     * @return bool
+     */
+    protected function getOnlineSettingAttr($value, $data)
+    {
+        return in_array($data['type'], [1]);
     }
 
     /**

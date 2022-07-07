@@ -136,7 +136,8 @@ class DeviceSubscribeMessageListener
     {
         $this->e('上线');
         $logic = new DeviceLogic();
-        $logic->online($this->imei);
+        $type  = get_device_online_type($hex);
+        $logic->online($this->imei, $type);
     }
 
     public function start(\app\Request $request, $deviceNo, $hex)

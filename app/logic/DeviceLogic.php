@@ -225,7 +225,7 @@ class DeviceLogic extends BaseLogic
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
      */
-    public function online($imei = '')
+    public function online($imei = '', $type = 1)
     {
         if (empty($imei)) {
             throw new ParamErrorException(Message::DEVICE_IMEI_EMPTY);
@@ -260,6 +260,7 @@ class DeviceLogic extends BaseLogic
             'device_no' => $number,
             'imei'      => $imei,
             'status'    => Device::STATUS_OFF,
+            'type'      => $type,
         ];
 
         $status = $this->getModel()->add($params);

@@ -458,5 +458,22 @@ function web($key = null, $default = null)
  */
 function is_dev()
 {
-    return config('web.is_dev');
+    return config('web.is_dev') || env('IS_DEV');
+}
+
+/**
+ * 获取上线设备的类型
+ * @param $hex
+ * @param int $default
+ * @return int|mixed
+ */
+function get_device_online_type($hex, $default = 1)
+{
+    $string = hex2str($hex);
+
+    preg_match('#\d+#', $string, $match);
+
+    $type = $match[0] ?? $default;
+
+    return $type;
 }

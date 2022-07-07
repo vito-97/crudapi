@@ -92,19 +92,25 @@ class Mqtt extends Command
                     Event::trigger(EventName::MQTT_SUBSCRIBE_MSG, $params);
 
                 } else {
-
-                    if ($hex === Enum::DEVICE_ONLINE_CODE) {
+                    if (strpos($hex, Enum::DEVICE_ONLINE_CODE) === 0) {
                         //允许上线的白名单
                         $white = [];
+
                         if (is_dev() && !in_array($imei, $white)) {
                             $this->output->writeln('本地测试不进行上线，需要上线请添加到白名单 IMEI:' . $imei);
                             return;
                         }
 
+                        $type = get_device_online_type($hex);
+
                         $logic = new DeviceLogic();
 
-                        $device = $logic->online($imei);
-                        $logic->setting($device);//设置
+                        $device = $logic->online($imei, $type);
+
+                        if ($device->onlineSetting) {
+                            $logic->setting($device);//设置
+                        }
+
                         $this->output->writeln('设备上线成功 IMEI:' . $imei);
 
 //                        $this->output->writeln('设备上线失败：' . $exception->getMessage());
