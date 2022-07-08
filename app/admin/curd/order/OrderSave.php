@@ -93,7 +93,7 @@ class OrderSave extends Save
 
         $params['is_recharged'] = 0;
         $params['type']         = Order::RECHARGE_TYPE;
-        $params['product_snap'] = $product->visible(['name', 'price', 'flow', 'give_flow', 'allow_refund', 'is_vip'])->toJson();
+        $params['product_snap'] = $product->visible(['name', 'price', 'flow', 'give_flow', 'minute', 'allow_refund', 'is_vip'])->toJson();
         $params['is_vip']       = $product->is_vip;
         $params['allow_refund'] = $product->allow_refund;//判断是否可以退款
 

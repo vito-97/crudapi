@@ -42,7 +42,7 @@ class SystemRoleLogic extends BaseLogic
      */
     public function check(int $role_id, string $route)
     {
-        $role  = $this->getRoleAuth($role_id);
+        $role = $this->getRoleAuth($role_id);
 
         if (!$role) {
             throw new DataNotFoundException(ErrorCode::ROLE_NOT_FOUND);
@@ -124,7 +124,7 @@ class SystemRoleLogic extends BaseLogic
         $roleID = $role_id ?: $user->role_id;
         $role   = $this->getRoleByID($roleID);
 
-        $data = $role->getAuth(['url']);
+        $data = $role->getAuth(app()->http->getName(), ['url']);
 
         $keys = array_column($data, 'route');
 
@@ -173,7 +173,7 @@ class SystemRoleLogic extends BaseLogic
             }
 
             return $result ? $result->toArray() : $result;
-        },60);
+        }, 60);
 
         return $role;
     }

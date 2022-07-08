@@ -9,7 +9,10 @@
 namespace app\model;
 
 
+use app\common\Util;
+use think\Container;
 use think\db\Query;
+use think\facade\App;
 
 class SystemRole extends BaseModel
 {
@@ -32,20 +35,32 @@ class SystemRole extends BaseModel
      */
     protected function getAuthAttr()
     {
-        return $this->getAuth();
+        $result = $this->getAuth(app()->http->getName());
+    }
+
+    /**
+     * 获取树形
+     * @return array
+     */
+    protected function getAuthTreeAttr()
+    {
+        $result = $this->getAuth(app()->http->getName());
+
+        return Util::tree($result);
     }
 
     /**
      * 获取所有权限
+     * @param string $module
      * @param array $append
      * @return array
      */
-    public function getAuth($append = [])
+    public function getAuth($module = '', $append = [])
     {
         static $auth = [];
 
         if (empty($auth[$this->id])) {
-            $auth[$this->id] = (new SystemAuth())->getAuth($this, $append)->toArray();
+            $auth[$this->id] = (new SystemAuth())->getAuth($this, $module, $append)->toArray();
         }
 
         return $auth[$this->id];

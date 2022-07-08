@@ -20,6 +20,9 @@ class UserWallet extends BaseController
 
     protected $registerCurdDir = 'user';
 
+    //废弃控制器
+    const DISUSE = true;
+
     protected function initialize()
     {
         $this->logic = new UserWalletLogic();

@@ -247,6 +247,12 @@ class AuthRouteService
 
         $reflection = new \ReflectionClass($class);
 
+        $disuse = $reflection->getConstant('DISUSE');
+
+        if ($disuse) {
+            return [];
+        }
+
         $excludeMethod = Enum::CURD;
 
         $properties = $reflection->getDefaultProperties();
@@ -403,7 +409,7 @@ class AuthRouteService
     protected function formatController($module, $names)
     {
         $names = array_map(function ($item) use ($module) {
-            $item = 'app\\' . str_replace([$this->appPath, '.php','/'], ['', '','\\'], $item);
+            $item = 'app\\' . str_replace([$this->appPath, '.php', '/'], ['', '', '\\'], $item);
 
             return $item;
         }, $names);

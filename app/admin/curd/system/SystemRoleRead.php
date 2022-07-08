@@ -18,7 +18,7 @@ class SystemRoleRead extends Read
     //排除字段
     protected $withoutField = false;
     //追加输出的属性
-    protected $append = ['auth'];
+    protected $append = ['auth_tree'];
     //条件
     protected $where = [];
 

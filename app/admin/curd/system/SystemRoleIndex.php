@@ -27,7 +27,7 @@ class SystemRoleIndex extends Index
 
     protected $with = [];
 
-    protected $append = ['auth'];
+    protected $append = ['auth_tree'];
 
     protected $middleware = [
         'queryMiddleware',

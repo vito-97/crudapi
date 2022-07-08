@@ -14,6 +14,9 @@ class Withdrawal extends BaseController
 
     protected $registerCurdDir = true;
 
+    //废弃控制器
+    const DISUSE = true;
+
     protected function initialize()
     {
         $this->logic = new WithdrawalLogic();

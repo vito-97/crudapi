@@ -26,15 +26,19 @@ class SystemAuth extends BaseModel
      * @param array $append
      * @return SystemAuth
      */
-    public function getAuth($role, $append = [])
+    public function getAuth($role, $module = '', $append = [])
     {
         $where = [];
+
+        if ($module) {
+            $where[] = ['module', '=', $module];
+        }
 
         if (!$role->isSuper()) {
             $where[] = ['id', 'IN', $role->auth_ids_array];
         }
 
-        $field = array_merge(['id', 'name', 'route', 'url'], $append);
+        $field = array_merge(['id', 'name', 'route', 'url', 'pid'], $append);
 
         return $this->where($where)->field($field)->select();
     }

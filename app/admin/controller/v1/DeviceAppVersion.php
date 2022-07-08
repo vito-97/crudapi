@@ -14,6 +14,8 @@ class DeviceAppVersion extends BaseController
 
     protected $registerCurdDir = 'device';
 
+    const DISUSE = true;
+
     protected function initialize()
     {
         $this->logic = new DeviceAppVersionLogic();

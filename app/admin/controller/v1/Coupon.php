@@ -14,6 +14,8 @@ class Coupon extends BaseController
 
     protected $registerCurdDir = true;
 
+    const DISUSE = true;
+
     protected function initialize()
     {
         $this->logic = new CouponLogic();

@@ -278,7 +278,7 @@ class OrderLogic extends BaseLogic
             'product_id'     => $product->id,
             'user_id'        => $userID,
             'agent_id'       => $product->agent_id,
-            'product_snap'   => $product->visible(['name', 'price', 'flow', 'give_flow', 'allow_refund', 'is_vip'])->toJson(),
+            'product_snap'   => $product->visible(['name', 'price', 'flow', 'give_flow', 'minute', 'allow_refund', 'is_vip'])->toJson(),
             'coupon_card_id' => $couponCardID,
             'pay_type'       => config('web.payment.default'),
             'price'          => $product->price,

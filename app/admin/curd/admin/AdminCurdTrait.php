@@ -8,7 +8,6 @@
 
 namespace app\admin\curd\admin;
 
-
 use app\logic\SystemRoleLogic;
 
 trait AdminCurdTrait
@@ -19,7 +18,7 @@ trait AdminCurdTrait
      */
     public function getRoleLabel()
     {
-        $logic = new SystemRoleLogic();
+        $logic  = new SystemRoleLogic();
         $result = $logic->getRoleLabel();
 
         return $result;
