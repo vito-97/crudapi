@@ -7,9 +7,7 @@
 namespace app\admin\curd\system;
 
 use app\common\curd\Edit;
-use app\common\Util;
 use app\exception\MessageException;
-use app\logic\SystemAuthLogic;
 
 class SystemRoleEdit extends Edit
 {
@@ -41,28 +39,9 @@ class SystemRoleEdit extends Edit
 
     public function getAuthLabel()
     {
-        $logic = new SystemAuthLogic();
-
         $role = $this->user->getUserInfo()->role;
 
-        $args = [
-            'field' => ['id', 'name', 'route', 'pid'],
-            'where' => [
-                ['module', '=', 'admin'],
-            ],
-            'scope' => ['status'],
-            'limit' => 0,
-        ];
-
-        //非超管则只可以设置自己有的权限
-        if (!$role->isSuper()) {
-            $ids             = $role->auth_ids;
-            $args['where'][] = ['id', 'IN', $ids];
-        }
-
-        $list = $logic->getAll($args)->toArray();
-
-        $result = Util::tree($list);
+        $result = $role->auth_tree;
 
         return $result;
     }

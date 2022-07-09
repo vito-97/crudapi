@@ -18,9 +18,9 @@ class SystemRoleValidate extends BaseValidate
      * @var array
      */
     protected $rule = [
-        'name' => 'require|max:30|unique:system_role',
-        'key' => 'require|max:15|unique:system_role',
-        'mark' => 'max:120',
+        'name'     => 'require|max:30|unique:system_role',
+        'key'      => 'require|max:15|unique:system_role',
+        'mark'     => 'max:120',
         'auth_ids' => 'require|checkIds',
     ];
 
@@ -48,7 +48,7 @@ class SystemRoleValidate extends BaseValidate
      * @var array
      */
     protected $scene = [
-        Enum::VALID_SAVE_SCENE => ['name', 'key', 'mark', 'auth_ids'],
-        Enum::VALID_UPDATE_SCENE => ['mark', 'auth_ids'],
+        Enum::VALID_SAVE_SCENE   => 'all',
+        Enum::VALID_UPDATE_SCENE => 'all',
     ];
 }

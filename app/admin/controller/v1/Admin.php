@@ -50,7 +50,7 @@ class Admin extends BaseController
         $systemRoleLogic = new SystemRoleLogic();
         $response        = [
             'detail' => $user,
-            'menu'   => $systemRoleLogic->getMenuList(),
+//            'menu'   => $systemRoleLogic->getMenuList(),
             'role'   => $systemRoleLogic->getAuthList(),
         ];
 

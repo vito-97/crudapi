@@ -8,14 +8,15 @@
 
 namespace app\model;
 
-
 use app\common\Util;
-use think\Container;
+use app\model\traits\TreeTrait;
 use think\db\Query;
-use think\facade\App;
+use think\Model;
 
 class SystemRole extends BaseModel
 {
+    use TreeTrait;
+
     protected $hidden = ['delete_time'];
 
     protected $superAdmin = 'admin';
@@ -30,12 +31,24 @@ class SystemRole extends BaseModel
     }
 
     /**
+     * 删除事件
+     * @param Model $model
+     */
+    public static function onAfterDelete(Model $model): void
+    {
+        //将所有子类也删除
+        self::destroy(['pid' => $model->id]);
+    }
+
+    /**
      * 权限获取器
      * @return array
      */
     protected function getAuthAttr()
     {
         $result = $this->getAuth(app()->http->getName());
+
+        return $result;
     }
 
     /**

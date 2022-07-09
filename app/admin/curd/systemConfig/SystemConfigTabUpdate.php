@@ -17,7 +17,7 @@ class SystemConfigTabUpdate extends Update
         SystemConfigTabValidate::class => Enum::VALID_UPDATE_SCENE,
     ];
     //允许新增的数据字段
-    protected $field = ['pid', 'title', 'status', 'icon', 'sort'];
+    protected $field = ['pid', 'name', 'status', 'icon', 'sort'];
     //获取对象时追加的字段
     protected $appendField = [];
     //排除的数据

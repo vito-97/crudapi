@@ -17,20 +17,16 @@ class SystemConfigValidate extends BaseValidate
      * @var array
      */
     protected $rule = [
-        'name' => 'require|max:50',
-        'key' => 'require|alphaDash|max:50|unique:system_config',
-        'type' => 'require|checkEnum',
-//        'input_type' => 'requireIf:type,input|checkEnum',
+        'name'                 => 'require|max:50',
+        'key'                  => 'require|alphaDash|max:50|unique:system_config',
+        'type'                 => 'require|alphaDash|max:20',
         'system_config_tab_id' => 'require|checkHas:system_config_tab',
-        'option' => 'max:255',//规则
-//        'upload_type' => 'requireIf:type,upload|checkEnum',
-        'validate' => 'max:100',
-        'width' => 'number|between:0,65535',
-        'height' => 'number|between:0,65535',
-        'value' => 'max:9999',
-        'desc' => 'max:255',
-        'sort' => 'number|between:0,255',
-        'status' => 'require|checkEnum',
+        'opts'                 => 'max:255',//规则
+        'validate'             => 'max:100',
+        'value'                => 'max:9999',
+        'placeholder'          => 'max:255',
+        'sort'                 => 'number|between:0,255',
+        'status'               => 'require|checkSwitch',
     ];
 
     /**
@@ -57,8 +53,8 @@ class SystemConfigValidate extends BaseValidate
      * @var array
      */
     protected $scene = [
-        self::SAVE_SCENE => 'all',
+        self::SAVE_SCENE   => 'all',
         self::UPDATE_SCENE => 'all',
-        self::LIST_SCENE => ['status', 'type', 'system_config_tab_id'],
+        self::LIST_SCENE   => ['status', 'type', 'system_config_tab_id'],
     ];
 }

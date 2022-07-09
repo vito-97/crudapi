@@ -13,6 +13,7 @@ use app\common\Message;
 use app\exception\ErrorException;
 use think\db\BaseQuery;
 use think\db\Query;
+use think\facade\Db;
 use think\facade\Lang;
 use think\helper\Str;
 use think\Model;
@@ -496,6 +497,51 @@ class BaseModel extends Model
     public function searchStatusAttr($query, $value, $data)
     {
         $this->_searchAttr(__FUNCTION__, $query, $value, $data);
+    }
+
+    /**
+     * 获取所有下级的Id
+     * @param $pid
+     * @param boolean $withPid
+     * @param string $parentKey
+     * @return array
+     */
+    public function getChildrenID($pid, $withPid = false, $parentKey = 'pid')
+    {
+        $sql = $this->getChildrenIDSql($pid, $parentKey);
+
+        $result = $this->withTrashed()->table($sql . ' as t')->column('t.id');
+
+        if ($withPid) {
+            array_unshift($result, $pid);
+        }
+
+        return $result;
+    }
+
+    /**
+     * 获取无限极分类的父类所有下级ID SQL
+     * @param $pid
+     * @param string $parentKey
+     * @return string
+     */
+    public function getChildrenIDSql($pid, $parentKey = 'pid')
+    {
+        $table = $this->getTable();
+
+        $sql = "(SELECT t2.id
+                    FROM(
+                        SELECT
+                            @ids AS parent_ids,
+                            (SELECT @ids := GROUP_CONCAT(id) FROM {$table} WHERE FIND_IN_SET({$parentKey}, @ids)) AS children_ids,
+                            @l := @l+1 AS LEVEL
+                         FROM {$table}, (SELECT @ids := '{$pid}', @l := 0 ) b
+                         WHERE @ids IS NOT NULL
+                        ) t1
+                    JOIN {$table} t2
+                    ON FIND_IN_SET(t2.id, t1.parent_ids)  AND t2.id != {$pid})";
+
+        return $sql;
     }
 
     /**

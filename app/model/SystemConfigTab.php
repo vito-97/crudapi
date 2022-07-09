@@ -8,28 +8,13 @@
 
 namespace app\model;
 
-
+use app\logic\SystemConfigLogic;
+use app\model\traits\TreeTrait;
 use think\db\Query;
 
 class SystemConfigTab extends BaseModel
 {
-    /**
-     * 关联所有子类
-     * @return \think\model\relation\HasMany
-     */
-    public function child()
-    {
-        return $this->hasMany('SystemConfigTab', 'pid', 'id')->with(['child']);
-    }
-
-    /**
-     * 关联下级子类
-     * @return \think\model\relation\HasMany
-     */
-    public function sub()
-    {
-        return $this->hasMany('SystemConfigTab', 'pid', 'id');
-    }
+    use TreeTrait;
 
     /**
      * 关联父类
@@ -43,5 +28,18 @@ class SystemConfigTab extends BaseModel
     public function searchIndexAttr(Query $query, $value)
     {
         return $query->where('title', 'like', "%{$value}%");
+    }
+
+    protected function getConfigAttr($value, $data)
+    {
+        static $config;
+        $id = $this->id;
+
+        if (is_null($config)) {
+            $logic  = new SystemConfigLogic();
+            $config = $logic->getConfigTree();
+        }
+
+        return $config[$id] ?? [];
     }
 }

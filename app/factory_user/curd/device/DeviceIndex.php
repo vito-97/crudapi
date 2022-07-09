@@ -19,7 +19,7 @@ class DeviceIndex extends Index
     protected $keywordQueryArgs = ['index'];
     protected $hidden = [];
     //查询条件
-    protected $where = ['agent_id' => 0];
+    protected $where = [['agent_id', '=', 0]];
     //字段
     protected $field = [];
     //排除字段

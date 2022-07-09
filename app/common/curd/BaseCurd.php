@@ -362,19 +362,24 @@ abstract class BaseCurd
         $params     = $params ?: $this->request->param();
         $tableField = $this->getLogic()->getTableFields();
         $pk         = $this->getLogic()->getPk();
-        //排序
-        $order_key = $params['order_by'] ?? $pk;
-        $sort      = $params['sort'] ?? 'DESC';
 
-        if (!in_array($order_key, $tableField)) {
-            $order_key = $pk;
+        //需要排序
+        if (!empty($params['order'])) {
+            //排序
+            $order_key = $params['order'] ?? $pk;
+            $sort      = $params['sort'] ?? 'DESC';
+
+            if (!in_array($order_key, $tableField)) {
+                $order_key = $pk;
+            }
+
+            $order = [$order_key => $sort];
         }
 
         $filters = $this->getJsonParams('filter', $params);
         $ops     = $this->getJsonParams('op', $params);
 
         $where = [];
-        $order = [$order_key => $sort];
 
 
         foreach ($filters as $field => $value) {
@@ -391,6 +396,7 @@ abstract class BaseCurd
                 if (in_array(strtoupper($value), ['NULL', 'NOT NULL'])) {
                     $op = strtoupper($value);
                 }
+                //如果是引号没内容 则查找空字符串的
                 if (in_array($value, ['""', "''"])) {
                     $value = '';
                     $op    = '=';
@@ -398,19 +404,22 @@ abstract class BaseCurd
             }
 
             if (in_array($field, $tableField)) {
-
+                //相等或不等
                 if (in_array($op, ['=', '<>'])) {
 
                     $where[] = [$field, $op, (string)$value];
 
+                    //模糊查询
                 } else if (in_array($op, ['LIKE', 'NOT LIKE',])) {
 
                     $where[] = [$field, $op, '%' . filter_like_char((string)$value) . '%'];
 
+                    //大小比较
                 } else if (in_array($op, ['>', '>=', '<', '<='])) {
 
                     $where[] = [$field, $op, (int)$value];
 
+                    //查找字符串
                 } else if (in_array($op, ['FIND IN SET', 'FIND IN', 'FINDINSET'])) {
 
                     $value = $this->valueToArray($value);
@@ -421,12 +430,15 @@ abstract class BaseCurd
                         }
                     }
 
+                    //IN查询
                 } else if (in_array($op, ['IN', 'NOT IN',])) {
                     $value = $this->valueToArray($value);
 
                     if ($value) {
                         $where[] = [$field, $op, $value];
                     }
+
+                    //区间查询
                 } else if (in_array($op, ['BETWEEN', 'NOT BETWEEN'])) {
                     $data = $this->getRangeValue($value, $op, 'BETWEEN');
                     if (!$data) {
@@ -434,6 +446,8 @@ abstract class BaseCurd
                     }
 
                     $where[] = [$field, $data[0], $data[1]];
+
+                    //区间查询
                 } else if (in_array($op, ['RANGE', 'NOT RANGE',])) {
                     $value = !is_array($value) ? str_replace([' - ', ' ~ ', '~'], ',', $value) : $value;
 
@@ -445,6 +459,7 @@ abstract class BaseCurd
                     $op      = str_replace('RANGE', 'BETWEEN', $data[0]) . ' TIME';
                     $where[] = [$field, $op, $data[1]];
 
+                    //NULL查询
                 } else if (in_array($op, ['NULL', 'IS NULL', 'NOT NULL', 'IS NOT NULL',])) {
                     $op      = str_replace('IS ', '', $op);
                     $where[] = [$field, $op];
@@ -458,8 +473,11 @@ abstract class BaseCurd
 
         $args = [
             'query' => [$query],
-            'order' => $order,
         ];
+
+        if (!empty($order)) {
+            $args['order'] = $order;
+        }
 
         return $args;
     }
@@ -813,6 +831,26 @@ abstract class BaseCurd
         }
 
         return $this;
+    }
+
+    /**
+     * 排除关联查询
+     * @param array $args
+     * @param string $key
+     * @return mixed
+     */
+    protected function without(array $args, string $key = 'without')
+    {
+        $without = (string)$this->request->param($key, '');
+        if ($without) {
+            $without = explode(',', $without);
+        }
+        //获取差集
+        if ($without && !empty($args['with'])) {
+            $args['with'] = array_diff($args['with'], $without);
+        }
+
+        return $args;
     }
 
     /**

@@ -17,29 +17,4 @@ class SystemConfigTabLogic extends BaseLogic
     {
         return SystemConfigTab::class;
     }
-
-    /**
-     * 获取下拉框的数据
-     * @return \app\model\BaseModel|\app\model\BaseModel[]|array|\think\Collection|\think\Paginator
-     * @throws \think\db\exception\DataNotFoundException
-     * @throws \think\db\exception\DbException
-     * @throws \think\db\exception\ModelNotFoundException
-     */
-    public function getLabel()
-    {
-        $args = [
-            'with' => [
-                //关联下级类
-                'child' => function ($query) {
-                    $query->field(['id', 'title', 'pid'])->hidden(['pid']);
-                },
-            ],
-            'field' => ['id,title'],
-            'scope' => ['status'],
-            'where' => ['pid' => 0],
-            'limit' => 0,
-        ];
-        return $this->getAll($args);
-    }
-
 }

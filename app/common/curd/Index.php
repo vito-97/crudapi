@@ -9,6 +9,8 @@
 namespace app\common\curd;
 
 
+use app\common\Util;
+use think\helper\Str;
 use think\Paginator;
 
 class Index extends BaseCurd
@@ -90,6 +92,7 @@ class Index extends BaseCurd
     protected $_middleware = [
         'appendCallbackMiddleware',
         'labelCallbackMiddleware',
+        'formatMiddleware',
     ];
 
     const PAGE_MODE = 'page';
@@ -105,6 +108,9 @@ class Index extends BaseCurd
      * @var array
      */
     protected $queryField = [];
+
+    //需要格式化的类型
+    protected $format = '';
 
     protected function _init($next)
     {
@@ -182,6 +188,43 @@ class Index extends BaseCurd
     }
 
     /**
+     * 格式化中间件
+     * @param $next
+     * @return mixed
+     */
+    protected function formatMiddleware($next)
+    {
+        $response = $next();
+
+        //格式化数据
+        if ($this->format) {
+            $method = 'format' . Str::studly($this->format);
+
+            if (method_exists($this, $method)) {
+                $list = $this->$method($this->getData('list'));
+
+                if (is_array($list)) {
+                    $this->setData('list', $list);
+                }
+            }
+        }
+
+        return $response;
+    }
+
+    /**
+     * 格式化成树形结构
+     * @param $list
+     * @return array
+     */
+    protected function formatTree($list)
+    {
+        $list = Util::tree($list);
+
+        return $list;
+    }
+
+    /**
      * 获取每页数量
      * @return array|mixed
      */
@@ -244,6 +287,7 @@ class Index extends BaseCurd
      */
     protected function getQueryArgs($args = [])
     {
+        //生成查询条件
         $this->generateWhere();
 
         $args = array_merge($args, parent::getQueryArgs());
@@ -271,8 +315,12 @@ class Index extends BaseCurd
             $args['field'] = $this->modeField[$this->mode];
         }
 
-        $params        = $this->buildParams();
-        $args['order'] = $params['order'];
+        $args = $this->without($args);
+
+        $params = $this->buildParams();
+        if (!empty($params['order'])) {
+            $args['order'] = $params['order'];
+        }
         $args['query'] = array_merge($args['query'], $params['query']);
         return $args;
     }

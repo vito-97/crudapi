@@ -15,6 +15,7 @@ use app\exception\DataNotFoundException;
 use app\exception\MessageException;
 use app\model\SystemAuth;
 use app\model\SystemRole;
+use think\facade\Config;
 
 class SystemRoleLogic extends BaseLogic
 {

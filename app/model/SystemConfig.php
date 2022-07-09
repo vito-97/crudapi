@@ -13,24 +13,10 @@ use think\db\Query;
 
 class SystemConfig extends BaseModel
 {
-    const TEXT_TYPE = 'text';
-    const PASSWORD_TYPE = 'password';
-    const UPLOAD_TYPE = 'upload';
-    const RADIO_TYPE = 'radio';
-    const CHECKBOX_TYPE = 'checkbox';
-    const SELECT_TYPE = 'select';
-    const TEXTAREA_TYPE = 'textarea';
-    const SWITCH_TYPE = 'switch';
-
-    protected $typeEnum = [
-        self::TEXT_TYPE => '文本输入框',
-        self::PASSWORD_TYPE => '密码输入框',
-        self::UPLOAD_TYPE => '上传',
-        self::RADIO_TYPE => '单选项',
-        self::CHECKBOX_TYPE => '多选项',
-        self::SELECT_TYPE => '下拉框',
-        self::TEXTAREA_TYPE => '多行文本',
-        self::SWITCH_TYPE => '开关',
+    protected $type = [
+        'value' => 'json',
+        'opts'  => 'json',
+        'list'  => 'json',
     ];
 
     protected function getValueAttr($value)

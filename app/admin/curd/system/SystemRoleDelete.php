@@ -7,7 +7,6 @@
 namespace app\admin\curd\system;
 
 use app\common\curd\Delete;
-use app\exception\DataCannotBeDeletedException;
 use app\exception\MessageException;
 use think\Model;
 

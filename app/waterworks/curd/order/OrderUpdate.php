@@ -26,7 +26,7 @@ class OrderUpdate extends Update
     //排除的数据
     protected $exclude = [];
     //条件
-    protected $where = ['type' => Order::SERVICE_CHARGE_TYPE];
+    protected $where = [['type', '=', Order::SERVICE_CHARGE_TYPE]];
 
     protected $saveMiddleware = ['saveMiddleware'];
 

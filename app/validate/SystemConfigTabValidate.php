@@ -6,8 +6,6 @@
 
 namespace app\validate;
 
-use app\common\Message;
-
 class SystemConfigTabValidate extends BaseValidate
 {
     /**
@@ -17,11 +15,11 @@ class SystemConfigTabValidate extends BaseValidate
      * @var array
      */
     protected $rule = [
-        'title' => 'require|max:50|unique:system_config_tab',
+        'name' => 'require|max:50|unique:system_config_tab',
         'pid' => 'require|checkHasCanEmpty:system_config_tab',
         'status' => 'require|checkEnum',
         'icon' => 'max:30',
-        'sort' => 'number:between:0,255',
+        'sort' => 'number|between:0,255',
     ];
 
     /**

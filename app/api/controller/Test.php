@@ -15,6 +15,7 @@ use app\service\DeviceControlService;
 use app\service\MqttService;
 use app\service\RedisStoreService;
 use think\console\Command;
+use think\facade\Config;
 use think\facade\Db;
 use think\facade\Event;
 use think\helper\Str;
@@ -34,6 +35,24 @@ class Test extends BaseController
         } else {
             return '测试方法不存在';
         }
+    }
+
+    public function json()
+    {
+        dump(json_encode([1 => 'a', 2 => 'b']));
+        dump(json_encode(["0" => 'a', "1" => 'b']));
+        dump(json_encode(['a', 'b']));
+
+        dump(json_decode('{"0":"a"}',true));
+    }
+
+    public function config()
+    {
+        Config::set(['a' => 1, 'b' => 2], 'test');
+
+        dump(Config::get('test'));
+
+        return 'ok';
     }
 
     public function waitRefund()

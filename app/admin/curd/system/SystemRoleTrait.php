@@ -12,6 +12,8 @@ namespace app\admin\curd\system;
 use app\exception\DataInoperableException;
 use app\exception\MessageException;
 use app\logic\AdminLogic;
+use app\logic\SystemRoleLogic;
+use think\facade\Db;
 
 trait SystemRoleTrait
 {
@@ -38,13 +40,16 @@ trait SystemRoleTrait
      */
     protected function canDelete($model)
     {
-        $id    = $model->id;
-        $logic = new AdminLogic();
+        $id         = $model->id;
+        $adminLogic = new AdminLogic();
 
-        $count = $logic->where('role_id', $id)->count();
+        //获取所有下级的ID
+        $ids = $this->getLogic()->getChildrenID($id, true);
+
+        $count = $adminLogic->where('role_id', 'IN', $ids)->count();
 
         if ($count) {
-            throw new MessageException(sprintf('该角色下有%d个管理员，请将该角色的管理员更换成其他角色才能删除', $count));
+            throw new MessageException(sprintf('该角色%s共有%d个管理员，请将该角色的管理员更换成其他角色才能删除', count($ids) > 1 ? '以及下级角色' : '', $count));
         }
 
         return $this;

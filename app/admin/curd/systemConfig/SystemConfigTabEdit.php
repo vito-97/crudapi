@@ -23,12 +23,5 @@ class SystemConfigTabEdit extends Edit
     //追加标签数据
     protected $labelCallback = [
         'get_status_enum' => ['name' => '状态'],
-        'get_is_show_switch' => ['name' => '显示配置页'],
-        'parent' => ['name' => '父类', 'key' => 'parent', 'field' => 'pid'],
     ];
-
-    public function parent()
-    {
-        return $this->getLogic()->getLabel();
-    }
 }
