@@ -15,11 +15,11 @@ class ContractValidate extends BaseValidate
      * @var array
      */
     protected $rule = [
-        'title'       => 'require|max:100',
-        'number'      => 'require|alphaDash|max:30',
-        'amount'      => 'require|isPositiveInteger',
-        'flow'        => 'require|isPositiveInteger',
-        'customer_id' => 'require|checkHas:customer',
+        'title'                  => 'require|max:100',
+        'number|contract_number' => 'require|alphaDash|max:30',
+        'amount'                 => 'require|isPositiveInteger',
+        'flow'                   => 'require|isPositiveInteger',
+        'customer_id'            => 'require|checkHas:customer',
     ];
 
     /**

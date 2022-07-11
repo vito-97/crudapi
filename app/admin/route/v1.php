@@ -78,6 +78,7 @@ Route::group('<api_version>', function () {
     Route::resource('system_auth', 'SystemAuth');
 
     //配置
+    Route::put('system_config/config', 'SystemConfig/config');
     Route::resource('system_config', 'SystemConfig');
     //配置分类
     Route::resource('system_config_tab', 'SystemConfigTab');

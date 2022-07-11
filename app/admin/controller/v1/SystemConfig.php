@@ -14,9 +14,21 @@ class SystemConfig extends BaseController
 
     protected $registerCurdDir = 'systemConfig';
 
+    protected $methodName = [
+        'config' => '更新配置',
+    ];
+
     protected function initialize()
     {
         $this->logic = new SystemConfigLogic();
     }
 
+    public function config()
+    {
+        $data = $this->request->put();
+
+        $result = $this->logic->updateConfigs($data);
+
+        return $this->success([], '更新配置成功');
+    }
 }

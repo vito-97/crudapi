@@ -52,6 +52,7 @@ class ErrorCode
     const EMPTY_PARAMS = [80911, 'Params is Empty'];
     const DATA_NOT_FOUND = [80912, 'Data not found'];
     const PASSWORD_ERROR = [80913, 'Password is Error'];
+    const SYSTEM_CLOSED = [80914, 'System is closed'];
 
     //支付错误
     const PAYMENT_SIGN_ERROR = [80001, 'payment sign is error'];

@@ -15,16 +15,16 @@ class SystemConfigValidate extends BaseValidate
      * @var array
      */
     protected $rule = [
-        'name'                 => 'require|max:50',
-        'key'                  => 'require|alphaDash|max:50|unique:system_config',
-        'type'                 => 'require|alphaDash|max:20',
-        'system_config_tab_id' => 'require|checkHas:system_config_tab',
-        'opts'                 => 'max:255',//规则
-        'validate'             => 'max:100',
-        'value'                => 'max:9999',
-        'placeholder'          => 'max:255',
-        'sort'                 => 'number|between:0,255',
-        'status'               => 'require|checkSwitch',
+        'name'                  => 'require|max:50',
+        'key|system_config_key' => 'require|alphaDash|max:50|unique:system_config',
+        'type'                  => 'require|alphaDash|max:20',
+        'system_config_tab_id'  => 'require|checkHas:system_config_tab',
+        'opts'                  => 'max:255',//规则
+        'validate'              => 'max:100',
+        'value'                 => 'max:9999',
+        'placeholder'           => 'max:255',
+        'sort'                  => 'number|between:0,255',
+        'status'                => 'require|checkSwitch',
     ];
 
     /**

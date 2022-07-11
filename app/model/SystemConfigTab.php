@@ -58,9 +58,11 @@ class SystemConfigTab extends BaseModel
         $result = $config[$id] ?? [];
 
         //过滤了隐藏状态
-        foreach ($result as $key => $item) {
+        foreach ($result as $key => &$item) {
             if (!$item['status']) {
                 unset($result[$key]);
+            }else{
+                $item['required'] = strpos($item['validate'],'require') !== false;
             }
         }
 

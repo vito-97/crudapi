@@ -9,6 +9,7 @@
 namespace app\model;
 
 
+use app\common\Util;
 use think\db\Query;
 
 class SystemConfig extends BaseModel
@@ -22,5 +23,27 @@ class SystemConfig extends BaseModel
     public function searchIndexAttr(Query $query, $value)
     {
         return $query->where('name|desc', 'like', "%{$value}%");
+    }
+
+    protected function setValidateAttr($value)
+    {
+        if (is_array($value)) {
+            $value = join('|', $value);
+        }
+
+        return $value;
+    }
+
+    protected function getValueAttr($value, $data)
+    {
+        $value = json_decode($value, true);
+
+        if (strpos($data['type'], 'upload') !== false) {
+            if ($value) {
+                $value = Util::link($value);
+            }
+        }
+
+        return $value;
     }
 }

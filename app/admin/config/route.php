@@ -6,5 +6,8 @@
  * Time: 14:08
  */
 return [
-    'middleware' => [\app\http\middleware\SystemLogMiddleware::class],
+    'middleware' => [
+        \app\admin\middleware\SystemStatusMiddleware::class,
+        \app\http\middleware\SystemLogMiddleware::class,
+    ],
 ];

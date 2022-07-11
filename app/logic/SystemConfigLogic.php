@@ -3,7 +3,10 @@ declare (strict_types=1);
 
 namespace app\logic;
 
+use app\exception\MessageException;
 use app\model\SystemConfig;
+use app\validate\BaseValidate;
+use app\validate\CustomRuleValidate;
 
 
 class SystemConfigLogic extends BaseLogic
@@ -89,5 +92,64 @@ class SystemConfigLogic extends BaseLogic
         }
 
         return $key ? (!empty(self::$configs[$key]) ? self::$configs[$key] : $default) : self::$configs;
+    }
+
+    /**
+     * 更新配置信息
+     * @param array $data
+     * @return SystemConfigLogic[]|array|\think\Collection
+     * @throws MessageException
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
+     * @throws \think\db\exception\ModelNotFoundException
+     */
+    public function updateConfigs($data = [])
+    {
+        if (empty($data)) {
+            throw new MessageException('请传入更新配置内容');
+        }
+
+        $data = array_filter($data, function ($item) {
+            return !is_null($item);
+        });
+
+        $keys = array_keys($data);
+
+        $result = $this->where('key', 'IN', $keys)->select();
+
+        $rules = $this->getRules($result);
+
+        if ($rules) {
+            CustomRuleValidate::batchCheck($data, $rules);
+        }
+
+        if ($result->isEmpty()) {
+            throw new MessageException('查询不到相关配置信息');
+        }
+
+        $result->each(function ($item) use ($data) {
+            $item->value = $data[$item->key];
+            $item->save();
+        });
+
+        return $result;
+    }
+
+    /**
+     * 获取验证规则
+     * @param $result
+     * @return array
+     */
+    public function getRules($result)
+    {
+        $rules = [];
+
+        foreach ($result as $item) {
+            if ($item->validate) {
+                $rules["{$item['key']}|{$item['name']}"] = $item->validate;
+            }
+        }
+
+        return $rules;
     }
 }

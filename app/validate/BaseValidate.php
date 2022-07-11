@@ -57,6 +57,14 @@ abstract class BaseValidate extends Validate
             $data  = [];
         }
 
+        $rule = [];
+
+        //第二参数是数组则默认设置成规则
+        if (is_array($scene)) {
+            $rule  = $scene;
+            $scene = '';
+        }
+
         $params = Request::param();
 
         if (is_array($data) && $data)
@@ -67,7 +75,7 @@ abstract class BaseValidate extends Validate
          */
         $class = Container::getInstance()->invokeClass(static::class);
 
-        $status = $class->setFieldLang()->setSceneField()->batch()->scene($scene)->check($params);
+        $status = $class->setFieldLang()->setSceneField()->batch()->rule($rule)->scene($scene)->check($params);
 
         if (!$status) {
             $error = $class->getError();
