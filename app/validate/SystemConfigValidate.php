@@ -6,8 +6,6 @@
 
 namespace app\validate;
 
-use app\common\Message;
-
 class SystemConfigValidate extends BaseValidate
 {
     /**

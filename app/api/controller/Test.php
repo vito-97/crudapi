@@ -44,6 +44,9 @@ class Test extends BaseController
         dump(json_encode(['a', 'b']));
 
         dump(json_decode('{"0":"a"}',true));
+
+        dump(json_encode(0));
+        dump(json_decode("0",true));
     }
 
     public function config()

@@ -19,15 +19,6 @@ class SystemConfig extends BaseModel
         'list'  => 'json',
     ];
 
-    protected function getValueAttr($value)
-    {
-        if ($value) {
-            return json_decode($value, true);
-        }
-
-        return '';
-    }
-
     public function searchIndexAttr(Query $query, $value)
     {
         return $query->where('name|desc', 'like', "%{$value}%");
