@@ -42,6 +42,38 @@ class SystemRole extends BaseModel
         self::destroy(['pid' => $model->id]);
     }
 
+    public static function onAfterUpdate(Model $model): void
+    {
+        self::checkChildAuth($model);
+    }
+
+    /**
+     * 检测下级分类是否有越权的权限
+     * @param $model
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
+     * @throws \think\db\exception\ModelNotFoundException
+     */
+    public static function checkChildAuth($model)
+    {
+        $id    = $model->id;
+        $auth  = $model->auth_ids_array;
+        $class = new static();
+
+        //获取下级角色
+        $result = $class->where('pid', $id)->select();
+
+        foreach ($result as $item) {
+            //获取交集
+            $allowId = array_intersect($auth, $item->auth_ids_array);
+            //交集权限的数量和之前的权限的数量不一样
+            if (count($allowId) !== count($item->auth_ids_array)) {
+                $item->auth_ids = $allowId;
+                $item->save();
+            }
+        }
+    }
+
     /**
      * 权限获取器
      * @return array

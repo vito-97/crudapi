@@ -508,13 +508,9 @@ class BaseModel extends Model
      */
     public function getChildrenID($pid, $withPid = false, $parentKey = 'pid')
     {
-        $sql = $this->getChildrenIDSql($pid, $parentKey);
+        $sql = $this->getChildrenIDSql($pid, $withPid, $parentKey);
 
         $result = $this->withTrashed()->table($sql . ' as t')->column('t.id');
-
-        if ($withPid) {
-            array_unshift($result, $pid);
-        }
 
         return $result;
     }
@@ -522,12 +518,15 @@ class BaseModel extends Model
     /**
      * 获取无限极分类的父类所有下级ID SQL
      * @param $pid
+     * @param boolean $withPid
      * @param string $parentKey
      * @return string
      */
-    public function getChildrenIDSql($pid, $parentKey = 'pid')
+    public function getChildrenIDSql($pid, $withPid = false, $parentKey = 'pid')
     {
         $table = $this->getTable();
+
+        $pidSql = $withPid ? '' : "AND t2.id != {$pid}";
 
         $sql = "(SELECT t2.id
                     FROM(
@@ -539,7 +538,7 @@ class BaseModel extends Model
                          WHERE @ids IS NOT NULL
                         ) t1
                     JOIN {$table} t2
-                    ON FIND_IN_SET(t2.id, t1.parent_ids)  AND t2.id != {$pid})";
+                    ON FIND_IN_SET(t2.id, t1.parent_ids)  {$pidSql})";
 
         return $sql;
     }

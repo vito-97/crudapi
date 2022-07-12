@@ -34,7 +34,7 @@ class SystemRoleSave extends Save
             }
 
             //取交集
-            $allowId = array_intersect($authId, $ids);
+            $allowId = array_intersect($ids, $authId);
 
             $params['auth_ids'] = $allowId;
             $params['admin_id'] = $this->user->uid();
