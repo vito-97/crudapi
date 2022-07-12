@@ -18,7 +18,7 @@ class SystemRoleIndex extends Index
     //追加数据
     protected $appendCallback = [];
     //查询条件
-    protected $where = [['pid', '=', 0]];
+    protected $where = [];
     //字段
     protected $field = [];
     //排除字段
@@ -38,6 +38,9 @@ class SystemRoleIndex extends Index
         $map = [];
 
         $role = $this->user->getUserInfo()->role;
+
+        //获取指定PID的角色
+        $map[] = ['pid', '=', $role->isSuper() ? 0 : $role->id];
 
         //非超管只能获取自己添加的角色
         if (!$role->isSuper()) {

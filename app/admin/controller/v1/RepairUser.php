@@ -14,7 +14,7 @@ use app\logic\RepairUserLogic;
 
 class RepairUser extends BaseController
 {
-    protected $name = '运营商维护员';
+    protected $name = '维护员';
 
     protected $registerCurd = true;
 
