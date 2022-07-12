@@ -9,6 +9,7 @@
 namespace app\model;
 
 use app\common\Util;
+use app\model\traits\SiteScopeTrait;
 use app\model\traits\TreeTrait;
 use think\db\Query;
 use think\Model;
@@ -16,6 +17,7 @@ use think\Model;
 class SystemRole extends BaseModel
 {
     use TreeTrait;
+    use SiteScopeTrait;
 
     protected $hidden = ['delete_time'];
 

@@ -202,6 +202,21 @@ abstract class BaseController
     }
 
     /**
+     * 获取用户角色
+     * @return array|mixed
+     */
+    protected function getUserRole()
+    {
+        $user = $this->getUserinfo();
+
+        if ($user) {
+            return $user->role;
+        }
+
+        return [];
+    }
+
+    /**
      * 获取需要的数量
      * @param int $limit
      * @param string $type

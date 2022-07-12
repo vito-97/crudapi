@@ -12,5 +12,5 @@ namespace app\customer\curd;
 class Save extends \app\common\curd\Save
 {
     use AgentScopeTrait;
-    protected $userField = 'agent_id';
+    protected $userField = 'user_id';
 }

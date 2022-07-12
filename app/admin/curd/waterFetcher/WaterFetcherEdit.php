@@ -15,7 +15,7 @@ class WaterFetcherEdit extends Edit
     //查询条件
     protected $where = [];
     //关联
-    protected $with = [];
+    protected $with = ['customer'];
     //追加字段
     protected $append = [];
     //追加标签数据

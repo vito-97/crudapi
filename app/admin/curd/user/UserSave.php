@@ -24,6 +24,9 @@ class UserSave extends Save
 
     protected function saveMiddleware($next, $params)
     {
+        if (empty($params['site_id'])) {
+            $params['site_id'] = $this->getUserRole()->site_id;
+        }
         $params['add_ip'] = $this->request->ip();
 
         return $next($params);

@@ -19,5 +19,5 @@ class CustomerRead extends Read
     //条件
     protected $where = [];
     //关联
-    protected $with = [];
+    protected $with = ['water_company'];
 }

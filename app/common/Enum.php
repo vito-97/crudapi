@@ -67,6 +67,11 @@ class Enum
     const DEVICE_PAUSE_OFF_CODE = '0103000E0000';//结束暂停
     const DEVICE_STOP_CODE = '010300090001';//已结束
 
+    //居科乐
+    const SITE_ONE = 1;
+    //市政
+    const SITE_TWO = 2;
+
     const MODULE = [
         'api'           => '接口',
         'admin'         => '后台',

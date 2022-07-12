@@ -11,6 +11,7 @@ namespace app\model;
 
 use app\model\traits\LoginTrait;
 use app\model\traits\RoleTrait;
+use app\model\traits\SiteScopeTrait;
 use think\db\Query;
 use think\facade\Request;
 use think\Model;
@@ -18,6 +19,7 @@ use think\Model;
 class Admin extends BaseModel
 {
     use LoginTrait, RoleTrait;
+    use SiteScopeTrait;
 
     protected $hidden = ['password', 'delete_time'];
 

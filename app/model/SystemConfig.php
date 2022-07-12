@@ -10,10 +10,13 @@ namespace app\model;
 
 
 use app\common\Util;
+use app\model\traits\StringToArrayTrait;
 use think\db\Query;
 
 class SystemConfig extends BaseModel
 {
+    use StringToArrayTrait;
+
     protected $type = [
         'value' => 'json',
         'opts'  => 'json',
@@ -45,5 +48,15 @@ class SystemConfig extends BaseModel
         }
 
         return $value;
+    }
+
+    protected function setListAttr($value, $data)
+    {
+        return json_encode($this->stringToArray($value));
+    }
+
+    protected function setOptsAttr($value, $data)
+    {
+        return json_encode($this->stringToArray($value));
     }
 }

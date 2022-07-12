@@ -10,6 +10,7 @@ namespace app\model;
 
 use app\model\traits\CustomerWaterFetcherScopeTrait;
 use app\model\traits\DeviceTrait;
+use app\model\traits\SiteScopeTrait;
 use app\model\traits\UserTrait;
 
 class Flow extends BaseModel
@@ -17,4 +18,5 @@ class Flow extends BaseModel
     use UserTrait;
     use DeviceTrait;
     use CustomerWaterFetcherScopeTrait;
+    use SiteScopeTrait;
 }

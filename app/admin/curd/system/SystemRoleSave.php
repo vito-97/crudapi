@@ -20,7 +20,7 @@ class SystemRoleSave extends Save
     //追加数据
     protected $appendParams = [];
     //允许新增的数据字段
-    protected $field = ['name', 'key', 'mark', 'auth_ids'];
+    protected $field = ['name', 'site_id', 'key', 'mark', 'auth_ids'];
 
     protected function saveMiddleware($next, $params)
     {

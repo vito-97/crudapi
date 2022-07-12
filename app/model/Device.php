@@ -12,6 +12,7 @@ namespace app\model;
 use app\common\Message;
 use app\model\traits\AgentTrait;
 use app\model\traits\DisabledTrait;
+use app\model\traits\SiteScopeTrait;
 use app\model\traits\UserTrait;
 use think\db\Query;
 use think\Model;
@@ -20,6 +21,7 @@ class Device extends BaseModel
 {
     use AgentTrait;
     use DisabledTrait;
+    use SiteScopeTrait;
 
     protected $type = [
         'start_time' => 'timestamp',

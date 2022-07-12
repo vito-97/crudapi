@@ -19,7 +19,7 @@ class WaterCompanySave extends Save
     ];
     //追加数据
     protected $appendParams = [
-        'type' => User::AGENT_TYPE,
+        'type' => User::WATER_COMPANY_TYPE,
     ];
     //允许新增的数据字段
     protected $field = [];

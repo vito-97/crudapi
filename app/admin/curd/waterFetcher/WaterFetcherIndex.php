@@ -27,7 +27,7 @@ class WaterFetcherIndex extends Index
     //排除字段
     protected $withoutField = false;
     //关联
-    protected $with = [];
+    protected $with = ['customer'];
     /**
      * 需要查询条件的字段
      * 数据库字段和参数字段名不一样 'db_field' => 'param_field'

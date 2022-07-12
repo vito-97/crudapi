@@ -9,6 +9,7 @@ declare (strict_types=1);
 namespace app\model;
 
 use app\model\traits\UserScopeTrait;
+use app\model\traits\WaterCompanyTrait;
 use app\service\WechatService;
 use think\Model;
 
@@ -44,5 +45,14 @@ class Waterworks extends User
         }
 
         return true;
+    }
+
+    /**
+     * 关联水务公司
+     * @return \think\model\relation\BelongsTo
+     */
+    public function waterCompany()
+    {
+        return $this->belongsTo('WaterCompany', 'user_id', 'id')->field($this->waterCompanyField ?? 'id,nickname,username,status');
     }
 }

@@ -52,6 +52,7 @@ class SystemLogMiddleware
                 'ip'      => $request->ip(),
                 'ua'      => $request->server('http_user_agent'),
                 'user_id' => $user ? $user->uid() : 0,
+                'site_id' => $user ? $user->getUserInfo()->role->site_id : 0,
             ];
 
             if (config('web.system_log_queue')) {

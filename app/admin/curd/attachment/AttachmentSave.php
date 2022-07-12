@@ -40,9 +40,10 @@ class AttachmentSave extends Save
 
         $model = $this->getLogic()->getModel();
 
-        $detail = $model->where(['admin_id' => $params['admin_id'], 'sha1' => $params['sha1']])->append($this->append)->find();
+        $detail = $model->where(['admin_id' => $params['admin_id'], 'sha1' => $params['sha1']])->find();
 
         if ($detail) {
+            $this->formatModel($detail);
             throw new FileIsExistsException(['data' => ['detail' => $detail]]);
         }
 

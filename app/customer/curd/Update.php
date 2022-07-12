@@ -13,5 +13,5 @@ class Update extends \app\common\curd\Update
 {
     use AgentScopeTrait;
 
-    protected $userField = 'agent_id';
+    protected $userField = 'user_id';
 }

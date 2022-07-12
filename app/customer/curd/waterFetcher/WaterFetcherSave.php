@@ -6,16 +6,16 @@
 
 namespace app\customer\curd\waterFetcher;
 
-use app\customer\curd\Save;
 use app\common\Enum;
+use app\customer\curd\Save;
 use app\model\User;
-use app\validate\RepairUserValidate;
+use app\validate\WaterFetcherValidate;
 
 class WaterFetcherSave extends Save
 {
     //验证器
     protected $validate = [
-        RepairUserValidate::class => Enum::VALID_SAVE_SCENE,
+        WaterFetcherValidate::class => Enum::VALID_SAVE_SCENE,
     ];
     //追加数据
     protected $appendParams = ['username' => '', 'platform' => User::ADD_PLATFORM];
@@ -27,7 +27,7 @@ class WaterFetcherSave extends Save
     protected function saveMiddleware($next, $params)
     {
         $params['add_ip']   = $this->request->ip();
-        $params['type']     = User::REPAIR_TYPE;
+        $params['type']     = User::WATER_FETCHER_TYPE;
 
         return $next($params);
     }

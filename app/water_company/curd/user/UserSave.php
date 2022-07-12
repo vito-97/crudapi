@@ -27,6 +27,7 @@ class UserSave extends Save
     {
         $params['add_ip']   = $this->request->ip();
         $params['agent_id'] = $this->user->uid();
+        $params['site_id']  = Enum::SITE_TWO;
 
         return $next($params);
     }

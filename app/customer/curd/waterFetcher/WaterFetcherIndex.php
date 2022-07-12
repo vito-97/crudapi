@@ -6,9 +6,9 @@
 
 namespace app\customer\curd\waterFetcher;
 
-use app\customer\curd\Index;
 use app\common\Enum;
-use app\validate\RepairUserValidate;
+use app\customer\curd\Index;
+use app\validate\WaterFetcherValidate;
 
 class WaterFetcherIndex extends Index
 {
@@ -22,14 +22,14 @@ class WaterFetcherIndex extends Index
     //查询条件
     protected $where = [];
     //字段
-    protected $field = ['money', 'flow', 'used_flow', 'invitation_code', 'spread_count', 'is_vip', 'pay_count'];
+    protected $field = ['invitation_code', 'spread_count', 'is_vip', 'pay_count'];
     //排除字段
     protected $withoutField = true;
 
     protected $queryField = ['sex', 'status', 'type', 'platform'];
 
     protected $validate = [
-        RepairUserValidate::class => Enum::VALID_LIST_SCENE,
+        WaterFetcherValidate::class => Enum::VALID_LIST_SCENE,
     ];
 
     protected $labelCallback = [

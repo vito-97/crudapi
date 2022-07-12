@@ -747,7 +747,7 @@ class BaseModel extends Model
     {
         $fields = $query->getTableFields();
         if (in_array($field, $fields)) {
-            $query->where($field, $value);
+            $query->where($field, is_array($value) ? 'IN' : '=', $value);
         }
     }
 

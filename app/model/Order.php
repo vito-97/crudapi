@@ -16,6 +16,7 @@ use app\common\Message;
 use app\model\traits\AgentTrait;
 use app\model\traits\DeviceTrait;
 use app\model\traits\ProductTrait;
+use app\model\traits\SiteScopeTrait;
 use app\model\traits\UserTrait;
 use app\common\Util;
 use think\db\Query;
@@ -27,6 +28,7 @@ class Order extends BaseModel
     use UserTrait, AgentTrait;
     use DeviceTrait;
     use ProductTrait;
+    use SiteScopeTrait;
 
     protected $scene = [
         'api'    => [

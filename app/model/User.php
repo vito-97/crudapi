@@ -12,6 +12,7 @@ namespace app\model;
 use app\model\traits\AgentTrait;
 use app\model\traits\LoginTrait;
 use \app\model\traits\RoleTrait;
+use app\model\traits\SiteScopeTrait;
 use app\model\traits\UserScopeTrait;
 use think\db\Query;
 
@@ -20,6 +21,8 @@ class User extends BaseModel
     use LoginTrait, RoleTrait, AgentTrait;
 
     use UserScopeTrait;
+
+    use SiteScopeTrait;
 
     const USER_TYPE = self::NORMAL_TYPE;
 

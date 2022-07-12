@@ -6,15 +6,15 @@
 
 namespace app\customer\curd\waterFetcher;
 
-use app\customer\curd\Update;
 use app\common\Enum;
-use app\validate\RepairUserValidate;
+use app\customer\curd\Update;
+use app\validate\WaterFetcherValidate;
 
 class WaterFetcherUpdate extends Update
 {
     //验证器
     protected $validate = [
-        RepairUserValidate::class => Enum::VALID_SAVE_SCENE,
+        WaterFetcherValidate::class => Enum::VALID_SAVE_SCENE,
     ];
     //允许新增的数据字段
     protected $field = ['agent_id', 'type', 'platform', 'money', 'flow'];
