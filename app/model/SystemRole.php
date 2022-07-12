@@ -42,6 +42,32 @@ class SystemRole extends BaseModel
         self::destroy(['pid' => $model->id]);
     }
 
+    /**
+     * 写入之前事件
+     * @param Model $model
+     * @return mixed|void
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
+     * @throws \think\db\exception\ModelNotFoundException
+     */
+    public static function onBeforeWrite(Model $model)
+    {
+        $pid = $model->pid ?? 0;
+
+        if ($pid) {
+            $parent          = self::where('id', $pid)->find();
+            //添加的权限只能是上级有的权限
+            $model->auth_ids = array_intersect($parent->auth_ids_array, $model->auth_ids_array);
+        }
+    }
+
+    /**
+     * 更新之后事件
+     * @param Model $model
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
+     * @throws \think\db\exception\ModelNotFoundException
+     */
     public static function onAfterUpdate(Model $model): void
     {
         self::checkChildAuth($model);
@@ -56,12 +82,11 @@ class SystemRole extends BaseModel
      */
     public static function checkChildAuth($model)
     {
-        $id    = $model->id;
-        $auth  = $model->auth_ids_array;
-        $class = new static();
+        $id   = $model->id;
+        $auth = $model->auth_ids_array;
 
         //获取下级角色
-        $result = $class->where('pid', $id)->select();
+        $result = self::where('pid', $id)->select();
 
         foreach ($result as $item) {
             //获取交集

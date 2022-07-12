@@ -615,6 +615,7 @@ class BaseModel extends Model
     protected function setArrayToStringAttr($value, $char = ',')
     {
         if (!is_string($value)) {
+            sort($value);
             $value = join($char, $value);
         }
 
