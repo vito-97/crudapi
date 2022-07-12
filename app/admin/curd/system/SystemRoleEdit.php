@@ -39,7 +39,14 @@ class SystemRoleEdit extends Edit
 
     public function getAuthLabel()
     {
-        $role = $this->user->getUserInfo()->role;
+        $detail = $this->getData('detail');
+
+        //有上级则获取上级的权限列表
+        if ($detail && $detail->pid) {
+            $role = $this->getLogic()->where('id', $detail->pid)->find();
+        } else {
+            $role = $this->user->getUserInfo()->role;
+        }
 
         $result = $role->auth_tree;
 
