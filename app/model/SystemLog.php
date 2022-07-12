@@ -10,6 +10,7 @@ namespace app\model;
 
 use app\common\Enum;
 use app\model\traits\IpTrait;
+use app\model\traits\SiteScopeTrait;
 use app\model\traits\UserTrait;
 use think\db\Query;
 
@@ -17,6 +18,7 @@ class SystemLog extends BaseModel
 {
     use UserTrait;
     use IpTrait;
+    use SiteScopeTrait;
 
     protected $moduleEnum = Enum::MODULE;
 

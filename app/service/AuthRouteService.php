@@ -18,7 +18,7 @@ class AuthRouteService
      * @var string[]
      */
     protected $onlyModule = [
-        'admin', 'api', 'agent', 'repair_user', 'coupon_user',
+        'admin',
     ];
 
     /**
@@ -39,7 +39,7 @@ class AuthRouteService
      * 公共方法对应的名称
      * @var string[]
      */
-    protected $commomMethodName = [
+    protected $commonMethodName = [
         'index'  => '%s列表',
         'save'   => '添加%s',
         'update' => '修改%s',
@@ -95,14 +95,7 @@ class AuthRouteService
      */
     public function getClassNameByRoute($route)
     {
-        $array  = explode('/', str_replace('.', '/', $route));
-        $module = array_shift($array);
-
-        $string = 'app/' . $module . '/controller/' . join('/', $array);
-
-        $className = str_replace('/', '\\', dirname($string));
-
-        $refection  = new \ReflectionClass($className);
+        $refection  = $this->getReflectionClassByRoute($route);
         $properties = $refection->getDefaultProperties();
 
         $controlName = basename($route);
@@ -122,14 +115,10 @@ class AuthRouteService
      */
     public function getMethodNameByRoute($route)
     {
-        $name   = $route;
-        $array  = explode('/', str_replace('.', '/', $route));
-        $module = array_shift($array);
-
-        $string = 'app/' . $module . '/controller/' . join('/', $array);
-
-        $className = str_replace('/', '\\', dirname($string));
-        $method    = basename($string);
+        $name      = $route;
+        $info      = $this->getRouteInfo($route);
+        $className = $info['class'];
+        $method    = $info['method'];
 
         $refection  = new \ReflectionClass($className);
         $properties = $refection->getDefaultProperties();
@@ -140,7 +129,7 @@ class AuthRouteService
             $controlName = $properties['name'];
         }
 
-        $methodName = array_merge($this->commomMethodName, $properties['methodName'] ?? []);
+        $methodName = array_merge($this->commonMethodName, $properties['methodName'] ?? []);
 
         if (isset($methodName[$method])) {
             $name = sprintf($methodName[$method], $controlName);
@@ -157,16 +146,31 @@ class AuthRouteService
      */
     public function getReflectionClassByRoute($route)
     {
+        $info = $this->getRouteInfo($route);
+
+        $className = $info['class'];
+
+        $refection = new \ReflectionClass($className);
+
+        return $refection;
+    }
+
+    /**
+     * 获取路由信息
+     * @param $route
+     * @return array
+     */
+    public function getRouteInfo($route)
+    {
         $array  = explode('/', str_replace('.', '/', $route));
         $module = array_shift($array);
 
         $string = 'app/' . $module . '/controller/' . join('/', $array);
 
         $className = str_replace('/', '\\', dirname($string));
+        $method    = basename($string);
 
-        $refection = new \ReflectionClass($className);
-
-        return $refection;
+        return ['class' => $className, 'method' => $method, 'module' => $module];
     }
 
     /**
@@ -222,6 +226,7 @@ class AuthRouteService
 
         foreach ($array as $module => $controllers) {
             foreach ($controllers as $class) {
+                //获取所有方法
                 $methods = $this->getClassMethods($class);
 
                 foreach ($methods as $method) {
@@ -261,12 +266,22 @@ class AuthRouteService
         $curd = [];
 
         if (!empty($properties['curd'])) {
+            //手动指定CURD
             $curd = array_keys($properties['curd']);
         } elseif (!empty($properties['registerCurd'])) {
+            //自动注册CURD
             if (true === $properties['registerCurd']) {
                 $curd = Enum::CURD;
             } else {
                 $curd = $properties['registerCurd'];
+            }
+        } else {
+            //判断类里是否有自己重写的CURD方法
+            foreach (Enum::CURD as $name) {
+                $method = $reflection->getMethod($name);
+                if ($method->class === $class) {
+                    $curd[] = $name;
+                }
             }
         }
 
