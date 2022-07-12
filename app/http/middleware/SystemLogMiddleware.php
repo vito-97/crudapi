@@ -23,9 +23,10 @@ class SystemLogMiddleware
 
         //后置中间件记录访问
         if (!$request->isOptions()) {
+            $rule               = $request->rule()->getRule();
             $route              = get_route();
             $service            = new AuthRouteService();
-            $name               = $service->getMethodNameByRoute($route);
+            $name               = $rule ? $service->getMethodNameByRoute($route) : '404';
             $request->routeName = $name;
 
             $this->record($request);
@@ -41,11 +42,12 @@ class SystemLogMiddleware
     public function record(Request $request)
     {
         if ($request->routeName) {
-            $user = $request->getUser();
-            $data = [
-                'title'   => $request->routeName,
+            $user  = $request->getUser();
+            $is404 = '404' === $request->routeName;
+            $data  = [
+                'title'   => $is404 ? '未定义的路由地址' : $request->routeName,
                 'module'  => app()->http->getName(),
-                'route'   => get_route(),
+                'route'   => $is404 ? '' : get_route(),
                 'url'     => $request->baseUrl(),
                 'query'   => http_build_query($request->get()),
                 'method'  => $request->method(),

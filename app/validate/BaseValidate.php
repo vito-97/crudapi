@@ -161,8 +161,15 @@ abstract class BaseValidate extends Validate
      */
     protected function isPositiveInteger($value, $rule = '', $data = [], $field = '')
     {
-        $num = $value + 0;
-        $n   = 1;
+        if (is_numeric($value)) {
+            $num = $value + 0;
+        } else {
+            if (preg_match('/[^\d]/', $value)) {
+                return ':attribute不是整数数字';
+            }
+            $num = (int)$value;
+        }
+        $n = 1;
         if ($rule === 'zero') {
             $n = 0;
         }

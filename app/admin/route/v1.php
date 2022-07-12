@@ -24,6 +24,8 @@ Route::group('<api_version>', function () {
         Route::get('info', 'info');
     })->prefix('Admin/');
     Route::resource('admin', 'Admin');
+    //更新个人信息接口
+    Route::put('profile', 'Profile/update');
     //代理
     Route::resource('agent', 'Agent');
     //出厂设置员
