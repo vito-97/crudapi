@@ -26,7 +26,7 @@ class SystemRoleIndex extends Index
 
     protected $with = ['children'];
 
-    protected $append = ['auth_tree'];
+    protected $append = ['auth_tree', 'children.auth_tree'];
 
 //    protected $format = 'tree';
 
