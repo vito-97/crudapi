@@ -8,7 +8,7 @@
 
 namespace app\model;
 
-
+use app\model\traits\AvatarAttrTrait;
 use app\model\traits\LoginTrait;
 use app\model\traits\RoleTrait;
 use app\model\traits\SiteScopeTrait;
@@ -20,6 +20,7 @@ class Admin extends BaseModel
 {
     use LoginTrait, RoleTrait;
     use SiteScopeTrait;
+    use AvatarAttrTrait;
 
     protected $hidden = ['password', 'delete_time'];
 

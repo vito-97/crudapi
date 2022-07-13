@@ -69,12 +69,4 @@ class AdminValidate extends BaseValidate
     {
         return $this->only($this->getSceneOnly(__FUNCTION__))->remove('username', 'unique');
     }
-
-    protected function sceneProfile()
-    {
-        $this->only($this->getSceneOnly(__FUNCTION__));
-        $this->removeOnlyRule([], 'require|requireWithout');
-
-        return $this;
-    }
 }

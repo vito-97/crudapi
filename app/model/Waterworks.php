@@ -19,6 +19,8 @@ class Waterworks extends User
 
     const USER_TYPE = self::WATERWORKS_TYPE;
 
+    protected $useSiteScope = false;
+
     public static function onAfterWrite(Model $model): void
     {
         self::createRepairRegisterQrcode($model);

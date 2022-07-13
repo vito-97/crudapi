@@ -16,6 +16,8 @@ class Customer extends User
 
     const USER_TYPE = self::CUSTOMER_TYPE;
 
+    protected $useSiteScope = false;
+
     /**
      * 关联水务公司
      * @return \think\model\relation\BelongsTo

@@ -10,6 +10,7 @@ namespace app\model;
 
 
 use app\model\traits\AgentTrait;
+use app\model\traits\AvatarAttrTrait;
 use app\model\traits\LoginTrait;
 use \app\model\traits\RoleTrait;
 use app\model\traits\SiteScopeTrait;
@@ -23,6 +24,8 @@ class User extends BaseModel
     use UserScopeTrait;
 
     use SiteScopeTrait;
+
+    use AvatarAttrTrait;
 
     const USER_TYPE = self::NORMAL_TYPE;
 

@@ -15,6 +15,8 @@ trait SiteScopeTrait
 {
     public function scopeSite(Query $query, $id)
     {
-        $this->scopeFiled($query, 'site_id', [0, $id]);
+        if (!isset($this->useSiteScope) || $this->useSiteScope) {
+            $this->scopeFiled($query, 'site_id', [0, $id]);
+        }
     }
 }

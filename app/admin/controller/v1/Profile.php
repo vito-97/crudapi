@@ -20,6 +20,8 @@ class Profile extends BaseController
         'update' => '更新%s',
     ];
 
+    const NOT_NEED_AUTH = ['update'];
+
     protected function initialize()
     {
         $this->logic = new AdminLogic();
@@ -40,7 +42,7 @@ class Profile extends BaseController
         $params = AdminValidate::getDataByRule('profile');
 
         foreach ($params as $key => $val) {
-            if (!$val) {
+            if (!$val && in_array($key, ['password'])) {
                 unset($params[$key]);
             }
         }
@@ -53,6 +55,6 @@ class Profile extends BaseController
             'detail' => $user,
         ];
 
-        return $this->success($response);
+        return $this->success($response, '更新个人信息成功');
     }
 }

@@ -14,5 +14,7 @@ class WaterCompany extends User
 {
     use UserScopeTrait;
 
+    protected $useSiteScope = false;
+
     const USER_TYPE = self::WATER_COMPANY_TYPE;
 }

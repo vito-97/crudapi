@@ -16,6 +16,8 @@ class WaterFetcher extends User
 
     const USER_TYPE = self::WATER_FETCHER_TYPE;
 
+    protected $useSiteScope = false;
+
     public function customer()
     {
         return $this->belongsTo('Customer', 'user_id', 'id')->field($this->customerField ?? 'id,nickname,username,status');
