@@ -89,9 +89,10 @@ class CouponCard extends BaseModel
      */
     public static function onAfterDelete(Model $model): void
     {
-    /*    if (!$model->is_use)
+        //未使用的将优惠券的使用数量减一
+        if (!$model->is_use)
             if ($model->coupon && !$model->coupon->delete_time)
-                $model->coupon->removeUse();*/
+                $model->coupon->removeUse();
     }
 
     /**

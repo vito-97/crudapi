@@ -15,7 +15,7 @@ class CouponCardEdit extends Edit
     //查询条件
     protected $where = [];
     //关联
-    protected $with = null;
+    protected $with = ['user', 'coupon'];
     //追加字段
     protected $append = [];
     //追加数据回调

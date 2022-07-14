@@ -26,7 +26,7 @@ class CashCouponCardIndex extends Index
     //排除字段
     protected $withoutField = false;
 
-    protected $with = ['user', 'coupon'];
+    protected $with = ['user', 'coupon', 'agent'];
 
     protected $validate = [
         CashCouponCardValidate::class => Enum::VALID_LIST_SCENE,
