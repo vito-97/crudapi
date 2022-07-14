@@ -41,7 +41,7 @@ class DeviceControlService
         'clear_flow'          => '010600020000280a',//清除使用流量
         'adverts_light_open'  => '00cc0001',
         'adverts_light_close' => '00cc0000',
-        'pause_timing'        => '010600D309607E4B',
+        'finish_timeout'      => '00D3',
     ];
 
     protected static $lastControlTime = 0;
@@ -231,6 +231,23 @@ class DeviceControlService
     }
 
     /**
+     * 设置自动结算定时器的定时时间
+     * @param $n
+     * @return $this
+     * @throws \PhpMqtt\Client\Exceptions\DataTransferException
+     * @throws \PhpMqtt\Client\Exceptions\RepositoryException
+     */
+    public function finishTimeout($n)
+    {
+        //传入的数字需要*10
+        $hex = strtoupper(str_pad(dec2hex($n * 10), 4, '0', STR_PAD_LEFT));
+
+        $address = self::ONE_HEAD . self::ADDRESS['finish_timeout'] . $hex;
+
+        return $this->writePush($address);
+    }
+
+    /**
      * 初始化下发余额
      * @param $value
      * @return $this
@@ -349,6 +366,7 @@ class DeviceControlService
     protected function writePush($address, $crc = true)
     {
         $data = $address . ($crc ? crc16($address) : '');
+        //010600D309607E4B  240秒
 
         if ($this->queue) {
             $this->queuePush($data);

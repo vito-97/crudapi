@@ -150,6 +150,11 @@ abstract class BaseCurd
     protected $obj = [];
 
     /**
+     * @var string 模型场景值
+     */
+    protected $scene = '';
+
+    /**
      * @var array 需要追加数据的字段
      */
     protected $append = [];

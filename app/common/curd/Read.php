@@ -25,9 +25,6 @@ class Read extends BaseCurd
 
     protected $validate = [IDMustBeIntValidate::class];
 
-    //数据场景
-    protected $scene = '';
-
     protected $readMiddleware = ['readMiddleware'];
 
     /**

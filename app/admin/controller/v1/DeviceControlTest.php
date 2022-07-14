@@ -6,10 +6,9 @@
  * Time: 10:24
  */
 
-namespace app\factory_user\controller\v1;
+namespace app\admin\controller\v1;
 
-
-use app\factory_user\controller\BaseController;
+use app\admin\controller\BaseController;
 use app\logic\DeviceControlTestLogic;
 use app\validate\DeviceControlTestValidate;
 
@@ -18,6 +17,20 @@ class DeviceControlTest extends BaseController
     protected $name = '设备控制测试';
 
     protected $validScene = 'imei';
+
+    protected $methodName = [
+        'clear'         => '清除状态',
+        'flow'          => '下发余额',
+        'temperature'   => '设置防冻温度',
+        'pulse'         => '设置脉冲参数',
+        'start'         => '启动设备',
+        'pause'         => '暂停设备',
+        'finish'        => '停止设备',
+        'qrcode'        => '设置二维码',
+        'deviceNo'      => '设置设备编号',
+        'finishTimeout' => '设置暂停自动结算时间',
+        'advertsLight'  => '开/关 广告灯',
+    ];
 
     protected function initialize()
     {

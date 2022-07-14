@@ -90,17 +90,24 @@ class DeviceControlTestLogic extends BaseLogic
         return $this;
     }
 
+    public function finishTimeout($imei, $n)
+    {
+        $this->service($imei)->finishTimeout((int)$n);
+        $this->updateDevice($imei, ['finish_timeout' => $n]);
+        return $this;
+    }
+
     public function temperature($imei, $n)
     {
         $this->service($imei)->writeTemperature((int)$n);
-        $this->updateDevice($imei,['temperature' => $n]);
+        $this->updateDevice($imei, ['temperature' => $n]);
         return $this;
     }
 
     public function pulse($imei, $n)
     {
         $this->service($imei)->writePulse((int)$n);
-        $this->updateDevice($imei,['l_to_pulse' => $n]);
+        $this->updateDevice($imei, ['l_to_pulse' => $n]);
         return $this;
     }
 
@@ -125,7 +132,7 @@ class DeviceControlTestLogic extends BaseLogic
     public function advertsLight($imei, $status)
     {
         $this->service($imei)->writeAdvertsLight($status);
-        $this->updateDevice($imei,['adverts_light' => $status ? 1: 0]);
+        $this->updateDevice($imei, ['adverts_light' => $status ? 1 : 0]);
         return $this;
     }
 

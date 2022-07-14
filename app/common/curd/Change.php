@@ -28,8 +28,6 @@ class Change extends BaseCurd
     protected $_middleware = ['queryMiddleware'];
 
     protected $saveMiddleware = ['saveMiddleware'];
-    //数据显示的场景
-    protected $scene = '';
 
     /**
      * @var array 排除的ID

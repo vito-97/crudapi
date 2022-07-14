@@ -62,6 +62,12 @@ Route::group('<api_version>', function () {
     })->prefix('Device/');
 
     Route::resource('device', 'Device');
+    //设备控制测试
+    Route::group('device_control_test', function () {
+
+        Route::post('<action>', '<action>')->pattern(['action'=> 'finishTimeout|start|pause|finish|clear|flow|temperature|pulse|qrcode|deviceNo|advertsLight']);
+
+    })->prefix('DeviceControlTest/');
     //设备控制记录
     Route::resource('device_control', 'DeviceControl');
     //设备APP版本

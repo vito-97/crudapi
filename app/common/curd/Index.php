@@ -84,9 +84,6 @@ class Index extends BaseCurd
     //追加数据
     protected $append = [];
 
-    //数据场景
-    protected $scene = '';
-
     protected $mode = self::PAGE_MODE;
 
     protected $_middleware = [

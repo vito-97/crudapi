@@ -19,8 +19,6 @@ class Edit extends BaseCurd
     protected $with = null;
 
     protected $append = [];
-    //数据显示的场景
-    protected $scene = '';
 
     protected $_middleware = [
         'labelCallbackMiddleware',

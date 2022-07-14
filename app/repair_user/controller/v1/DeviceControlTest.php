@@ -79,6 +79,12 @@ class DeviceControlTest extends BaseController
         return $this->callControl(__FUNCTION__, $this->request->param('status'));
     }
 
+    public function finishTimeout()
+    {
+        $this->validScene = 'num';
+        return $this->callControl(__FUNCTION__, $this->request->param('num'));
+    }
+
     protected function callControl($name, ...$args)
     {
         DeviceControlTestValidate::batchCheck($this->validScene);

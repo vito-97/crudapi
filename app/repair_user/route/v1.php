@@ -17,7 +17,7 @@ Route::group('<api_version>', function () {
     //设备控制测试
     Route::group('device_control_test', function () {
 
-        Route::post('<action>', '<action>')->pattern(['action'=> 'start|pause|finish|clear|flow|temperature|pulse|qrcode|deviceNo|advertsLight']);
+        Route::post('<action>', '<action>')->pattern(['action'=> 'finishTimeout|start|pause|finish|clear|flow|temperature|pulse|qrcode|deviceNo|advertsLight']);
 
     })->prefix('DeviceControlTest/');
     //设备报修
