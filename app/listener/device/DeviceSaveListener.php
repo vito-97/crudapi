@@ -38,6 +38,11 @@ class DeviceSaveListener
                 $deviceControlService->writePulse($new['l_to_pulse']);
             }
 
+            //设置定时时间
+            if (!empty($new['finish_timeout']) && (!$old || empty($old['finish_timeout']) || $new['finish_timeout'] != $old['finish_timeout'])) {
+                $deviceControlService->finishTimeout($new['finish_timeout']);
+            }
+
             if ($isNew) {
                 //设置设备号
                 if (!empty($new['device_no'])) {

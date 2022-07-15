@@ -173,6 +173,11 @@ class DeviceSubscribeMessageListener
 
     public function stop(\app\Request $request, $deviceNo, $hex)
     {
+        if (strpos($hex, Enum::DEVICE_PAUSE_ON_CODE) !== false) {
+            $this->e('结算指令携带暂停指令，不予处理');
+            return;
+        }
+
         $this->e('已结算');
         if ($this->control) {
             $user   = $this->getUser();

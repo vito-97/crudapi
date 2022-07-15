@@ -89,8 +89,8 @@ class DeviceUpdateFlowListener extends DeviceHandleListener
                 'flow'      => $realUseFlow,
                 'site_id'   => $this->device->site_id,
             ]);
+            $this->e("已使用流量{$useFlow}L");
         }
-        $this->e("已使用流量{$useFlow}L");
 
 //        for($i=1;$i<=3;$i++){
         $this->e('正在初始化余额和清空流量');

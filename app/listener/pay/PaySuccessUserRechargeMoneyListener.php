@@ -26,7 +26,8 @@ class PaySuccessUserRechargeMoneyListener
                 $order->user->money = ['inc', $order->money];
             }
             if ($order->flow > 0) {
-                $order->user->flow = ['inc', $order->flow];
+//                $order->user->flow = ['inc', $order->flow];
+                $order->user->flow = $order->flow;
             }
             $order->user->pay_count = ['inc', 1];
             $order->user->save();
