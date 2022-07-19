@@ -134,7 +134,7 @@ class Order extends BaseController
     {
         PayValidate::batchCheck('order');
 
-        $response = (new PayLogic())->pay($orderNo);
+        $response = ['pay_url' => $this->getPayUrl($orderNo)];
 
         return $this->success($response);
     }

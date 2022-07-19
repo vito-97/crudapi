@@ -169,6 +169,9 @@ class Test extends BaseController
         } elseif ('close' == $mode) {
             $controlService->close();
             return success('已强制结束');
+        } elseif ('clear_finish_flow' == $mode) {
+            $controlService->clearFinishFlow();
+            return success('已清除结算流量');
         } else {
             return success('未知操作');
         }

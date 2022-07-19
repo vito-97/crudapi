@@ -11,6 +11,7 @@ namespace app\common\curd;
 
 use app\exception\ErrorException;
 use app\exception\InvalidArgumentException;
+use think\facade\Db;
 use think\Model;
 
 class Save extends BaseCurd
@@ -47,27 +48,36 @@ class Save extends BaseCurd
 //            $field = $this->getAllowField();
 //            $model = $model->allowField($field);
 //        }
-        $detail = $this->then($this->saveMiddleware, function ($params) use ($model) {
+        // 启动事务
+        Db::startTrans();
+        try {
+            $detail = $this->then($this->saveMiddleware, function ($params) use ($model) {
 
-            if ($params instanceof Model) {
-                $detail = $params;
-                $detail->save();
-            } else if (is_array($params)) {
-                $detail = $model->add($params, $this->together);
-            } else {
-                throw new ErrorException('新增参数必须是数组或对象');
+                if ($params instanceof Model) {
+                    $detail = $params;
+                    $detail->save();
+                } else if (is_array($params)) {
+                    $detail = $model->add($params, $this->together);
+                } else {
+                    throw new ErrorException('新增参数必须是数组或对象');
+                }
+
+                return $detail;
+            }, $params);
+
+            if ($detail) {
+                $this->model = $detail;
+                $this->setData('detail', $detail);
             }
+            //提交事务
+            Db::commit();
 
-
-            return $detail;
-        }, $params);
-
-        if ($detail) {
-            $this->model = $detail;
-            $this->setData('detail', $detail);
+            return !!$detail;
+        } catch (\Throwable $e) {
+            //回滚事务
+            Db::rollback();
+            throw $e;
         }
-
-        return !!$detail;
     }
 
     /**

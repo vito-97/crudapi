@@ -134,25 +134,24 @@ class Order extends BaseController
     {
         PayValidate::batchCheck('order');
 
-        $response = (new PayLogic())->pay($orderNo);
+        $response = ['pay_url' => $this->getPayUrl($orderNo)];
 
         return $this->success($response);
     }
 
-//同步回调
+    //同步回调
     public function callback()
     {
-
         $params = $this->getParams();
 
 //        Log::write('支付同步回调' . json_encode($params));
         \app\model\Order::withScope(false);
-        $pay    = new PayLogic();
-        $order  = $pay->callback($params);
-        $device = $order->device;
+        $pay   = new PayLogic();
+        $order = $pay->callback($params);
+
         $query  = ['order_no' => $order->order_no];
 
-        $url = client_url('pages/order/callback', $query, 'waterworks_host');
+        $url = client_url('pages/order/callback', $query, 'client_host');
         return redirect($url);
     }
 
@@ -167,6 +166,7 @@ class Order extends BaseController
     {
         $payLogic = new PayLogic();
 
+        //水厂端为PC端，手机扫码支付后没必要返回水厂端
         $url = Util::url('/waterworks/v1/order/callback');
         return $payLogic->getPayUrl($orderNo, $url);
     }

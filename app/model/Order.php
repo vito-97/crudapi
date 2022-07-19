@@ -32,7 +32,7 @@ class Order extends BaseModel
 
     protected $scene = [
         'api'    => [
-            'hidden' => ['channel_trade_no', 'user_id', 'agent_id', 'product_id', 'pay_type', 'mark', 'type', 'allow_refund', 'delete_time'],
+            'hidden' => ['channel_trade_no', 'user_id', 'agent_id', 'product_id', 'pay_type', 'mark', 'allow_refund', 'delete_time'],
             'append' => ['is_pay', 'device', 'status_desc', 'channel_type_desc'],
         ],
         'status' => [

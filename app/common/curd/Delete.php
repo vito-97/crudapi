@@ -10,6 +10,7 @@ namespace app\common\curd;
 
 use app\exception\DataNotFoundException;
 use app\validate\IDMustBeIntArrayValidate;
+use think\facade\Db;
 use think\Model;
 
 class Delete extends BaseCurd
@@ -41,13 +42,20 @@ class Delete extends BaseCurd
 
         //循环删除
         foreach ($objs as $obj) {
-            //删除数据
-            $this->then($this->deleteMiddleware, function (Model $obj) {
-                $logic = $this->getLogic();
-                $args  = $this->getQueryArgs(['where', 'together']);
+            Db::startTrans();
+            try {
+                //删除数据
+                $this->then($this->deleteMiddleware, function (Model $obj) {
+                    $logic = $this->getLogic();
+                    $args  = $this->getQueryArgs(['where', 'together']);
 
-                return $logic->deleteByID($obj, $args);
-            }, $obj);
+                    return $logic->deleteByID($obj, $args);
+                }, $obj);
+                Db::commit();
+            } catch (\Throwable $e) {
+                Db::rollback();
+                throw $e;
+            }
         }
 
         return true;

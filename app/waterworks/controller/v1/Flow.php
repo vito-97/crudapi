@@ -55,10 +55,12 @@ class Flow extends BaseController
         $flow  = $this->logic->$sumMethod('flow', $where, $args);
         $money = $orderLogic->$sumMethod('`pay_price` - `refund_money`', $orderWhere, $args);
 
-        $result = $flow;
+        $result         = $flow;
+        $result['list'] = [];
 
-        foreach ($result['list'] as $key => $item) {
-            $result['list'][$key] = [
+        foreach ($flow['list'] as $key => $item) {
+            $result['list'][] = [
+                'time'  => $key,
                 'flow'  => $item,
                 'money' => $money['list'][$key],
             ];

@@ -41,7 +41,7 @@ class PayLogic extends BaseLogic
      * @throws \app\exception\ErrorException
      * @throws \app\exception\DataNotFoundException
      */
-    public function getPayUrl($orderNo, $returnUrl = '', $notifyUrl = '')
+    public function getPayUrl($orderNo, $returnUrl = null, $notifyUrl = null)
     {
         $order = $this->getOrder($orderNo);
         $order->checkCanPay();
@@ -52,7 +52,7 @@ class PayLogic extends BaseLogic
 //            'type' => config('web.payment.default'),
         ];
 //        $returnUrl = $returnUrl ?: Util::url('/api/' . $this->API_VERSION . '/pay/callback', $query);
-        $returnUrl = $returnUrl ?: client_url('pages/order/order');
+        $returnUrl = !is_null($returnUrl) ? $returnUrl : client_url('pages/order/order');
         $notifyUrl = $notifyUrl ?: Util::url('/api/' . $this->API_VERSION . '/pay/notify', $query);
 
         $params = $payService->getParams([

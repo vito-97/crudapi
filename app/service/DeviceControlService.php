@@ -32,13 +32,14 @@ class DeviceControlService
         'close1'              => '010600140000C9CE',//强制结束
         'open2'               => '01050000FF8C3A',
         'close2'              => '0105000000CDCA',
-        'set_pulse'           => '00c800',//设置脉冲
+        'set_pulse'           => '00c8',//设置脉冲
         'set_temperature'     => '020200',//设置温度
         'set_qrcode_url'      => '0500000D1A',//设置二维码地址
         'set_device_no'       => '0600000306',//设置设备号
         'clear_status'        => '01050FA200006F3C',//清除状态
         'init'                => '01060009000059C8',//清除状态
         'clear_flow'          => '010600020000280a',//清除使用流量
+        'clear_finish_flow'   => '010600640000',//清除结算余额
         'adverts_light_open'  => '00cc0001',
         'adverts_light_close' => '00cc0000',
         'finish_timeout'      => '00D3',
@@ -138,6 +139,15 @@ class DeviceControlService
         $address = self::ONE_HEAD . self::ADDRESS[$key];
 
         $this->writeLog(($status ? '开' : '关') . '广告灯', $address);
+
+        return $this->writePush($address);
+    }
+
+    public function clearFinishFlow()
+    {
+        $address = self::ADDRESS['clear_finish_flow'];
+
+        $this->writeLog('清空结算余额', $address);
 
         return $this->writePush($address);
     }
@@ -324,7 +334,7 @@ class DeviceControlService
      */
     public function writePulse(int $value)
     {
-        $address = self::ONE_HEAD . self::ADDRESS['set_pulse'] . dec2hex($value);
+        $address = self::ONE_HEAD . self::ADDRESS['set_pulse'] . str_pad(dec2hex($value), 4, '0', STR_PAD_LEFT);
 
         $this->writeLog('脉冲参数' . $value, $address);
 

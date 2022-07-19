@@ -32,7 +32,7 @@ class DeviceService
             $id = $logic->getModel()->where('device_no', $deviceNo)->cache(60)->value('id') ?: 0;
 
             return $id;
-        },false);
+        }, false);
 
         return $id;
     }
@@ -54,7 +54,7 @@ class DeviceService
             $value = $logic->getModel()->where('imei', $imei)->cache(60)->value('device_no') ?: 0;
 
             return $value;
-        },false);
+        }, false);
 
         return $value;
     }
@@ -105,7 +105,7 @@ class DeviceService
             }
 
             return $detail;
-        },false);
+        }, false);
 
         if ($data) {
             if (isset($data['create_time']) && is_string($data['create_time'])) {
@@ -116,6 +116,24 @@ class DeviceService
             }
             $data = new DeviceControl($data);
         }
+
+        return $data;
+    }
+
+    /**
+     * 设备是否下发流量
+     * @param $deviceNo
+     * @param null $data
+     * @return int|mixed|null
+     */
+    public function deviceIsSetFlow($deviceNo, $data = null)
+    {
+        $table = __FUNCTION__;
+        $key   = $deviceNo;
+
+        $data = RedisStoreService::tableRemember($table, $key, $data, function () use ($deviceNo) {
+            return false;
+        }, true);
 
         return $data;
     }

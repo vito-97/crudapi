@@ -10,6 +10,7 @@ namespace app\logic;
 
 
 use app\exception\DataNotFoundException;
+use app\model\Member;
 use app\model\Product;
 
 class ProductLogic extends BaseLogic
@@ -51,9 +52,15 @@ class ProductLogic extends BaseLogic
                 $deviceID = [$device->id];
             }
 
-            $agentID[] = $device->agent_id;
-        }
+            $user = Member::cache(60)->find($device->agent_id);
 
+            if (!$user->isEmpty()) {
+                //水厂则取上级水务公司
+                $agentID[] = $user->type === Member::WATERWORKS_TYPE ? $user->user_id : $user->id;
+            } else {
+                $agentID[] = $device->agent_id;
+            }
+        }
 
         $productLogic = new ProductLogic();
         $args         = [

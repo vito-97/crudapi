@@ -13,6 +13,7 @@ use app\exception\EmptyParamsException;
 use app\exception\ParamErrorException;
 use app\exception\ValidateException;
 use app\validate\ChangeCurdValidate;
+use think\facade\Db;
 use think\Model;
 
 class Change extends BaseCurd
@@ -50,13 +51,24 @@ class Change extends BaseCurd
             throw new EmptyParamsException();
         }
 
-        foreach ($objs as $obj) {
-            $this->formatModel($obj);
 
-            $this->then($this->saveMiddleware, function (Model $obj, array $params) {
-                $logic = $this->getLogic();
-                return $logic->updateByID($obj, $params);
-            }, $obj, $params);
+        foreach ($objs as $obj) {
+            Db::startTrans();
+
+            try {
+                $this->formatModel($obj);
+
+                $this->then($this->saveMiddleware, function (Model $obj, array $params) {
+                    $logic = $this->getLogic();
+                    return $logic->updateByID($obj, $params);
+                }, $obj, $params);
+                Db::commit();
+
+            } catch (\Throwable $e) {
+                Db::rollback();
+
+                throw $e;
+            }
         }
 
         return true;

@@ -11,6 +11,7 @@ namespace app\common\curd;
 
 use app\exception\DataNotFoundException;
 use app\validate\IDMustBeIntValidate;
+use think\facade\Db;
 use think\Model;
 
 class Update extends BaseCurd
@@ -63,20 +64,27 @@ class Update extends BaseCurd
         if (!$obj) {
             throw new DataNotFoundException();
         }
+        Db::startTrans();
+        try {
+            $status = $this->then($this->saveMiddleware, function (Model $obj, array $params) {
+                $logic = $this->getLogic();
+                $args  = $this->getQueryArgs(['where', 'together']);
 
-        $status = $this->then($this->saveMiddleware, function (Model $obj, array $params) {
-            $logic = $this->getLogic();
-            $args  = $this->getQueryArgs(['where', 'together']);
+                return $status = $logic->updateByID($obj, $params, $args);
+            }, $obj, $data);
 
-            return $status = $logic->updateByID($obj, $params, $args);
-        }, $obj, $data);
+            if ($status) {
+                $this->model = $obj;
+                $this->setData('detail', $status);
+            }
 
-        if ($status) {
-            $this->model = $obj;
-            $this->setData('detail', $status);
+            Db::commit();
+
+            return !!$status;
+        } catch (\Throwable $e) {
+            Db::rollback();
+            throw $e;
         }
-
-        return !!$status;
     }
 
     /**

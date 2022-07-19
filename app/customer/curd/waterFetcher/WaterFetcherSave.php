@@ -29,6 +29,7 @@ class WaterFetcherSave extends Save
         $params['add_ip']   = $this->request->ip();
         $params['type']     = User::WATER_FETCHER_TYPE;
 
+
         return $next($params);
     }
 }

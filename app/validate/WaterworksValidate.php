@@ -20,11 +20,11 @@ class WaterworksValidate extends UserValidate
         'profile'          => ['password', 'nickname', 'avatar'],
     ];
 
-    protected function sceneProfile()
+/*    protected function sceneProfile()
     {
         $this->only($this->getSceneOnly(__FUNCTION__));
         $this->removeOnlyRule([], 'require|requireWithout');
 
         return $this;
-    }
+    }*/
 }

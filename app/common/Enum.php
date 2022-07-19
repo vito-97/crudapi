@@ -66,6 +66,7 @@ class Enum
     const DEVICE_PAUSE_ON_CODE = '0103000E0001';//暂停中
     const DEVICE_PAUSE_OFF_CODE = '0103000E0000';//结束暂停
     const DEVICE_STOP_CODE = '010300090001';//已结束
+    const DEVICE_IS_SET_FLOW = '0103000A0001';//已下发余额
 
     //居科乐
     const SITE_ONE = 1;

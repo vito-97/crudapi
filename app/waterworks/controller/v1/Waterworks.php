@@ -57,7 +57,7 @@ class Waterworks extends BaseController
         $data = WaterworksValidate::getDataByRule('profile');
 
         foreach ($data as $key => $val) {
-            if (!$val) {
+            if (in_array($key, ['password']) && !$val) {
                 unset($data[$key]);
             }
         }

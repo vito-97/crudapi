@@ -94,10 +94,10 @@ class DeviceUpdateFlowListener extends DeviceHandleListener
 
 //        for($i=1;$i<=3;$i++){
         $this->e('正在初始化余额和清空流量');
-        $this->deviceControlService->init()->sleep(0.1)->init()->sleep(0.1)->init()->sleep()->clearFlow();
+        $this->deviceControlService->init()->sleep(0.1)->init()->sleep(0.1)->init()->sleep()->clearFlow()->sleep(0.1)->clearFinishFlow();
         $this->e('已经初始化余额和清空流量');
         //设备可能接受不到清空流量指令
-        $this->deviceControlService->sleep(1.3)->clearFlow()->sleep(1.5)->clearFlow();
+        $this->deviceControlService->sleep(1.3)->clearFlow()->sleep(1.5)->clearFlow()->sleep(0.5)->clearFinishFlow();
 //        }
     }
 }

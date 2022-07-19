@@ -48,6 +48,8 @@ class DeviceSubscribeMessageListener
         Enum::DEVICE_PAUSE_ON_CODE  => 'pauseOn',
         Enum::DEVICE_PAUSE_OFF_CODE => 'pauseOff',
         Enum::DEVICE_STOP_CODE      => 'stop',
+        Enum::DEVICE_IS_SET_FLOW    => 'isSetFlow',
+        '01030064000'               => 'clearFinishFlow',
     ];
 
     public function handle($params)
@@ -73,6 +75,54 @@ class DeviceSubscribeMessageListener
         }
     }
 
+    public function clearFinishFlow($deviceNo, $hex)
+    {
+        $code = '10304';
+        $i    = strpos($hex, $code);
+
+        if ($i === false) {
+            $this->e('已使用流量数据错误');
+            return;
+        }
+        $i   += strlen($code);
+        $num = substr($hex, $i, 8);
+
+        if (strlen($num) === 8) {
+            $n1 = substr($num, 4, 4);
+            $n2 = substr($num, 0, 4);
+            $n  = hexdec($n1 . $n2);
+
+//            $this->e($num);
+//            $this->e($n1 . $n2);
+            $this->e("剩余流量：{$n}L");
+            $service = $this->service;
+            $userID  = $service->deviceLastControlUserID($deviceNo) ?: 0;
+            if ($userID) {
+                $service->userStopFlow($userID, $n);
+            }
+        }
+
+//        if ($this->control && $this->control->isFinishState()) {
+        $this->e('设备已结算，正在清除结算余额');
+        $control = new DeviceControlService($this->imei);
+        $control->clearFinishFlow();
+//        }
+    }
+
+    /**
+     * 已下发余额
+     * @param $deviceNo
+     * @param $hex
+     */
+    public function isSetFlow($deviceNo, $hex)
+    {
+        if (!$this->service->deviceIsSetFlow($deviceNo, true)) {
+            $this->e('已下发余额');
+
+            // 设备已经下发流量
+            $this->service->deviceIsSetFlow($deviceNo, 1);
+        }
+    }
 
     /**
      * 当前剩余流量
@@ -122,6 +172,8 @@ class DeviceSubscribeMessageListener
                     Queue::later(4, DeviceRestartJob::class, $msg, Enum::JOB_DEVICE_RESTART);
                 }
             } else {
+                $this->isSetFlow($deviceNo, $hex);
+
                 $this->e('当前剩余流量：' . $n . 'L');
 
                 if ($userID) {
@@ -177,12 +229,11 @@ class DeviceSubscribeMessageListener
             $this->e('结算指令携带暂停指令，不予处理');
             return;
         }
-
+        //删除已下发流量状态
+        $this->service->deviceIsSetFlow($deviceNo, false);
         $this->e('已结算');
         if ($this->control) {
             $user   = $this->getUser();
-            $params = ['device' => $this->control->device, 'control' => $this->control];
-            Event::trigger(EventName::DEVICE_UPDATE_FLOW, $params);
 
             //最后一次操作不是完成
             if (!$this->control->isFinishState()) {
@@ -190,6 +241,9 @@ class DeviceSubscribeMessageListener
                 $logic = new DeviceLogic();
                 $logic->finish($deviceNo);
             }
+
+            $params = ['device' => $this->control->device, 'control' => $this->control];
+            Event::trigger(EventName::DEVICE_UPDATE_FLOW, $params);
 
             //清除该设备想控制的用户ID
 //            $this->service->deviceWantControlUserID($this->deviceNo, false);
