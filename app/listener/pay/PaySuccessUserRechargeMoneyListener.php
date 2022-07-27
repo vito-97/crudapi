@@ -29,6 +29,9 @@ class PaySuccessUserRechargeMoneyListener
 //                $order->user->flow = ['inc', $order->flow];
                 $order->user->flow = $order->flow;
             }
+            if ($order->second > 0) {
+                $order->user->setExpireTime($order->second);
+            }
             $order->user->pay_count = ['inc', 1];
             $order->user->save();
         }

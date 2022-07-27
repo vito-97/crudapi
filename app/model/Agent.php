@@ -19,9 +19,11 @@ class Agent extends User
 
     const USER_TYPE = self::AGENT_TYPE;
 
+    protected $productTypeEnum = Product::TYPE_ENUM;
+
     protected $scene = [
         'api' => [
-            'visible' => ['id', 'nickname', 'username', 'extend', 'real_name', 'phone', 'tel', 'avatar', 'email', 'last_login_ip', 'last_login_time', 'create_time'],
+            'visible' => ['id', 'nickname', 'username', 'extend', 'real_name', 'phone', 'tel', 'avatar', 'email', 'product_type', 'last_login_ip', 'last_login_time', 'create_time'],
         ],
     ];
 

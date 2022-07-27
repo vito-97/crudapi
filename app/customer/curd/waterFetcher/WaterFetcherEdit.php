@@ -11,7 +11,7 @@ use app\customer\curd\Edit;
 class WaterFetcherEdit extends Edit
 {
     //显示的字段
-    protected $field = ['money', 'flow', 'used_flow', 'invitation_code', 'spread_count', 'is_vip', 'pay_count'];
+    protected $field = ['money', 'invitation_code', 'spread_count', 'is_vip', 'pay_count'];
     protected $withoutField = true;
     //查询条件
     protected $where = [];

@@ -27,16 +27,19 @@ class ProductIndex extends Index
     protected $withoutField = false;
 
     protected $queryField = [
-        'device_id', 'status', 'is_vip', 'allow_refund',
+        'device_id', 'status', 'is_vip', 'allow_refund', 'type',
     ];
 
     protected $validate = [
         ProductValidate::class => Enum::VALID_LIST_SCENE,
     ];
 
+    protected $append = ['status_desc','type_desc'];
+
     protected $labelCallback = [
         'get_status_enum'         => ['name' => '状态'],
         'get_is_vip_switch'       => ['name' => '会员套餐'],
         'get_allow_refund_switch' => ['name' => '是否可退'],
+        'get_type_enum'           => ['name' => '类型'],
     ];
 }

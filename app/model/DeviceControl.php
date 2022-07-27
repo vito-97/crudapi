@@ -13,8 +13,10 @@ use app\common\ErrorCode;
 use app\common\EventName;
 use app\exception\DeviceControlErrorException;
 use app\exception\ValidateException;
+use app\logic\DeviceLogic;
 use app\model\traits\DeviceTrait;
 use app\model\traits\UserTrait;
+use app\service\DeviceService;
 use think\facade\Event;
 
 class DeviceControl extends BaseModel
@@ -94,6 +96,29 @@ class DeviceControl extends BaseModel
     }
 
     /**
+     * 加水机结算
+     * @return DeviceControl|false
+     */
+    public function deviceFinish()
+    {
+        $status = $this->add([
+            'device_id' => $this->device_id,
+            'user_id'   => $this->user_id,
+            'state'     => self::STATE_FINISH,
+        ]);
+
+        if ($status) {
+            $service = new DeviceService();
+            $service->deviceIsSetFlow($this->device->device_no, false);
+            $params = ['device' => $this->device, 'control' => $status];
+            Event::trigger(EventName::DEVICE_UPDATE_FLOW, $params);
+            return $status;
+        }
+
+        return false;
+    }
+
+    /**
      * 检测用户是否可以操作
      * @param $userID
      * @param $state
@@ -101,13 +126,17 @@ class DeviceControl extends BaseModel
      * @throws ValidateException
      * @throws \app\exception\ErrorException
      */
-    public function checkUserCanControl($userID, $state)
+    public function checkUserCanControl($userID, $state, $switch = false)
     {
         $this->checkModelData('device_id');
         //状态不是完成 操作中的用户也不是传入的用户
         if (($this->isStartState() || $this->isPauseState() || $this->isWaitState()) && $userID != $this->getData('user_id')) {
+            $status = $this->deviceFinish();
+            if ($status) {
+                return $this;
+            }
 //            当前设备已有其他用户操作中
-            throw new DeviceControlErrorException(ErrorCode::DEVICE_HAS_OTHER_USER_CONTROL);
+//            throw new DeviceControlErrorException(ErrorCode::DEVICE_HAS_OTHER_USER_CONTROL);
         }
 
         //判断需要执行的操作
@@ -123,7 +152,7 @@ class DeviceControl extends BaseModel
 
             case self::STATE_START:
                 if ($this->isStartState()) {
-                    $params = ['control' => $this, 'device' => $this->device];
+                    $params = ['control' => $this, 'device' => $this->device, 'switch' => $switch];
                     Event::trigger(EventName::DEVICE_CONTROL_START, $params);
 //                    当前设备已在加水
                     throw new DeviceControlErrorException(ErrorCode::DEVICE_IS_START_CONTROL);
@@ -145,7 +174,7 @@ class DeviceControl extends BaseModel
 
             case self::STATE_FINISH:
                 if ($this->isFinishState()) {
-                    $params = ['control' => $this, 'device' => $this->device];
+                    $params = ['control' => $this, 'device' => $this->device, 'switch' => $switch];
                     Event::trigger(EventName::DEVICE_CONTROL_FINISH, $params);
                     //当前设备未启动
                     throw new DeviceControlErrorException(ErrorCode::DEVICE_IS_FINISH_CONTROL);
@@ -156,27 +185,32 @@ class DeviceControl extends BaseModel
         return $this;
     }
 
-    public function isWaitState()
+    public
+    function isWaitState()
     {
         return $this->getData('state') == self::STATE_WAIT;
     }
 
-    public function isStartState()
+    public
+    function isStartState()
     {
         return $this->getData('state') == self::STATE_START;
     }
 
-    public function isPauseState()
+    public
+    function isPauseState()
     {
         return $this->getData('state') == self::STATE_PAUSE;
     }
 
-    public function isFinishState()
+    public
+    function isFinishState()
     {
         return $this->getData('state') == self::STATE_FINISH;
     }
 
-    public function isWaitTimeoutState()
+    public
+    function isWaitTimeoutState()
     {
         return $this->getData('state') == self::STATE_WAIT_TIMEOUT;
     }
@@ -185,7 +219,8 @@ class DeviceControl extends BaseModel
      * 判断操作是否超时
      * @return bool
      */
-    public function isTimeout()
+    public
+    function isTimeout()
     {
         return $this->isWaitTimeout() || $this->isPauseTimeout() || $this->isStartTimeout();
     }
@@ -194,7 +229,8 @@ class DeviceControl extends BaseModel
      * 等待启动超时
      * @return bool
      */
-    public function isWaitTimeout()
+    public
+    function isWaitTimeout()
     {
         $time = $this->getTime();
         return $this->isWaitState() && ($time + self::WAIT_TIMEOUT) < time() || $this->isWaitTimeoutState();
@@ -204,7 +240,8 @@ class DeviceControl extends BaseModel
      * 暂停超时
      * @return bool
      */
-    public function isPauseTimeout()
+    public
+    function isPauseTimeout()
     {
         $time = $this->getTime();
         return $this->isPauseState() && ($time + self::PAUSE_TIMEOUT) < time();
@@ -214,7 +251,8 @@ class DeviceControl extends BaseModel
      * 使用超时
      * @return bool
      */
-    public function isStartTimeout()
+    public
+    function isStartTimeout()
     {
         $time = $this->getTime();
         return $this->isStartState() && ($time + self::START_TIMEOUT) < time();
@@ -224,7 +262,8 @@ class DeviceControl extends BaseModel
      * 获取状态
      * @return string
      */
-    public function getStateKey()
+    public
+    function getStateKey()
     {
         if ($this->isStartTimeout() || $this->isPauseTimeout()) {
             return 'timeout';
@@ -233,7 +272,8 @@ class DeviceControl extends BaseModel
         return self::STATE_KEY[$this->state];
     }
 
-    protected function getTime()
+    protected
+    function getTime()
     {
         $time = $this->getData('create_time');
         if (is_string($time)) {
@@ -243,7 +283,8 @@ class DeviceControl extends BaseModel
         return $time;
     }
 
-    protected function getStateDescAttr($value, $data)
+    protected
+    function getStateDescAttr($value, $data)
     {
         return $this->getEnumDesc('state', $data);
     }
@@ -252,7 +293,8 @@ class DeviceControl extends BaseModel
      * 设置控制已完成
      * @return bool
      */
-    protected function setControlFinish()
+    protected
+    function setControlFinish()
     {
         $model            = new DeviceControl();
         $model->device_id = $this->getData('device_id');

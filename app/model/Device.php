@@ -36,6 +36,7 @@ class Device extends BaseModel
     protected $scene = [
         'api' => [
             'hidden' => ['used_flow', 'agent_id', 'used_global_product', 'mark', 'delete_time'],
+            'append' => ['product_type'],
         ],
     ];
 
@@ -177,6 +178,15 @@ class Device extends BaseModel
     protected function getPhoneAttr()
     {
         return Agent::where('id', $this->agent_id)->cache(60)->value('phone');
+    }
+
+    protected function getProductTypeAttr()
+    {
+        // 当前是简易设备
+        if ($this->getData('type') == self::EASY_TYPE) {
+            return Product::TIME_TYPE;
+        }
+        return (int)Agent::where('id', $this->agent_id)->cache(60)->value('product_type');
     }
 
     /**

@@ -11,7 +11,7 @@ use app\agent\curd\Change;
 class ProductChange extends Change
 {
     //允许修改的字段
-    protected $field = ['status', 'mark', 'is_vip','allow_refund'];
+    protected $field = ['status', 'mark', 'is_vip', 'allow_refund', 'type'];
     //排除的数据
     protected $exclude = [];
     //条件

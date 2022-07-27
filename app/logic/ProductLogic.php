@@ -10,6 +10,7 @@ namespace app\logic;
 
 
 use app\exception\DataNotFoundException;
+use app\model\Device;
 use app\model\Member;
 use app\model\Product;
 
@@ -54,10 +55,16 @@ class ProductLogic extends BaseLogic
 
             $user = Member::cache(60)->find($device->agent_id);
 
+            //水厂则取上级水务公司
+            if ($user->type === Member::WATERWORKS_TYPE) {
+                $user = Member::cache(60)->find($user->user_id);
+            }
+
             if (!$user->isEmpty()) {
-                //水厂则取上级水务公司
-                $agentID[] = $user->type === Member::WATERWORKS_TYPE ? $user->user_id : $user->id;
+                $type      = $user->product_type;
+                $agentID[] = $user->id;
             } else {
+                $type      = $device->type == Device::SCREEN_TYPE ? Product::FLOW_TYPE : Product::TIME_TYPE;
                 $agentID[] = $device->agent_id;
             }
         }
@@ -67,6 +74,7 @@ class ProductLogic extends BaseLogic
             'where'    => [
                 'is_vip'   => $vip ? 1 : 0,
                 'agent_id' => $agentID,
+                'type'     => $type,
             ], 'scope' => ['status']];
         $result       = $productLogic->getAll($args);
 

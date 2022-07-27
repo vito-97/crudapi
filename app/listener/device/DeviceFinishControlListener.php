@@ -8,8 +8,7 @@
 
 namespace app\listener\device;
 
-use app\model\User;
-use app\service\DeviceService;
+use app\model\Device;
 
 class DeviceFinishControlListener extends DeviceHandleListener
 {
@@ -18,8 +17,19 @@ class DeviceFinishControlListener extends DeviceHandleListener
 //        $userID  = $this->control->user_id;
 //        $service = new DeviceService();
 //        for ($i=1;$i<=2;$i++){
+        $type = $this->device->type;
         $this->e('正在停止');
-        $this->deviceControlService->finish();
+        if ($this->switch) {
+            $this->deviceControlService->close($type);
+
+            //简易主板 查询状态
+            if ($type == Device::EASY_TYPE) {
+                $this->deviceControlService->queryEasyStatus()->sleep(0.1)->queryEasyStatus();
+            }
+
+        } else {
+            $this->deviceControlService->finish();
+        }
         $this->e('已经停止');
 //        }
 

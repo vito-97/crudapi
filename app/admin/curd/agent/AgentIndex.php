@@ -17,8 +17,9 @@ class AgentIndex extends Index
     protected $keywordQueryArgs = ['index'];
     //追加标签数据
     protected $labelCallback = [
-        'get_status_enum' => ['name' => '状态'],
-        'get_sex_enum'    => ['name' => '性别'],
+        'get_status_enum'       => ['name' => '状态'],
+        'get_sex_enum'          => ['name' => '性别'],
+        'get_product_type_enum' => ['name' => '套餐类型'],
     ];
     //查询条件
     protected $where = [];

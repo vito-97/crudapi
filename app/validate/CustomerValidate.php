@@ -17,7 +17,7 @@ class CustomerValidate extends UserValidate
         self::UPDATE_SCENE => 'all',
         self::LIST_SCENE   => ['sex', 'status', 'type'],
         self::LOGIN_SCENE  => ['username', 'password'],
-        'profile'          => ['password', 'nickname', 'avatar'],
+        'profile'          => ['password', 'nickname', 'avatar', 'tel', 'email'],
     ];
 
     protected function sceneProfile()

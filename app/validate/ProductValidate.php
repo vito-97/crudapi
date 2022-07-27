@@ -18,18 +18,20 @@ class ProductValidate extends BaseValidate
      * @var array
      */
     protected $rule = [
-        'device_no'    => 'max:10',
-        'name'         => 'max:50',
-        'allow_refund' => 'checkSwitch',
-        'flow'         => 'require|isPositiveInteger:zero',
-        'give_flow'    => 'isPositiveInteger:zero',
-        'device_id'    => 'checkHasCanEmpty:device',
-        'status'       => 'require|checkEnum',
-        'price'        => 'require|float',
-        'money'        => 'float',
-        'mark'         => 'max:120',
-        'is_vip'       => 'require|checkSwitch',
-        'agent_id'     => 'checkHasCanEmpty:agent',
+        'device_no'         => 'max:10',
+        'name'              => 'max:50',
+        'allow_refund'      => 'checkSwitch',
+        'flow'              => 'requireIf:type,1|isPositiveInteger:zero',
+        'give_flow'         => 'isPositiveInteger:zero',
+        'device_id'         => 'checkHasCanEmpty:device',
+        'status'            => 'require|checkEnum',
+        'price'             => 'require|float',
+        'money'             => 'float',
+        'mark'              => 'max:120',
+        'is_vip'            => 'require|checkSwitch',
+        'agent_id'          => 'checkHasCanEmpty:agent',
+        'type|product_type' => 'checkEnum',
+        'second'            => 'requireIf:type,2|isPositiveInteger:zero',
     ];
 
     /**

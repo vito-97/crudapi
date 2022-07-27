@@ -19,5 +19,5 @@ class ContractRead extends Read
     //条件
     protected $where = [];
     //关联
-    protected $with = ['customer'];
+    protected $with = [];
 }

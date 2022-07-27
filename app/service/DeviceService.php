@@ -139,6 +139,24 @@ class DeviceService
     }
 
     /**
+     * 当前设备是否是开关
+     * @param $deviceNo
+     * @param null $data
+     * @return int|mixed|null
+     */
+    public function deviceIsSwitch($deviceNo, $data = null)
+    {
+        $table = __FUNCTION__;
+        $key   = $deviceNo;
+
+        $data = RedisStoreService::tableRemember($table, $key, $data, function () use ($deviceNo) {
+            return false;
+        }, true);
+
+        return $data;
+    }
+
+    /**
      * 通过用户获取最后一次操作的记录
      * @param $userID
      * @param null $data
@@ -159,7 +177,7 @@ class DeviceService
             }
 
             return $detail;
-        });
+        },false);
 
         if ($data) {
             if (isset($data['create_time']) && is_string($data['create_time'])) {

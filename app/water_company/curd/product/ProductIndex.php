@@ -30,6 +30,8 @@ class ProductIndex extends Index
         'device_id', 'status', 'is_vip', 'allow_refund',
     ];
 
+    protected $append = ['status_desc', 'type_desc'];
+
     protected $validate = [
         ProductValidate::class => Enum::VALID_LIST_SCENE,
     ];

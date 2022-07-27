@@ -16,7 +16,9 @@ class ContractIndex extends Index
      */
     protected $keywordQueryArgs = ['index'];
     //追加标签数据
-    protected $labelCallback = [];
+    protected $labelCallback = [
+        'get_status_enum'   => ['name' => '状态'],
+    ];
     //查询条件
     protected $where = [];
     //字段
@@ -24,7 +26,7 @@ class ContractIndex extends Index
     //排除字段
     protected $withoutField = false;
     //关联
-    protected $with = ['customer'];
+    protected $with = [];
     /**
      * 需要查询条件的字段
      * 数据库字段和参数字段名不一样 'db_field' => 'param_field'

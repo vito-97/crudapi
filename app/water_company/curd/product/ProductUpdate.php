@@ -17,7 +17,7 @@ class ProductUpdate extends Update
         ProductValidate::class => Enum::VALID_UPDATE_SCENE,
     ];
     //允许新增的数据字段
-    protected $field = ['name', 'allow_refund', 'price', 'give_money', 'device_id', 'status', 'mark', 'is_vip', 'flow', 'give_flow'];
+    protected $field = ['name', 'allow_refund', 'price', 'give_money', 'device_id', 'status', 'mark', 'is_vip', 'flow', 'give_flow', 'type', 'second'];
     //获取对象时追加的字段
     protected $appendField = [];
     //排除的数据

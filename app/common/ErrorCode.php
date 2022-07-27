@@ -18,9 +18,10 @@ class ErrorCode
     const DEVICE_IS_PAUSE_CONTROL = [10103, 'device is pause control'];
     const DEVICE_IS_FINISH_CONTROL = [10104, 'device is finish control'];
     const DEVICE_IS_NOT_START_CONTROL = [10105, 'device is not start control'];
-    const USER_HAS_OTHER_DEVICE_CONTROL = [10106, 'user has other device control'];
+    const USER_HAS_OTHER_DEVICE_CONTROL = [10106, 'user has control other device'];
     const DEVICE_IS_WAIT_CONTROL = [10107, 'device is wait control'];
     const DEVICE_CONTROL_ERROR = [10108, 'device control error'];
+    const USER_IS_CONTROL_DEVICE = [10109, 'user is control device'];
 
     const ADMIN_NOT_FOUND = [40101, 'admin user not found'];
     const ADMIN_PASSWORD_ERROR = [40102, 'admin password error'];

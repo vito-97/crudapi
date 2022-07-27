@@ -13,6 +13,6 @@ trait DeviceTrait
 {
     public function device()
     {
-        return $this->belongsTo('Device')->field($this->deviceField ?? 'id,name,device_no,imei,status,site_id,disabled');
+        return $this->belongsTo('Device')->field($this->deviceField ?? 'id,name,device_no,imei,status,site_id,disabled,type');
     }
 }

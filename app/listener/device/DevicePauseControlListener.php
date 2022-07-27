@@ -14,7 +14,7 @@ class DevicePauseControlListener extends DeviceHandleListener
     protected function run($detail)
     {
         $this->e('正在暂停');
-        $this->deviceControlService->pause()->sleep(0.5)->pause();
+        $this->deviceControlService->pause();
         $this->e('已经暂停');
     }
 }

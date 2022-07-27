@@ -18,10 +18,13 @@ class PaySuccessUpdatePayAmountListener
         ['order' => $order] = $detail;
 
         if (!empty($detail['result'])) {
-            $pay  = new AllInPayLogic();
-            $data = $pay->getOne(['where' => ['agent_id' => $order->getPayAgentID(), 'status' => 1]]);
-            if ($data) {
-                $data->inc('amount', $order->pay_price)->update();
+            $pay = new AllInPayLogic();
+            $id  = $order->getPayAgentID();
+            if ($id !== false) {
+                $data = $pay->getOne(['where' => ['agent_id' => $id, 'status' => 1]]);
+                if ($data) {
+                    $data->inc('amount', $order->pay_price)->update();
+                }
             }
         }
     }

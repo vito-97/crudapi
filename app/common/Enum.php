@@ -50,6 +50,7 @@ class Enum
     const JOB_DEVICE_CONTROL_LATER = 'device_control_later';
     const JOB_DEVICE_RESTART = 'device_restart';
     const JOB_DEVICE_CONTROL_CHECK = 'device_control_check';
+    const JOB_DEVICE_TIMEOUT_CHECK = 'device_timeout_check';
 
     //订单退款
     const JOB_ORDER_REFUND = 'order_refund';
@@ -62,10 +63,14 @@ class Enum
     const DEVICE_FLOW_CODE = '01030004';//流量
     const DEVICE_FLOW_START_CODE = '010304';//余额标识开始地址
     const DEVICE_ONLINE_CODE = '6F6E6C696E65';//上线
-    const DEVICE_START_CODE = '0103000B0001';//启动中
-    const DEVICE_PAUSE_ON_CODE = '0103000E0001';//暂停中
-    const DEVICE_PAUSE_OFF_CODE = '0103000E0000';//结束暂停
-    const DEVICE_STOP_CODE = '010300090001';//已结束
+//    const DEVICE_START_CODE = '0103000B0001';//启动中
+//    const DEVICE_PAUSE_ON_CODE = '0103000E0001';//暂停中
+//    const DEVICE_PAUSE_OFF_CODE = '0103000E0000';//结束暂停
+//    const DEVICE_STOP_CODE = '010300090001';//已结束
+    const DEVICE_START_CODE = '0103000E0001';//启动中
+    const DEVICE_PAUSE_ON_CODE = '0103000E0002';//暂停中
+    const DEVICE_STOP_FINISH_CODE = '0103000E0000';//结束完成
+    const DEVICE_STOP_CODE = '010300090003';//已结束
     const DEVICE_IS_SET_FLOW = '0103000A0001';//已下发余额
 
     //居科乐

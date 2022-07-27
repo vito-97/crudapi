@@ -24,7 +24,8 @@ class DeviceControlService
     const ADDRESS = [
         'set_flow'            => '0000000204', //初始流量 单位升
         'start'               => '00060001',//启动按键
-        'pause'               => '00070001',//暂停按键
+//        'pause'               => '00070001',//暂停按键
+        'pause'               => '00060001',//暂停按键
         'finish'              => '00080001',//结算按键
 //        'open'                => '00500001',//开机
 //        'close'               => '00500000',//关机
@@ -43,6 +44,7 @@ class DeviceControlService
         'adverts_light_open'  => '00cc0001',
         'adverts_light_close' => '00cc0000',
         'finish_timeout'      => '00D3',
+        'query_easy_status'   => '0101000000083DCC',
     ];
 
     protected static $lastControlTime = 0;
@@ -307,6 +309,15 @@ class DeviceControlService
         $this->writeLog('写入二维码', $address);
 
         return $this->writePush($address);
+    }
+
+    public function queryEasyStatus()
+    {
+        $address = self::ADDRESS['query_easy_status'];
+
+        $this->writeLog('查询简易设备的继电器状态', $address);
+
+        return $this->writePush($address, false);
     }
 
     /**

@@ -10,12 +10,16 @@ namespace app\logic;
 
 
 use app\common\Enum;
+use app\common\ErrorCode;
 use app\common\EventName;
 use app\exception\DataNotFoundException;
+use app\exception\DeviceControlErrorException;
 use app\exception\MessageException;
 use app\model\DeviceControl;
 use app\model\Order;
+use app\model\Product;
 use app\model\ServiceCharge as ServiceChargeModel;
+use app\service\DeviceService;
 use think\facade\Event;
 
 class OrderLogic extends BaseLogic
@@ -241,6 +245,24 @@ class OrderLogic extends BaseLogic
 
         $device = (new DeviceLogic())->getID($params['device_id']);
 
+        $service = new DeviceService();
+
+        $detail = $service->deviceLastControlByUser($userID);
+
+        if ($detail) {
+            if ($detail->isTimeout()) {
+                $detail->deviceFinish();
+            } else if (!$detail->isFinishState()) {
+                $detail->deviceFinish();
+
+                /*if ($detail['device_id'] != $device->id) {
+                    throw new DeviceControlErrorException(sprintf(ErrorCode::USER_HAS_OTHER_DEVICE_CONTROL[1], $detail->device_no), ErrorCode::USER_HAS_OTHER_DEVICE_CONTROL[0]);
+                } else {
+                    throw new DeviceControlErrorException(ErrorCode::USER_IS_CONTROL_DEVICE);
+                }*/
+            }
+
+        }
         //检测机器是否可以使用
         $deviceControlLogic = new DeviceControlLogic();
         $deviceControlLogic->checkCanControl($device, DeviceControl::STATE_WAIT);
@@ -278,13 +300,14 @@ class OrderLogic extends BaseLogic
             'product_id'     => $product->id,
             'user_id'        => $userID,
             'agent_id'       => $product->agent_id,
-            'product_snap'   => $product->visible(['name', 'price', 'flow', 'give_flow', 'minute', 'allow_refund', 'is_vip'])->toJson(),
+            'product_snap'   => $product->visible(['name', 'price', 'flow', 'give_flow', 'second', 'allow_refund', 'is_vip'])->toJson(),
             'coupon_card_id' => $couponCardID,
             'pay_type'       => config('web.payment.default'),
             'price'          => $product->price,
             'pay_price'      => $payPrice,
             'money'          => 0,
-            'flow'           => $product->all_flow,
+            'flow'           => $product->type == Product::FLOW_TYPE ? $product->all_flow : 0,
+            'second'         => $product->type == Product::TIME_TYPE ? $product->second : 0,
             'device_id'      => $params['device_id'],
             'site_id'        => $device->site_id,
 //            'allow_refund'     => ($couponCardID || bccomp($money, $payPrice) === 1) ? 0 : 1,//判断是否可以退款

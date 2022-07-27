@@ -118,7 +118,7 @@ class User extends BaseModel
      */
     public function parent()
     {
-        return $this->belongsTo('User')->field($this->userField ?? 'id,username,nickname,money,flow,pay_count,type,user_id');
+        return $this->belongsTo('User')->field($this->userField ?? 'id,username,nickname,money,flow,expire_time,pay_count,type,user_id');
     }
 
     /**
@@ -185,5 +185,20 @@ class User extends BaseModel
     public function cashCouponCard()
     {
         return $this->hasMany('CashCouponCard', 'user_id');
+    }
+
+    /**
+     * 设置过期时间
+     * @param $second
+     */
+    public function setExpireTime($second)
+    {
+        $expireTime = $this->expire_time;
+        $time       = time();
+        if ($expireTime > $time) {
+            $this->expire_time += $second;
+        } else {
+            $this->expire_time = $time + $second;
+        }
     }
 }

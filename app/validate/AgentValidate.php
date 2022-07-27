@@ -17,7 +17,7 @@ class AgentValidate extends UserValidate
         self::UPDATE_SCENE => 'all',
         self::LIST_SCENE   => ['sex', 'status', 'agent_id', 'type'],
         self::LOGIN_SCENE  => ['username', 'password'],
-        'profile'          => ['password', 'nickname', 'avatar', 'phone'],
+        'profile'          => ['password', 'nickname', 'avatar', 'phone', 'product_type'],
     ];
 
     protected function sceneProfile()

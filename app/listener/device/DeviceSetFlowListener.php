@@ -15,6 +15,10 @@ class DeviceSetFlowListener extends DeviceHandleListener
 {
     public function run($detail)
     {
+        if ($this->switch) {
+            return true;
+        }
+
         $device = $this->device;
 
         $service   = new DeviceService();

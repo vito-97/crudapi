@@ -11,7 +11,6 @@ namespace app\listener\device;
 //结算
 use app\common\EventName;
 use app\logic\FlowLogic;
-use app\model\Flow;
 use app\model\Order;
 use app\model\User;
 use app\service\DeviceService;
@@ -27,6 +26,16 @@ class DeviceUpdateFlowListener extends DeviceHandleListener
         $realUseFlow = $useFlow = $service->userUseFLow($userID);
         //初始化流量数据
         $service->userFlowInit($userID);
+        /**
+         * @var $user User
+         */
+        $user = $this->control->user;
+
+        if (!$useFlow && $user->type === User::NORMAL_TYPE && $user->flow) {
+            $this->e('当前未使用流量，用户有流量，清空用户流量');
+            $useFlow = 1;
+        }
+
         //有使用流量
         if ($useFlow > 0) {
             $orders    = Order::where(['user_id' => $userID, 'status' => Order::STATUS_PAID, 'is_recharged' => Order::SWITCH_ON, 'is_clear' => Order::SWITCH_OFF])->order('id', 'desc')->limit(5)->select()->reverse();
@@ -67,13 +76,14 @@ class DeviceUpdateFlowListener extends DeviceHandleListener
                 }
             }
 
-            /**
-             * @var $user User
-             */
-            $user = $this->control->user;
-
             //用户使用总量
-            $user->flow      = ['dec', $useFlow];
+            if ($user->flow <= $useFlow) {
+                //流量大于现有的流量
+                $user->flow = 0;
+            } else {
+                $user->flow = ['dec', $useFlow];
+            }
+
             $user->used_flow = ['inc', $realUseFlow];
             $user->save();
 
@@ -92,12 +102,16 @@ class DeviceUpdateFlowListener extends DeviceHandleListener
             $this->e("已使用流量{$useFlow}L");
         }
 
+        $this->e('正在清除结算余额');
+        $this->deviceControlService->clearFinishFlow();
+
+//        return;
 //        for($i=1;$i<=3;$i++){
-        $this->e('正在初始化余额和清空流量');
-        $this->deviceControlService->init()->sleep(0.1)->init()->sleep(0.1)->init()->sleep()->clearFlow()->sleep(0.1)->clearFinishFlow();
-        $this->e('已经初始化余额和清空流量');
+//            $this->e('正在初始化余额和清空流量');
+//        $this->deviceControlService->init()->sleep(0.1)->init()->sleep(0.1)->init()->sleep()->clearFlow()->sleep(0.1)->clearFinishFlow();
+//        $this->e('已经初始化余额和清空流量');
         //设备可能接受不到清空流量指令
-        $this->deviceControlService->sleep(1.3)->clearFlow()->sleep(1.5)->clearFlow()->sleep(0.5)->clearFinishFlow();
+//        $this->deviceControlService->sleep(1.3)->clearFlow()->sleep(1.5)->clearFlow()->sleep(0.5)->clearFinishFlow();
 //        }
     }
 }

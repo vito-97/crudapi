@@ -42,12 +42,14 @@ abstract class BaseUserService
      * BaseUserService constructor.
      * @param $user
      */
-    public function __construct($user, $token, $type = null)
+    public function __construct($user, $token, $type = TokenService::USER)
     {
         $this->user  = $user;
         $this->token = $token;
         if ($this->type) {
             $this->type = $type;
+        } else {
+            $this->type = TokenService::USER;
         }
 
         $this->init();

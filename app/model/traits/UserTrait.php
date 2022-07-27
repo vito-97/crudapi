@@ -13,6 +13,6 @@ trait UserTrait
 {
     public function user()
     {
-        return $this->belongsTo('Member')->field($this->userField ?? 'id,username,nickname,money,flow,pay_count,type,user_id');
+        return $this->belongsTo('Member')->field($this->userField ?? 'id,username,nickname,money,flow,pay_count,type,user_id,expire_time');
     }
 }

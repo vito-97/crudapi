@@ -21,14 +21,17 @@ class DashboardListener
     public function handle($params)
     {
         $uid               = Request::getUser()->uid();
+        $user              = Request::getUser()->getUserInfo();
         $waterFetcherLogic = new WaterFetcherLogic();
         $flowLogic         = new FlowLogic();
+        $shareFlow         = $waterFetcherLogic->sumTotal('flow');
 
         $params->merge([
             'count_water_fetcher_user' => $waterFetcherLogic->count(),
 
-            'total_used_flow'       => $waterFetcherLogic->sumTotal('used_flow'),
-            'total_flow'            => $waterFetcherLogic->sumTotal('flow'),
+            'total_used_flow'       => (int)$waterFetcherLogic->sumTotal('used_flow'),
+            'total_flow'            => $shareFlow + $user->flow,
+            'share_total_flow'      => (int)$shareFlow,
             'total_today_used_flow' => $flowLogic->sumTotal('flow', [], 1, 'day'),
             'total_month_used_flow' => $flowLogic->sumTotal('flow', [], 1, 'month'),
             'total_year_used_flow'  => $flowLogic->sumTotal('flow', [], 1, 'year'),

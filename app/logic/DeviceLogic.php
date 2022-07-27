@@ -9,6 +9,7 @@
 namespace app\logic;
 
 
+use app\common\Enum;
 use app\common\ErrorCode;
 use app\common\EventName;
 use app\common\Message;
@@ -16,13 +17,16 @@ use app\exception\MessageException;
 use app\exception\DataNotFoundException;
 use app\exception\ParamErrorException;
 use app\exception\ValidateException;
+use app\job\DeviceTimeoutJob;
 use app\model\Device;
 use app\model\DeviceControl;
+use app\model\Product;
 use app\service\DeviceService;
 use app\service\user\UserService;
 use app\validate\DeviceValidate;
 use app\validate\IDMustBeIntArrayValidate;
 use think\facade\Event;
+use think\facade\Queue;
 use think\facade\Request;
 
 class DeviceLogic extends BaseLogic
@@ -114,9 +118,9 @@ class DeviceLogic extends BaseLogic
     }
 
     //开始加水
-    public function start($deviceNo = '', $send = false)
+    public function start($deviceNo = '', $send = false, $switch = false)
     {
-        $this->control($deviceNo, DeviceControl::STATE_START, $send);
+        $this->control($deviceNo, DeviceControl::STATE_START, $send, $switch);
 
         return true;
     }
@@ -130,9 +134,9 @@ class DeviceLogic extends BaseLogic
     }
 
     //加水完成
-    public function finish($deviceNo = '', $send = false)
+    public function finish($deviceNo = '', $send = false, $switch = false)
     {
-        $this->control($deviceNo, DeviceControl::STATE_FINISH, $send);
+        $this->control($deviceNo, DeviceControl::STATE_FINISH, $send, $switch);
 
         return true;
     }
@@ -281,10 +285,31 @@ class DeviceLogic extends BaseLogic
      * @throws MessageException
      * @throws \app\exception\ValidateException
      */
-    protected function control($deviceNo, $state, $send = false)
+    protected function control($deviceNo, $state, $send = false, $switch = false)
     {
-        $device = $this->getDevice($deviceNo);
-        $this->checkCanControl($device, $state);
+        $device       = $this->getDevice($deviceNo);
+        $user         = $this->user->getUserInfo();
+        $service      = new DeviceService();
+        $lastIsSwitch = $state === DeviceControl::STATE_FINISH && $service->deviceIsSwitch($deviceNo);
+        $isSwitch     = $device->type === Device::EASY_TYPE || ($user->expire_time > time() || $switch || $lastIsSwitch);
+        $this->checkCanControl($device, $state, $isSwitch);
+
+        // 简易设备 或者 用户有剩余时长
+        if ($isSwitch) {
+            if ($state == Device::START_STATE) {
+                $time = $user->expire_time - time();
+                // 延时队列 监听到期后是否还在启动
+                Queue::later($time, DeviceTimeoutJob::class, ['user_id' => $user->id, 'device_id' => $device->id, 'device_no' => $deviceNo, 'device_type' => $device->type], Enum::JOB_DEVICE_TIMEOUT_CHECK);
+            } elseif ($state == Device::FINISH_STATE) {
+
+            }
+            $this->sendDeviceControl($device, $state, true);
+//            if ($state === DeviceControl::STATE_FINISH) {
+            $control = $this->addDeviceControl($device, $state, true);
+//            }
+            return true;
+        }
+
         if ($send) {
             $this->sendDeviceControl($device, $state);
         } else {
@@ -300,17 +325,26 @@ class DeviceLogic extends BaseLogic
      * @return bool
      * @throws \app\exception\ValidateException
      */
-    protected function checkCanControl($device, $state)
+    protected function checkCanControl($device, $state, $switch = false)
     {
-        $user = $this->user;
+        $user = $this->user->getUserInfo();
 
-        if ($state == DeviceControl::STATE_START && $user->getUserInfo()->flow <= 0) {
-            throw new MessageException(Message::NO_FLOW);
+        //没流量或者已过期
+        if ($state == DeviceControl::STATE_START) {
+            if ($user->flow <= 0 && $user->expire_time <= time()) {
+//            throw new MessageException(Message::NO_FLOW);
+                throw new MessageException('请先充值再使用');
+            }
+
+            // 设备套餐类型为计时需要有加水时长
+            if ($device->product_type === Product::TIME_TYPE && $user->expire_time <= time()) {
+                throw new MessageException('当前设备为按时计费，加水时长不足，请先充值再使用');
+            }
         }
 
         $logic = new DeviceControlLogic();
 
-        return $logic->checkCanControl($device, $state);
+        return $logic->checkCanControl($device, $state, 0, $switch);
     }
 
     /**
@@ -320,20 +354,27 @@ class DeviceLogic extends BaseLogic
      * @return \app\model\BaseModel
      * @throws MessageException
      */
-    public function addDeviceControl($device, $state)
+    public function addDeviceControl($device, $state, $switch = false)
     {
         $logic = new DeviceControlLogic();
 
-        $status = $logic->addByDevice($device, $state);
+        $status = $logic->addByDevice($device, $state, 0, $switch);
 
         return $status;
     }
 
-    public function sendDeviceControl($device, $state)
+    /**
+     * 只发送指令不保存
+     * @param $device
+     * @param $state
+     * @return DeviceControl
+     * @throws \app\exception\ErrorException
+     */
+    public function sendDeviceControl($device, $state, $switch = false)
     {
         $logic = new DeviceControlLogic();
 
-        $status = $logic->sendByDevice($device, $state);
+        $status = $logic->sendByDevice($device, $state, 0, $switch);
 
         return $status;
     }

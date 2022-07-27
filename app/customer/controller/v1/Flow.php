@@ -11,9 +11,9 @@ namespace app\customer\controller\v1;
 use app\customer\controller\BaseController;
 use app\logic\FlowLogic;
 use app\logic\WaterFetcherLogic;
+use app\validate\CustomerUsedFlowStatisticsValidate;
 use app\validate\PaginateValidate;
 use app\validate\TimeTypeValidate;
-use app\validate\UsedFlowStatisticsValidate;
 use think\helper\Str;
 
 class Flow extends BaseController
@@ -39,16 +39,24 @@ class Flow extends BaseController
         $sumMethod = 'sumBy' . ucfirst($type);
         $args      = ['page' => $page, 'num' => $limit, 'fetch_sql' => false];
 
-        $flow = $this->logic->$sumMethod('flow', $where, $args);
+        $flow = $this->logic->$sumMethod('flow', [], $args);
 
-        $result = $flow;
+        $result         = $flow;
+        $result['list'] = [];
+
+        foreach ($flow['list'] as $key => $item) {
+            $result['list'][] = [
+                'time'  => $key,
+                'flow'  => $item,
+            ];
+        }
 
         return $this->success($result);
     }
 
     public function used($page = 1, $limit = 15, $type = 'water_fetcher')
     {
-        UsedFlowStatisticsValidate::batchCheck('flow');
+        CustomerUsedFlowStatisticsValidate::batchCheck('flow');
         PaginateValidate::batchCheck();
 
         $method = 'used' . Str::studly($type);

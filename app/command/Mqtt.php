@@ -72,6 +72,11 @@ class Mqtt extends Command
                     $deviceID = $service->deviceID($deviceNo);
                     $control  = $service->deviceLastControl($deviceNo);
 
+                    if (!is_dev() && env('MQTT_DEV_TEST') && in_array($deviceID, [1])) {
+                        $this->output->writeln("[$deviceNo]正在本地测试，线上不予操作");
+                        return;
+                    }
+
                     $params = [
                         'service'   => $service,
                         'imei'      => $imei,

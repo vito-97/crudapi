@@ -28,6 +28,8 @@ class DeviceHandleListener
      */
     protected $control;
 
+    protected $switch = false;
+
     public function __construct(DeviceControlService $deviceControlService)
     {
         $this->deviceControlService = $deviceControlService;
@@ -41,6 +43,10 @@ class DeviceHandleListener
 
         if (isset($detail['control'])) {
             $this->control = $detail['control'];
+        }
+
+        if (isset($detail['switch'])) {
+            $this->switch = $detail['switch'];
         }
 
         $this->device = $device;

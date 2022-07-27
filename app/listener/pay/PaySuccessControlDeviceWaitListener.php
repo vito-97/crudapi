@@ -28,7 +28,8 @@ class PaySuccessControlDeviceWaitListener
         //充值订单
         if ($order->is_recharge && !empty($params['result'])) {
             $device = $order->device;
-            if ($device) {
+            //有流量的订单
+            if ($device && $order->flow) {
                 $user = new UserService($order->user, '');
                 $request->setUser($user);
 

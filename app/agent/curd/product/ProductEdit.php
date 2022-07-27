@@ -23,5 +23,6 @@ class ProductEdit extends Edit
         'get_status_enum' => ['name' => '状态'],
         'get_is_vip_switch' => ['name' => '会员套餐'],
         'get_allow_refund_switch' => ['name' => '是否可退'],
+        'get_type_enum'           => ['name' => '类型'],
     ];
 }

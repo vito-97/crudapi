@@ -11,6 +11,7 @@ namespace app\api\controller;
 use app\common\EventName;
 use app\model\Device;
 use app\model\Order;
+use app\model\User;
 use app\service\DeviceControlService;
 use app\service\MqttService;
 use app\service\RedisStoreService;
@@ -70,6 +71,16 @@ class Test extends BaseController
 
         dump(Config::get('test'));
 
+        return 'ok';
+    }
+
+    public function addTime()
+    {
+        $time = time() + 15;
+
+        $user              = User::find(140);
+        $user->expire_time = $time;
+        $user->save();
         return 'ok';
     }
 

@@ -19,7 +19,7 @@ class ProductSave extends Save
     //追加数据
     protected $appendParams = ['name' => ''];
     //允许新增的数据字段
-    protected $field = ['name', 'allow_refund', 'price', 'give_money', 'device_id', 'status', 'mark', 'is_vip', 'flow', 'give_flow'];
+    protected $field = ['name', 'allow_refund', 'price', 'give_money', 'device_id', 'status', 'mark', 'is_vip', 'flow', 'give_flow', 'type', 'second'];
 
     protected $withUser = 'agent_id';
 }
