@@ -18,3 +18,8 @@ php think mqtt
 
 监听设备控制超时
 php think device_control_timeout
+
+生成设备的服务费定时生成 每日定时一次即可
+php think device --mode sc
+禁用服务费超时缴费的设备
+php think device --mode pay_timeout

@@ -35,13 +35,13 @@ class DeviceSetFlowListener extends DeviceHandleListener
             }
 
             $service->userStartFlow($userID, $flow);
-            $this->deviceControlService->writeFlow($flow)->sleep(0.5)->writeFlow($flow);
+            $this->deviceControlService->writeFlow($flow);
         } else {
             //获取当前下发流量的状态
             $hasSet = $service->deviceIsSetFlow($device->device_no, true);
             //未下发余额
             if (!$hasSet) {
-                $this->deviceControlService->writeFlow($isSetFlow)->sleep(0.5)->writeFlow($isSetFlow);
+                $this->deviceControlService->writeFlow($isSetFlow);
             }
         }
     }

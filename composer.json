@@ -30,7 +30,8 @@
         "guzzlehttp/guzzle": "^7.4",
         "topthink/think-queue": "^3.0",
         "overtrue/wechat": "~5.0",
-        "topthink/think-captcha": "^3.0"
+        "topthink/think-captcha": "^3.0",
+        "workerman/workerman": "^4.0"
     },
     "require-dev": {
         "symfony/var-dumper": "^4.2",

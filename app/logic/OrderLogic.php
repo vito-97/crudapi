@@ -251,15 +251,15 @@ class OrderLogic extends BaseLogic
 
         if ($detail) {
             if ($detail->isTimeout()) {
-                $detail->deviceFinish();
+//                $detail->deviceFinish();
             } else if (!$detail->isFinishState()) {
-                $detail->deviceFinish();
+//                $detail->deviceFinish();
 
-                /*if ($detail['device_id'] != $device->id) {
+                if ($detail['device_id'] != $device->id) {
                     throw new DeviceControlErrorException(sprintf(ErrorCode::USER_HAS_OTHER_DEVICE_CONTROL[1], $detail->device_no), ErrorCode::USER_HAS_OTHER_DEVICE_CONTROL[0]);
                 } else {
                     throw new DeviceControlErrorException(ErrorCode::USER_IS_CONTROL_DEVICE);
-                }*/
+                }
             }
 
         }

@@ -110,10 +110,10 @@ class DeviceControlLogic extends BaseLogic
 
             if ($detail) {
                 if ($detail->isTimeout()) {
-                    $detail->deviceFinish();
+//                    $detail->deviceFinish();
                 } else if (!$detail->isFinishState() && $detail['device_id'] != $deviceID) {
-                    $detail->deviceFinish();
-//                    throw new DeviceControlErrorException(ErrorCode::USER_HAS_OTHER_DEVICE_CONTROL[1], ErrorCode::USER_HAS_OTHER_DEVICE_CONTROL[0]);
+//                    $detail->deviceFinish();
+                    throw new DeviceControlErrorException(ErrorCode::USER_HAS_OTHER_DEVICE_CONTROL[1], ErrorCode::USER_HAS_OTHER_DEVICE_CONTROL[0]);
                 }
 
             }

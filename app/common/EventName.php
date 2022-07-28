@@ -29,6 +29,9 @@ class EventName
     const WATERWORKS_DASHBOARD = 'waterworks_dashboard';
     const CUSTOMER_DASHBOARD = 'customer_dashboard';
 
+    //定时任务的事件名称
+    const CRONTAB_TASK = 'task_%s';
+
     /**
      * 后台用户登录
      * 传入登录的管理员信息

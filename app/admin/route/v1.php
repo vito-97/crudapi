@@ -73,6 +73,11 @@ Route::group('<api_version>', function () {
     //设备APP版本
     Route::resource('device_app_version', 'DeviceAppVersion');
     //订单
+    //权限
+    Route::group('order', function () {
+        //退款申请
+        Route::post('refund', 'refund');
+    })->prefix('Order/');
     Route::resource('order', 'Order');
     //套餐
     Route::resource('product', 'Product');

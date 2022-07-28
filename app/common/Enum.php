@@ -51,6 +51,7 @@ class Enum
     const JOB_DEVICE_RESTART = 'device_restart';
     const JOB_DEVICE_CONTROL_CHECK = 'device_control_check';
     const JOB_DEVICE_TIMEOUT_CHECK = 'device_timeout_check';
+    const JOB_CREATE_SERVICE_CHARGE = 'create_service_charge';
 
     //订单退款
     const JOB_ORDER_REFUND = 'order_refund';

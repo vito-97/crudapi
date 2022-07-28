@@ -131,12 +131,12 @@ class DeviceControl extends BaseModel
         $this->checkModelData('device_id');
         //状态不是完成 操作中的用户也不是传入的用户
         if (($this->isStartState() || $this->isPauseState() || $this->isWaitState()) && $userID != $this->getData('user_id')) {
-            $status = $this->deviceFinish();
+            /*$status = $this->deviceFinish();
             if ($status) {
                 return $this;
-            }
+            }*/
 //            当前设备已有其他用户操作中
-//            throw new DeviceControlErrorException(ErrorCode::DEVICE_HAS_OTHER_USER_CONTROL);
+            throw new DeviceControlErrorException(ErrorCode::DEVICE_HAS_OTHER_USER_CONTROL);
         }
 
         //判断需要执行的操作

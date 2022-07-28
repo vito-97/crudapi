@@ -154,6 +154,10 @@ class DeviceSubscribeMessageListener
             // 设备已经下发流量
             $this->service->deviceIsSetFlow($deviceNo, 1);
         }
+
+        /*$this->e('正在清除下发余额状态');
+        $deviceControl = new DeviceControlService($this->imei);
+        $deviceControl->send('0106000A0000A9C8');*/
     }
 
     /**
@@ -236,6 +240,10 @@ class DeviceSubscribeMessageListener
         $userID        = $this->getWantControlUserID();
         $user          = $this->getUser($userID);
 
+        if (!$this->service->deviceIsSetFlow($deviceNo, true)) {
+            // 设备已经下发流量
+            $this->service->deviceIsSetFlow($deviceNo, 1);
+        }
 
         if (($this->control && !$this->control->isStartState()) || !$this->control) {
 
@@ -247,6 +255,11 @@ class DeviceSubscribeMessageListener
                 $logic = new DeviceLogic();
                 $logic->start($deviceNo);
             }
+
+            /*$this->e('正在清除加注状态');
+            $deviceControl = new DeviceControlService($this->imei);
+            $deviceControl->send('0106000E0000E809');*/
+
         } elseif ($isSwitch) {
             $this->checkUserExpireTime($user);
         }
