@@ -26,7 +26,7 @@ class OrderRefundListener
 
         try {
             $result = $pay->refund(['order_no' => $order->order_no, 'amount' => $order->refund_money]);
-            dump($result);
+//            dump($result);
             $code   = $pay->getPayStatus($result);
             $status = $pay->payIsSuccess($result);
             if ($status && $code === 'refund') {

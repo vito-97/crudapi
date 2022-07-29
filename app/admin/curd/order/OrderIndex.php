@@ -26,19 +26,19 @@ class OrderIndex extends Index
     //排除字段
     protected $withoutField = false;
 
-    protected $queryField = ['user_id','agent_id', 'product_id', 'status', 'device_id', 'channel_type'];
+    protected $queryField = ['user_id', 'agent_id', 'product_id', 'status', 'device_id', 'channel_type'];
 
     protected $validate = [
         OrderValidate::class => Enum::VALID_LIST_SCENE,
     ];
 
     protected $with = [
-      'user','device','coupon_card','agent'
+        'user', 'device', 'coupon_card', 'agent',
     ];
 
     protected $labelCallback = [
-        'get_status_enum' => ['name' => '状态'],
+        'get_status_enum'       => ['name' => '状态'],
         'get_channel_type_enum' => ['name' => '支付类型'],
-        'get_type_enum' => ['name' => '订单类型'],
+        'get_type_enum'         => ['name' => '订单类型'],
     ];
 }

@@ -296,6 +296,15 @@ class Order extends BaseModel
 
     public function searchIndexAttr(Query $query, $value)
     {
-        return $query->where('order_no|outer_trade_no|channel_trade_no', 'like', "%{$value}%");
+        $query->hasWhere('user', function ($query) use ($value) {
+            /**
+             * @var $query Query
+             */
+            $query->where('nickname', 'like', "%{$value}%");
+        });
+
+        if (preg_match('/^\d*$/', $value)) {
+            $query->whereOr('order_no|outer_trade_no|channel_trade_no', 'like', "%{$value}%");
+        }
     }
 }

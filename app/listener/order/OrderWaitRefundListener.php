@@ -8,7 +8,6 @@
 
 namespace app\listener\order;
 
-
 use app\common\Enum;
 use app\exception\MessageException;
 use app\job\OrderRefundJob;

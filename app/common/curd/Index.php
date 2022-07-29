@@ -8,7 +8,6 @@
 
 namespace app\common\curd;
 
-
 use app\common\Util;
 use think\helper\Str;
 use think\Paginator;
@@ -150,7 +149,7 @@ class Index extends BaseCurd
     protected function query()
     {
         $args = $this->getQueryArgs();
-
+//        dump($args);die;
         $result = $this->getLogic()->getAll($args);
 
         if ($this->fetchSql) {
@@ -294,7 +293,7 @@ class Index extends BaseCurd
         //关键词
         if ($keyword) {
             foreach ($this->keywordQueryArgs as $field) {
-                $args['where'][$field] = $keyword;
+                $args['with_search'][$field] = $keyword;
             }
         }
 

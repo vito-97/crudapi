@@ -4,9 +4,11 @@ declare (strict_types=1);
 namespace app\admin\controller\v1;
 
 use app\admin\controller\BaseController;
+use app\common\EventName;
 use app\exception\DataNotFoundException;
 use app\exception\MessageException;
 use app\logic\OrderLogic;
+use think\facade\Event;
 
 class Order extends BaseController
 {
@@ -51,9 +53,11 @@ class Order extends BaseController
             throw new MessageException('订单状态错误');
         }
 
-        $order->status      = \app\model\Order::STATUS_WAIT_REFUND;
-        $order->refund_mark = $mark;
-        $order->save();
+//        $order->status      = \app\model\Order::STATUS_WAIT_REFUND;
+//        $order->refund_mark = $mark;
+//        $order->save();
+        // 待退款事件
+        Event::trigger(EventName::ORDER_WAIT_REFUND, ['order' => $order, 'refund_money' => $order->pay_price, 'refund_mark' => $mark]);
 
         return $this->success('申请退款成功');
     }

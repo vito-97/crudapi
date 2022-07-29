@@ -342,7 +342,10 @@ class BaseModel extends Model
 
         //获取query
         $query = $this->db($withoutGlobalScope);
-
+        //搜索器
+        if ($args['with_search']) {
+            $query = $query->withSearch(array_keys($args['with_search']), $args['with_search']);
+        }
         //并条件
         if ($args['where']) {
             $query = $query->where($args['where']);
@@ -369,10 +372,6 @@ class BaseModel extends Model
             } else {
                 $query = $query->field($args['field']);
             }
-        }
-        //搜索器
-        if ($args['with_search']) {
-            $query = $query->withSearch(array_keys($args['with_search']), $args['with_search']);
         }
         //关联
         if ($args['with']) {
