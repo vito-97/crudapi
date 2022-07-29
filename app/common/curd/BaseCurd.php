@@ -17,6 +17,7 @@ use app\logic\BaseLogic;
 use app\service\user\BaseUserService;
 use think\App;
 use think\Container;
+use think\db\Query;
 use think\helper\Str;
 use think\Model;
 
@@ -473,7 +474,23 @@ abstract class BaseCurd
         }
 
         $query = function ($query) use ($where) {
-            $query->where($where);
+            /**
+             * @var $query Query
+             */
+            $map  = [];
+            $name = $query->getName();
+
+            foreach ($where as $key => $item) {
+                $field = $item[0];
+
+                if (!strpos($field, '.')) {
+                    $item[0] = "${name}.${field}";
+                }
+
+                $map[$key] = $item;
+            }
+
+            $query->where($map);
         };
 
         $args = [

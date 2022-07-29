@@ -342,6 +342,10 @@ class BaseModel extends Model
 
         //获取query
         $query = $this->db($withoutGlobalScope);
+
+        //设置别名
+        $query = $query->alias($this->getName());
+
         //搜索器
         if ($args['with_search']) {
             $query = $query->withSearch(array_keys($args['with_search']), $args['with_search']);

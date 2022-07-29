@@ -149,7 +149,6 @@ class Index extends BaseCurd
     protected function query()
     {
         $args = $this->getQueryArgs();
-//        dump($args);die;
         $result = $this->getLogic()->getAll($args);
 
         if ($this->fetchSql) {
