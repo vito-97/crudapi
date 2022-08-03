@@ -109,12 +109,12 @@ class DeviceSubscribeMessageListener
             $deviceServiceControl->clearFinishFlow();
         }
 
-//        if ($this->control && $this->control->isFinishState()) {
-//        $this->e('设备已结算');
-
-        //结算
-//        $this->stop(app()->request, $deviceNo, $hex);
-//        }
+        if ($this->control && !$this->control->isFinishState()) {
+            //结算
+            $this->stop(app()->request, $deviceNo, $hex);
+        } elseif ($this->control && $this->control->isFinishState()) {
+            $this->e('设备已结算');
+        }
     }
 
     /**
@@ -130,7 +130,8 @@ class DeviceSubscribeMessageListener
             '0103020001' => 'start',
             '0103020002' => 'pauseOn',
             '0103020003' => 'stop',
-            '0103020000' => 'stopOn',
+//            '0103020000' => 'stopOn',
+            '0103020000' => 'stop',
         ];
 
         foreach ($methods as $code => $name) {
@@ -150,7 +151,7 @@ class DeviceSubscribeMessageListener
     {
         $this->e('已下发余额');
 
-        if (!$this->service->deviceIsSetFlow($deviceNo, true)) {
+        if ($this->control && !$this->control->isFinishState() && !$this->service->deviceIsSetFlow($deviceNo, true)) {
             // 设备已经下发流量
             $this->service->deviceIsSetFlow($deviceNo, 1);
         }

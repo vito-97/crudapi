@@ -1,9 +1,9 @@
 <?php
 /**
- * Created by PhpStorm.
+ * Created by Command.
  * User: Vito
- * Date: 2022/07/21
- * Time: 10:04
+ * Date: 2022/08/03
+ * Time: 10:06
  */
 use app\common\ErrorCode;
 use app\common\Message;
@@ -104,6 +104,7 @@ return [
 	'valid.money' => '金额',
 	'valid.type' => '类型',
 	'valid.product_type' => '套餐类型',
+	'valid.flow' => '流量(单位升)',
 	'valid.name' => '名称',
 	'valid.app_id' => 'APP ID',
 	'valid.cus_id' => '商户ID',
@@ -121,6 +122,7 @@ return [
 	'valid.coupon_id' => '优惠券ID',
 	'valid.user_id' => '用户ID',
 	'valid.is_use' => '是否使用',
+	'valid.cash_coupon_id' => '现金券ID',
 	'valid.full_minus' => '满减金额',
 	'valid.amount' => '金额',
 	'valid.total' => '总量',
@@ -139,8 +141,8 @@ return [
 	'valid.field' => '字段',
 	'valid.value' => '值',
 	'valid.contract_number' => '合同号',
-	'valid.flow' => '流量(单位升)',
 	'valid.customer_id' => '取水客户',
+	'valid.flow_type' => '取水类型',
 	'valid.version' => '版本号',
 	'valid.is_new' => '是否最新',
 	'valid.is_force' => '是否强制',
@@ -162,6 +164,8 @@ return [
 	'valid.used_global_product' => '使用全局套餐',
 	'valid.address' => '地址',
 	'valid.adverts_light' => '广告灯',
+	'valid.flow_coupon_id' => '流量券',
+	'valid.flow_coupon_amount' => '流量（升）',
 	'valid.ID' => '编号',
 	'valid.dir' => '文件夹',
 	'valid.coupon_card_id' => '优惠券卡ID',
@@ -171,7 +175,7 @@ return [
 	'valid.page' => '页码',
 	'valid.allow_refund' => '是否可退',
 	'valid.give_flow' => '赠送流量(单位升)',
-	'valid.second' => 'second',
+	'valid.second' => '时间（秒）',
 	'valid.time' => '日期',
 	'valid.is_pay' => '是否支付',
 	'valid.route' => '路由',
@@ -187,7 +191,8 @@ return [
 	'valid.key' => '键',
 	'valid.auth_ids' => '权限ID',
 	'valid.time_type' => '时间类型',
-	'valid.flow_type' => '取水类型',
 	'valid.order_id' => '订单ID',
 	'valid.pm' => '收入/支出情况',
+	'valid.wechat_oauth_scope' => '微信授权场景',
+	'valid.wechat_oauth_code' => '微信授权码',
 ];

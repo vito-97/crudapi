@@ -8,10 +8,12 @@
 
 namespace app\service;
 
+use think\cache\driver\Redis;
 use think\facade\Cache;
 
 /**
  * Class RedisStore
+ * @mixin Redis
  * @package app\service
  */
 class RedisStoreService

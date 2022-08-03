@@ -35,7 +35,7 @@ class SystemStatusMiddleware
             //只有非超管角色才进入判断网站后台状态
             if (!$role->isSuper()) {
                 $logic = new SystemConfigLogic();
-                $status = $logic->getConfigs('close_system');
+                $status = $logic->config('close_system');
 
                 if ($status) {
                     throw new SystemIsClosedException();

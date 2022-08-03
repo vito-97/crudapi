@@ -33,10 +33,12 @@ class Coupon extends BaseModel
 
     const COUPON_TYPE = 1;
     const CASH_TYPE = 2;
+    const FLOW_TYPE = 3;
 
     const TYPE_ENUM = [
         self::COUPON_TYPE => '优惠券',
         self::CASH_TYPE   => '现金券',
+        self::FLOW_TYPE   => '流量券',
     ];
 
     const ALL_LIMIT_TYPE = 1;
@@ -145,9 +147,12 @@ class Coupon extends BaseModel
             $this->checkReceiveStatus()->checkLimit($couponCardModel->user_id)->checkHas();
         }
 
-        $couponCardModel->expire_time = $this->getCouponExpireTime();
+        $couponCardModel->expire_time    = $this->getCouponExpireTime();
+        $couponCardModel->coupon_user_id = $this->coupon_user_id;
+        $couponCardModel->agent_id       = $this->agent_id;
+        $couponCardModel->type           = $this->getData('type');
 
-        $couponCardModel->coupon->inc('issued_total', 1)->update();
+        $this->inc('issued_total', 1)->update();
 
         return $this;
     }
@@ -325,7 +330,7 @@ class Coupon extends BaseModel
                 $msg = $type . '已经领取上限';
 
                 if ($limitType != 1) {
-                    $msg .= $this->limit_type_desc . "/{$this->getData('limit')}张";
+                    $msg .= $this->limit_type_desc . "{$this->getData('limit')}张";
                 }
 
                 throw new ValidateException($msg);
@@ -342,7 +347,7 @@ class Coupon extends BaseModel
      */
     public function subMoney($money)
     {
-        $num = bcsub($money, $this->getData('amount'),2);
+        $num = bcsub($money, $this->getData('amount'), 2);
 
         if ($num <= 0) {
             $num = Enum::PRICE_ZERO_DEFAULT;

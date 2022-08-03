@@ -39,11 +39,17 @@ class CouponCard extends BaseModel
 
     const COUPON_TYPE = Coupon::COUPON_TYPE;
     const CASH_TYPE = Coupon::CASH_TYPE;
+    const FLOW_TYPE = Coupon::FLOW_TYPE;
 
     protected $typeEnum = Coupon::TYPE_ENUM;
 
     protected $type = [
         'expire_time' => 'timestamp',
+    ];
+
+    //全局查询范围
+    protected $globalScope = [
+        'type',
     ];
 
     /**

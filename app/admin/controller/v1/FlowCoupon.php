@@ -4,21 +4,19 @@ declare (strict_types = 1);
 namespace app\admin\controller\v1;
 
 use app\admin\controller\BaseController;
-use app\logic\CashCouponLogic;
+use app\logic\FlowCouponLogic;
 
-class CashCoupon extends BaseController
+class FlowCoupon extends BaseController
 {
-    protected $name = '现金券';
+    protected $name = '流量券';
 
     protected $registerCurd = true;
 
     protected $registerCurdDir = true;
 
-    const DISUSE = true;
-
     protected function initialize()
     {
-        $this->logic = new CashCouponLogic();
+        $this->logic = new FlowCouponLogic();
     }
 
 }

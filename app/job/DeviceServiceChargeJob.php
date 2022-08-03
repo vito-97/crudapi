@@ -20,8 +20,8 @@ class DeviceServiceChargeJob extends BaseJob
     {
         $logic = new SystemConfigLogic();
 
-        $amount    = $logic->getConfigs('service_charge_amount', 0);
-        $expireDay = $logic->getConfigs('service_charge_pay_day', 31);
+        $amount    = $logic->config('service_charge_amount', 0);
+        $expireDay = $logic->config('service_charge_pay_day', 31);
 
         if ($amount) {
             //获取今年有几天

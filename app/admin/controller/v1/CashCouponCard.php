@@ -4,7 +4,7 @@ declare (strict_types=1);
 namespace app\admin\controller\v1;
 
 use app\admin\controller\BaseController;
-use app\logic\CouponCardLogic;
+use app\logic\CashCouponCardLogic;
 
 class CashCouponCard extends BaseController
 {
@@ -14,9 +14,11 @@ class CashCouponCard extends BaseController
 
     protected $registerCurdDir = 'cashCoupon';
 
+    const DISUSE = true;
+
     protected function initialize()
     {
-        $this->logic = new CouponCardLogic();
+        $this->logic = new CashCouponCardLogic();
     }
 
 }

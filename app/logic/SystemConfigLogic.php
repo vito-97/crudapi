@@ -79,7 +79,7 @@ class SystemConfigLogic extends BaseLogic
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
      */
-    public function getConfigs($key = null, $default = '')
+    public function config($key = null, $default = '')
     {
         if (is_null(self::$configs)) {
             $config = $this->getConfigList();
@@ -92,6 +92,25 @@ class SystemConfigLogic extends BaseLogic
         }
 
         return $key ? (!empty(self::$configs[$key]) ? self::$configs[$key] : $default) : self::$configs;
+    }
+
+    /**
+     * @param null $key 获取的键名
+     * @param string $default 默认值
+     * @return SystemConfig|SystemConfig[]|array|mixed|string|\think\Collection
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
+     * @throws \think\db\exception\ModelNotFoundException
+     */
+    public static function get($key = null, $default = '')
+    {
+        static $class;
+
+        if (!$class) {
+            $class = new static();
+        }
+
+        return $class->config($key, $default);
     }
 
     /**

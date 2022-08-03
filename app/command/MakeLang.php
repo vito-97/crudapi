@@ -120,7 +120,7 @@ class MakeLang extends Command
         $day     = date('Y/m/d');
         $time    = date('H:i');
         $array[] = "/**
- * Created by PhpStorm.
+ * Created by Command.
  * User: Vito
  * Date: {$day}
  * Time: {$time}
@@ -131,7 +131,6 @@ class MakeLang extends Command
         }
 
         $array[] = '';
-
         $array[] = 'return [';
 
         foreach ($data as $key => $value) {
@@ -266,19 +265,22 @@ class MakeLang extends Command
                         $alias = $f = $key;
                     }
 
+                    $k = $alias;
+
                     if (strpos($alias, $langGroup . '.') === false) {
-                        $alias = $langGroup . '.' . $alias;
+                        $k = $langGroup . '.' . $alias;
                     }
 
-                    $data[$alias] = $f;
+                    $data[$k] = $alias;
                 }
 
                 foreach ($field as $key => $val) {
+                    $k = $val;
                     if (strpos($val, $langGroup . '.') === false) {
-                        $val = $langGroup . '.' . $val;
+                        $k = $langGroup . '.' . $val;
                     }
 
-                    $data[$val] = $key;
+                    $data[$k] = $val;
                 }
             }
         }

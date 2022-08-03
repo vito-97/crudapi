@@ -54,7 +54,7 @@ class SystemConfigTabIndex extends Index
     public function getConfig()
     {
         $logic  = new SystemConfigLogic();
-        $config = $logic->getConfigs();
+        $config = $logic->config();
 
         return $config;
     }

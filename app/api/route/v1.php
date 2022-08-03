@@ -13,7 +13,26 @@ define('USER_AUTH_MIDDLEWARE', [UserAuthTokenMiddleware::class, [\app\service\To
 
 Route::group('<api_version>', function () {
     //微信接口
-    Route::any('wechat', 'Wechat/index');
+    Route::group('wechat', function () {
+        Route::any('message', 'index');
+        Route::post('login', 'login');
+        Route::post('callback', 'callback')->name('wechat_login_callback');
+
+    })->prefix('Wechat/');
+
+    //现金券
+    Route::group('cash_coupon', function () {
+        //领取
+        Route::post('receive', 'receive');
+    })->prefix('CashCoupon/')->middleware([USER_AUTH_MIDDLEWARE]);
+
+    //流量券
+    Route::resource('flow_coupon', 'FlowCoupon')->only(['read']);
+    Route::group('flow_coupon', function () {
+        //领取
+        Route::post('receive', 'receive');
+    })->prefix('FlowCoupon/')->middleware([USER_AUTH_MIDDLEWARE]);
+
     //支付
     Route::group('pay', function () {
         //支付链接

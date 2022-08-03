@@ -9,8 +9,8 @@
 $isDev = isset($_SERVER['HTTP_HOST']) && $_SERVER['HTTP_HOST'] === 'water.cn';
 
 if ($isDev) {
-    $clientHost     = 'http://localhost:8080/';
-    $agentHost      = 'http://localhost:8081/';
+    $clientHost     = 'http://h5.water.cn:8880/';
+    $agentHost      = 'http://agent.waetr.cn:8881/';
     $waterworksHost = 'http://localhost:8082/';
 } else {
     $clientHost     = 'https://h5.aijkl.com/';

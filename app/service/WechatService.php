@@ -8,7 +8,7 @@
 
 namespace app\service;
 
-
+use app\logic\SystemConfigLogic;
 use EasyWeChat\Factory;
 
 /**
@@ -19,9 +19,11 @@ use EasyWeChat\Factory;
 class WechatService
 {
     protected $config = [
-        'http'          => [
-            'verify' => false,
+        'http' => [
+            'verify'  => false,
+            'timeout' => 5.0,
         ],
+
         'response_type' => 'array',
     ];
 
@@ -36,7 +38,15 @@ class WechatService
      */
     public function __construct($config = [])
     {
-        $config = $config ?: site('wechat');
+        if (!$config) {
+            $logic  = new SystemConfigLogic();
+            $config = [
+                'app_id'  => $logic->config('wechat_appid'),
+                'secret'  => $logic->config('wechat_appsecret'),
+                'token'   => $logic->config('wechat_appsecret'),
+                'aes_key' => $logic->config('wechat_encodingaeskey'),
+            ];
+        }
 
         $this->config = array_merge_recursive($this->config, $config);
 
@@ -45,7 +55,7 @@ class WechatService
 
     public function __get($name)
     {
-        return $this->app->$name;
+        return $this->app->{$name};
     }
 
     public function __call($name, $arguments)
