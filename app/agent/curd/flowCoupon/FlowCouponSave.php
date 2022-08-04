@@ -30,5 +30,5 @@ class FlowCouponSave extends Save
         'coupon_user_id', 'limit_type',
     ];
 
-    protected $withUser = true;
+    protected $withUser = 'agent_id';
 }

@@ -15,6 +15,11 @@ Route::group('<api_version>', function () {
     //现金券领取
     Route::resource('cash_coupon_card', 'CashCouponCard')->only(['index', 'read', 'change']);
 
+    //流量券
+    Route::resource('flow_coupon', 'FlowCoupon')->except(['save']);
+    //流量券领取
+    Route::resource('flow_coupon_card', 'FlowCouponCard')->only(['index', 'read', 'change']);
+
     //用户
     Route::group('coupon_user', function () {
         //详情

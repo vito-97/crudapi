@@ -11,7 +11,6 @@
 use think\facade\Route;
 use \app\common\ErrorCode;
 
-
 //miss路由
 Route::miss(function () {
     return error(ErrorCode::ROUTE_NOT_FOUND);

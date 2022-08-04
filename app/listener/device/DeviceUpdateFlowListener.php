@@ -81,7 +81,12 @@ class DeviceUpdateFlowListener extends DeviceHandleListener
                 //流量大于现有的流量
                 $user->flow = 0;
             } else {
-                $user->flow = ['dec', $useFlow];
+                // 普通用户只要有使用就清空流量
+                if ($user->type == User::NORMAL_TYPE) {
+                    $user->flow = 0;
+                } else {
+                    $user->flow = ['dec', $useFlow];
+                }
             }
 
             $user->used_flow = ['inc', $realUseFlow];
@@ -102,8 +107,8 @@ class DeviceUpdateFlowListener extends DeviceHandleListener
             $this->e("已使用流量{$useFlow}L");
         }
 
-        $this->e('正在清除结算余额');
-        $this->deviceControlService->clearFinishFlow();
+//        $this->e('正在清除结算余额');
+//        $this->deviceControlService->clearFinishFlow();
 
 //        return;
 //        for($i=1;$i<=3;$i++){

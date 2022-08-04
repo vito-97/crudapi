@@ -19,7 +19,7 @@ class UserValidate extends BaseValidate
      */
     protected $rule = [
         'username'     => 'require|alphaDash|length:4,20|unique:user',
-        'nickname'     => 'require|chsDash|length:2,20|unique:user',
+        'nickname'     => 'require|length:2,20|unique:user',
         'password'     => 'requireWithout:id|checkPassword|length:8,20',
         'tel'          => 'mobile|unique:user',
         'phone'        => 'alphaDash|max:15',

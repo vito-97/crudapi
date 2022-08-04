@@ -21,13 +21,12 @@ class FlowCouponCardSave extends Save
     //允许新增的数据字段
     protected $field = ['coupon_id', 'user_id', 'status'];
 
-    protected $withUser = true;
+    protected $withUser = 'agent_id';
 
     protected function saveMiddleware($next, $params)
     {
         $coupon = FlowCoupon::find($params['coupon_id']);
 
-        $params['agent_id']       = $coupon->agent_id;
         $params['coupon_user_id'] = $coupon->coupon_user_id;
 
         return $next($params);

@@ -30,15 +30,19 @@ class Adverts extends BaseController
         $this->logic = new AdvertsLogic();
     }
 
-    public function index($deviceNo = '')
+    public function index($deviceNo = '', $agentId = 0)
     {
-        DeviceNoValidate::batchCheck();
+        if (!$agentId) {
+            DeviceNoValidate::batchCheck();
+        }
         $where  = [];
         $device = null;
         if ($deviceNo) {
             $deviceLogic       = new DeviceLogic();
             $device            = $deviceLogic->getByDeviceNo($deviceNo);
             $where['agent_id'] = $device->agent_id;
+        } elseif ($agentId) {
+            $where['agent_id'] = $agentId;
         }
 
         $list = $this->logic->getAll(['where' => $where, 'scope' => ['status'], 'field' => ['id', 'title', 'image', 'link']])->append([]);

@@ -477,3 +477,20 @@ function get_device_online_type($hex, $default = 1)
 
     return $type;
 }
+
+/**
+ * 去除emoji表情
+ * @param $str
+ * @return string|string[]|null
+ */
+function trim_emoji($str)
+{
+    $str = preg_replace_callback(
+        '/./u',
+        function (array $match) {
+            return strlen($match[0]) >= 4 ? '' : $match[0];
+        },
+        $str);
+
+    return $str;
+}

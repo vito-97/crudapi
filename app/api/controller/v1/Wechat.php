@@ -142,7 +142,7 @@ class Wechat extends BaseController
         }
     }
 
-    public function login($type = 'base')
+    public function login($type = 'userinfo')
     {
         WechatOauthValidate::batchCheck(['scope' => $type], 'scope');
 
@@ -212,9 +212,14 @@ class Wechat extends BaseController
     protected function register($nickname, $avatar = '')
     {
         $userLogic = new UserLogic();
-        $userinfo  = $userLogic->register([
+//        $nickname  = trim_emoji($nickname);
+        if (!$nickname) {
+            $nickname = '微信授权';
+        }
+
+        $userinfo = $userLogic->register([
             'username' => 'oauth_' . Str::random(10),
-            'nickname' => $nickname,
+            'nickname' => $nickname . Str::random(5),
             'password' => 'a123456.',
             'avatar'   => $avatar,
             'money'    => 0,

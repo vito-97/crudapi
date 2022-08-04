@@ -52,7 +52,7 @@ class FlowCoupon extends BaseController
         $status = $card->save();
 
         if ($status) {
-            $user->flow = (int)$card->coupon->amount;
+            $user->flow = ['inc', (int)$card->coupon->amount];
             $user->save();
 
             return $this->success('领取成功');

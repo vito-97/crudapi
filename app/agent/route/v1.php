@@ -46,6 +46,10 @@ Route::group('<api_version>', function () {
     Route::resource('cash_coupon', 'CashCoupon');
     //现金券领取
     Route::resource('cash_coupon_card', 'CashCouponCard');
+    //流量券
+    Route::resource('flow_coupon', 'FlowCoupon');
+    //流量券领取
+    Route::resource('flow_coupon_card', 'FlowCouponCard');
     //服务费
     Route::resource('service_charge', 'ServiceCharge')->only(['index', 'read']);
     //仪表盘

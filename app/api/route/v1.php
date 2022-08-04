@@ -75,10 +75,10 @@ Route::group('<api_version>', function () {
 
     //订单
     Route::group('order', function () {
-        Route::post('create', 'create');
+        Route::post('create', 'create')->middleware([USER_AUTH_MIDDLEWARE]);
         Route::get('detail', 'detail');
         Route::get('status', 'status');
-    })->prefix('Order/')->middleware([USER_AUTH_MIDDLEWARE]);
+    })->prefix('Order/');
 
     //用户
     Route::group('user', function () {
