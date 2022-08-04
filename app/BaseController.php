@@ -23,6 +23,9 @@ abstract class BaseController
     //不需要验证权限的方法
     const NOT_NEED_AUTH = [];
 
+    //不需要写日志的方法
+    const NOT_NEED_LOGGER = [];
+
     //为true表示控制器已废弃
     const DISUSE = false;
 

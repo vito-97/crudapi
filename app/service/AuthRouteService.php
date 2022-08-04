@@ -35,6 +35,8 @@ class AuthRouteService
 
     ];
 
+    protected static $refection = [];
+
     /**
      * 公共方法对应的名称
      * @var string[]
@@ -146,13 +148,15 @@ class AuthRouteService
      */
     public function getReflectionClassByRoute($route)
     {
-        $info = $this->getRouteInfo($route);
+        if (empty(self::$refection[$route])) {
+            $info = $this->getRouteInfo($route);
 
-        $className = $info['class'];
+            $className = $info['class'];
 
-        $refection = new \ReflectionClass($className);
+            self::$refection[$route] = new \ReflectionClass($className);
+        }
 
-        return $refection;
+        return self::$refection[$route];
     }
 
     /**

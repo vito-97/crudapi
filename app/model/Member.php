@@ -15,4 +15,6 @@ class Member extends User
     use UserScopeTrait;
 
     const USER_TYPE = 0;
+
+    protected $useSiteScope = false;
 }

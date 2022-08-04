@@ -23,16 +23,25 @@ class SystemLogMiddleware
 
         //后置中间件记录访问
         if (!$request->isOptions()) {
-            //获取路由规则
-            $rule   = $request->rule();
-            $route = $rule->getRoute();
+            $router = get_route();
 
-            $service = new AuthRouteService();
-            //没规则是未定义路由
-            $name               = $route ? $service->getMethodNameByRoute(get_route()) : 404;
-            $request->routeName = $name;
+            $service       = new AuthRouteService();
+            $class         = $service->getReflectionClassByRoute($router);
+            $notNeedLogger = $class->getConstant('NOT_NEED_LOGGER');
+            $action        = $request->action();
 
-            $this->record($request);
+            //需要记录日志
+            if (empty($notNeedLogger) || (!in_array('*', $notNeedLogger) && !in_array($action, $notNeedLogger))) {
+                //获取路由规则
+                $rule  = $request->rule();
+                $route = $rule->getRoute();
+                //没规则是未定义路由
+                $name               = $route ? $service->getMethodNameByRoute($router) : 404;
+                $request->routeName = $name;
+
+                $this->record($request);
+            }
+
         }
 
         return $response;

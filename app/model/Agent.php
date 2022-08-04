@@ -19,6 +19,8 @@ class Agent extends User
 
     const USER_TYPE = self::AGENT_TYPE;
 
+    protected $useSiteScope = false;
+
     protected $productTypeEnum = Product::TYPE_ENUM;
 
     protected $scene = [

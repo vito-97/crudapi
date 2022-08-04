@@ -13,7 +13,7 @@ use app\common\Message;
 use app\model\traits\AgentTrait;
 use app\model\traits\DisabledTrait;
 use app\model\traits\SiteScopeTrait;
-use app\model\traits\UserTrait;
+use app\model\traits\WaterworksTrait;
 use think\db\Query;
 use think\Model;
 
@@ -22,6 +22,9 @@ class Device extends BaseModel
     use AgentTrait;
     use DisabledTrait;
     use SiteScopeTrait;
+    use WaterworksTrait;
+
+    protected $waterworksForeignKey = 'agent_id';
 
     protected $type = [
         'start_time' => 'timestamp',

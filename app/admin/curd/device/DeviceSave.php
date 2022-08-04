@@ -30,7 +30,9 @@ class DeviceSave extends Save
 
     protected function saveMiddleware($next, $params)
     {
-        if (empty($params['site_id'])) {
+        $role = $this->getUserRole();
+
+        if (!$role->isSuper()) {
             $params['site_id'] = $this->getUserRole()->site_id;
         }
 

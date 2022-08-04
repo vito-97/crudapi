@@ -244,27 +244,34 @@ abstract class BaseValidate extends Validate
 
         $array = explode(',', $rule);
 
-        $name  = $array[0];
-        $model = model($name);
-        $pk    = $array[1] ?? 'id';
+        $names = explode('/', $array[0]);
 
-        $where = $this->checkHasWhere[$field] ?? [];
+        foreach ($names as $name) {
+            $model = model($name);
+            $pk    = $array[1] ?? 'id';
 
-        if (is_string($where) && method_exists($this, $where)) {
-            $where = $this->$where();
+            $where = $this->checkHasWhere[$field] ?? [];
 
-            if (!is_array($where)) {
-                $where = [];
+            if (is_string($where) && method_exists($this, $where)) {
+                $where = $this->$where($name);
+
+                if (!is_array($where)) {
+                    $where = [];
+                }
+            }
+
+            $where = array_merge($where, [$pk => $value]);
+
+            $has = $model
+                ->field($pk)->where($where)
+                ->cache(60)->useSoftDelete('delete_time', ['=', 0])->find();
+
+            if ($has) {
+                return true;
             }
         }
 
-        $where = array_merge($where, [$pk => $value]);
-
-        $has = $model
-            ->field($pk)->where($where)
-            ->cache(60)->useSoftDelete('delete_time', ['=', 0])->find();
-
-        return $has ? true : ':attribute 数据不存在';
+        return ':attribute 数据不存在';
     }
 
     /**

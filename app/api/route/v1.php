@@ -73,6 +73,8 @@ Route::group('<api_version>', function () {
 
     })->prefix('Device/')->middleware([USER_AUTH_MIDDLEWARE]);
 
+    Route::resource('device','Device')->only(['index'])->middleware([USER_AUTH_MIDDLEWARE]);
+
     //订单
     Route::group('order', function () {
         Route::post('create', 'create')->middleware([USER_AUTH_MIDDLEWARE]);

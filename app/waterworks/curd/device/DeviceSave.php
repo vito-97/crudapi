@@ -47,7 +47,7 @@ class DeviceSave extends Save
         if ($detail->agent_id && $detail->agent_id == $uid) {
             throw new MessageException('设备已绑定');
         }
-
+        $detail->site_id  = Enum::SITE_TWO;
         $detail->agent_id = $uid;
 
         return $next($detail);

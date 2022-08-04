@@ -17,6 +17,10 @@ class Device extends BaseController
 {
     const NOT_NEED_LOGIN = ['detail', 'setting'];
 
+    protected $registerCurd = ['index'];
+
+    protected $registerCurdDir = true;
+
     protected $name = '设备';
 
     protected $methodName = [

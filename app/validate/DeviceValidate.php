@@ -26,7 +26,7 @@ class DeviceValidate extends BaseValidate
         'lat'                 => 'checkLat',
         'lng'                 => 'checkLng',
         'l_to_pulse'          => 'isPositiveInteger:zero',
-        'agent_id'            => 'checkHas:agent',
+        'agent_id'            => 'checkHas:agent/waterworks',
         'used_global_product' => 'checkSwitch',
         'address'             => 'requireWith:lat|max:120',
         'adverts_light'       => 'checkSwitch',
@@ -60,7 +60,6 @@ class DeviceValidate extends BaseValidate
         self::SAVE_SCENE   => 'all',
         self::UPDATE_SCENE => 'all',
         self::LIST_SCENE   => ['status', 'agent_id'],
-        'bind'             => ['imei'],
     ];
 
     /**
@@ -75,5 +74,10 @@ class DeviceValidate extends BaseValidate
     public function sceneDevice()
     {
         return $this->only(['device_no'])->remove('device_no', 'unique');
+    }
+
+    public function sceneBind()
+    {
+        return $this->only(['imei'])->remove('imei', 'unique');
     }
 }

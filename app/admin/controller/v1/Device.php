@@ -18,6 +18,8 @@ class Device extends BaseController
         'state' => '获取设备使用状态',
     ];
 
+    const NOT_NEED_LOGGER = ['state'];
+
     protected function initialize()
     {
         $this->logic = new DeviceLogic();

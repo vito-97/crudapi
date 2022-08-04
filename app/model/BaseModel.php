@@ -364,6 +364,10 @@ class BaseModel extends Model
         if ($args['where_or']) {
             $query = $query->whereOr($args['where_or']);
         }
+        //指定having查询
+        if ($args['having']) {
+            $query = $query->having($args['having']);
+        }
         //分组
         if ($args['group']) {
             $query = $query->group($args['group']);
@@ -418,7 +422,7 @@ class BaseModel extends Model
         if ($select) {
             //需要分页
             if ($args['paginate'] && !$args['fetch_sql']) {
-                $query = $query->paginate(['page' => (int)$args['page'], 'list_rows' => (int)$args['limit']]);
+                $query = $query->paginate(['page' => (int)$args['page'], 'list_rows' => (int)$args['limit']], $args['simple']);
             } else {
                 //分页
                 if ($args['page'] && $args['limit']) {
@@ -457,11 +461,13 @@ class BaseModel extends Model
             'page'                 => 0,
             'limit'                => $this->defaultLimit,
             'paginate'             => false,
+            'simple'               => false,
             'with_search'          => null,
             'query'                => [],
             'scope'                => null,
             'together'             => [],//关联操作
             'without_global_scope' => [],
+            'having'               => '',
             'fetch_sql'            => false,
             'cache'                => false,
         ];
