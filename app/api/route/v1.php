@@ -88,4 +88,9 @@ Route::group('<api_version>', function () {
         Route::get('detail', 'detail');
     })->prefix('User/')->middleware([USER_AUTH_MIDDLEWARE]);
 
+    Route::group('water_fetcher', function () {
+        //详情
+        Route::post('bind', 'bind');
+    })->prefix('WaterFetcher/')->middleware([USER_AUTH_MIDDLEWARE]);
+
 })->prefix('<api_version>.');

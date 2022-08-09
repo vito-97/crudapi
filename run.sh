@@ -1,7 +1,7 @@
 #!/bin/bash
 ps -ef | grep think | awk '{print $2;}' | xargs kill -9
 
-think="/www/wwwroot/api/think"
+think=pwd"/think"
 
 php $think queue:listen --queue device_control &
 php $think queue:listen --queue device_control_later &

@@ -62,7 +62,7 @@ class ExceptionHandle extends Handle
     public function render($request, Throwable $e): Response
     {
         $code = $e->getCode();
-        $msg  = $e->getMessage();
+        $msg  = $this->getMessage($e);
         $data = [];
 
         //获取数据
@@ -74,8 +74,8 @@ class ExceptionHandle extends Handle
             $info = [
                 'file'    => $e->getFile(),
                 'line'    => $e->getLine(),
-                'message' => $this->getMessage($e),
-                'code'    => $this->getCode($e),
+                'message' => $msg,
+                'code'    => $code,
             ];
 
             if (is_array($info['code'])) {
@@ -91,9 +91,7 @@ class ExceptionHandle extends Handle
         }
 
         if (!$e instanceof BaseException || $e instanceof ErrorException) {
-            if ($e instanceof ErrorException) {
-                $msg = Lang::get($msg);
-            } else {
+            if (!($e instanceof ErrorException)) {
                 if (env('app_debug')) {
                     return parent::render($request, $e);
                 }
@@ -109,7 +107,7 @@ class ExceptionHandle extends Handle
         }
 
         if (env('app_debug') && !$e instanceof BaseException) {
-            Log::write($e->getMessage(), 'error');
+            Log::write($this->getMessage($e), 'error');
             return parent::render($request, $e);
         }
 

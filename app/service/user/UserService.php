@@ -28,11 +28,18 @@ class UserService extends BaseUserService
         User::FACTORY_TYPE       => 'factory_user',
     ];
 
+    // 类型对应的模型
+    const TYPE_MODEL = [
+        self::TYPE[User::NORMAL_TYPE] => 'member',
+    ];
+
     protected function userinfo()
     {
         if ($this->isLogin()) {
-            $model = model($this->type);
-            $user = $model->getByID($this->uid());
+            $name  = self::TYPE_MODEL[$this->type] ?? $this->type;
+            $model = model($name);
+
+            $user  = $model->getByID($this->uid());
 
             if (!$user) {
                 throw new NotLoginException();

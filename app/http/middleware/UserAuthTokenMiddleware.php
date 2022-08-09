@@ -57,7 +57,6 @@ class UserAuthTokenMiddleware
             if (!$user) {
                 throw new NotLoginException();
             }
-
             $request->setUser(new UserService($user, $token, $type));
 
         } else {

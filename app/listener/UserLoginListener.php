@@ -60,7 +60,7 @@ class UserLoginListener
         $user->token = $token;
 
         //允许展示的字段
-        $user->visible(['id', 'token', 'username', 'nickname', 'role_id', 'last_login_ip', 'last_login_time', 'avatar']);
+        $user->visible(['id', 'token', 'username', 'nickname', 'role_id', 'last_login_ip', 'last_login_time', 'avatar', 'flow', 'expire_time']);
 
         return $user;
     }
