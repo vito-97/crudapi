@@ -3,7 +3,7 @@
  * Created by Command.
  * User: Vito
  * Date: 2022/08/09
- * Time: 11:42
+ * Time: 14:09
  */
 use app\common\ErrorCode;
 use app\common\Message;
@@ -27,6 +27,7 @@ return [
 	ErrorCode::USER_DISABLED[1] => '用户已被禁用',
 	ErrorCode::TOURIST_USER_LOGIN_ERROR[1] => '游客登录失败',
 	ErrorCode::WATER_FETCHER_IS_OTHER_BIND[1] => '账号已被其他微信号绑定',
+	ErrorCode::WATER_FETCHER_IS_BIND[1] => '账号已绑定',
 	ErrorCode::FLUSH_AUTH_FAIL[1] => '刷新权限失败',
 	ErrorCode::ROLE_NOT_FOUND[1] => '找不到该权限',
 	ErrorCode::NOT_AUTH[1] => '没有权限操作',

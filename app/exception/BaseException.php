@@ -14,16 +14,27 @@ use Throwable;
 
 class BaseException extends Exception
 {
+    //返回数据
     protected $result = [];
+
+    //多语言变量
+    protected $vars = [];
 
     public function __construct($message = "", $code = 0, Throwable $previous = null)
     {
         if ($message && is_array($message)) {
-
+            $vars = [];
             if (key($message) === 0) {
-                $tmp     = $message;
-                $message = $tmp[1];
-                $code    = $tmp[0];
+                $tmp = $message;
+
+                if (is_array($tmp[0])) {
+                    [$code, $message] = $tmp[0];
+                    if (!empty($tmp[1])) {
+                        $vars = $tmp[1];
+                    }
+                } else {
+                    [$code, $message] = $tmp;
+                }
             } else {
                 $result = $message;
 
@@ -33,6 +44,10 @@ class BaseException extends Exception
 
                 if (!empty($result['data'])) {
                     $this->result = $result['data'];
+                }
+
+                if (!empty($result['vars'])) {
+                    $vars = $result['vars'];
                 }
 
                 if (!empty($result['msg']) || !empty($result['message'])) {
@@ -46,6 +61,8 @@ class BaseException extends Exception
                 $code    = $message;
                 $message = '';
             }
+
+            $this->vars = $vars;
         }
 
         if (!$message && $this->message) {
@@ -62,5 +79,10 @@ class BaseException extends Exception
     public function getResult()
     {
         return $this->result;
+    }
+
+    public function getVars()
+    {
+        return $this->vars;
     }
 }

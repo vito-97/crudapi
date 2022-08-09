@@ -66,7 +66,7 @@ class WaterFetcherLogic extends UserLogic
         $uid = $this->user->uid();
 
         if ($user->id == $uid) {
-            throw new MessageException('你已绑定账号');
+            throw new MessageException(ErrorCode::WATER_FETCHER_IS_BIND);
         }
 
         $oauthLogic = new UserOauthLogic();
@@ -74,7 +74,7 @@ class WaterFetcherLogic extends UserLogic
         $has = $oauthLogic->where('user_id', $user->id)->where('type', UserOauth::TYPE_WECHAT)->field('id')->find();
 
         if ($has) {
-            throw new MessageException(ErrorCode::WATER_FETCHER_IS_OTHER_BIND[1], ErrorCode::WATER_FETCHER_IS_OTHER_BIND[0]);
+            throw new MessageException(ErrorCode::WATER_FETCHER_IS_OTHER_BIND);
         }
 
         $oauth = $oauthLogic->where('user_id', $uid)->where('type', UserOauth::TYPE_WECHAT)->find();

@@ -31,7 +31,8 @@ class ErrorCode
     const USER_PASSWORD_ERROR = [40202, 'user password error'];
     const USER_DISABLED = [40203, 'user is disabled'];
     const TOURIST_USER_LOGIN_ERROR = [40204, 'tourist user login error'];
-    const WATER_FETCHER_IS_OTHER_BIND = [40205,'water fetcher is other bind'];
+    const WATER_FETCHER_IS_OTHER_BIND = [40205, 'water fetcher is other bind'];
+    const WATER_FETCHER_IS_BIND = [40206, 'water fetcher is bind'];
 
     //授权错误
     const FLUSH_AUTH_FAIL = [50101, 'flush auth fail'];

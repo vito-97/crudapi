@@ -118,4 +118,21 @@ class ExceptionHandle extends Handle
             return parent::render($request, $e);
         }
     }
+
+    /**
+     * 获取错误消息
+     * @param Throwable $exception
+     * @return string
+     */
+    protected function getMessage(Throwable $exception): string
+    {
+        $vars = $exception instanceof BaseException ? $exception->getVars() : [];
+        if ($vars) {
+            $msg  = $exception->getMessage();
+            $lang = $this->app->lang;
+            return $lang->has($msg) ? $lang->get($msg, $vars) : $msg;
+        } else {
+            return parent::getMessage($exception);
+        }
+    }
 }
