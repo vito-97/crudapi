@@ -13,5 +13,5 @@ use app\common\ErrorCode;
 class FileIsExistsException extends BaseException
 {
     protected $code = ErrorCode::FILE_IS_EXISTS[0];
-    protected $message = ErrorCode::FILE_IS_EXISTS[0];
+    protected $message = ErrorCode::FILE_IS_EXISTS[1];
 }
