@@ -46,6 +46,7 @@ class ProductLogic extends BaseLogic
 //        $deviceID = [0];
 //        $agentID  = [0];
         $agentID = [];
+        $type    = Product::FLOW_TYPE;
         if ($device) {
             if ($device->used_global_product) {
                 $deviceID[] = $device->id;
@@ -61,12 +62,12 @@ class ProductLogic extends BaseLogic
             }
 
             if (!$user->isEmpty()) {
-                $type      = $user->product_type;
                 $agentID[] = $user->id;
             } else {
-                $type      = $device->type == Device::SCREEN_TYPE ? Product::FLOW_TYPE : Product::TIME_TYPE;
                 $agentID[] = $device->agent_id;
             }
+
+            $type = $device->product_type;
         }
 
         $productLogic = new ProductLogic();

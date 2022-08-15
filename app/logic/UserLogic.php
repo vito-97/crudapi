@@ -46,12 +46,13 @@ class UserLogic extends BaseLogic
         }
 
         $user = $this->getModel()->add([
-            'username' => $username,
-            'password' => Str::random(10),
-            'nickname' => '游客' . $random,
-            'platform' => User::H5_PLATFORM,
-            'add_ip'   => Request::ip(),
-            'flow'     => config('web.is_dev') ? 100 : 0,
+            'username'    => $username,
+            'password'    => Str::random(10),
+            'nickname'    => '游客' . $random,
+            'platform'    => User::H5_PLATFORM,
+            'add_ip'      => Request::ip(),
+            'flow'        => is_dev() ? 100 : 0,
+            'expire_time' => is_dev() ? time() + 3600 : 0,
         ]);
 
         if (!$user) {

@@ -136,7 +136,7 @@ abstract class BaseCurd
      * 获取参数时排除的参数
      * @var array
      */
-    protected $getParamsExcept = ['id', 'lang', 'api_version', '_label'];
+    protected $getParamsExcept = ['id', 'lang', 'api_version', '_label', 'with_label'];
 
     /**
      * @var array 追加设置的数据
@@ -1061,7 +1061,7 @@ abstract class BaseCurd
     {
         $response = $next();
 
-        $append = $this->request->param('_label', false);
+        $append = $this->request->param('with_label', $this->request->param('_label'));
 
         if ($append) {
             $this->labelCallback();

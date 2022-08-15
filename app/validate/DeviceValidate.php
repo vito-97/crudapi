@@ -31,6 +31,7 @@ class DeviceValidate extends BaseValidate
         'address'             => 'requireWith:lat|max:120',
         'adverts_light'       => 'checkSwitch',
         'mark'                => 'max:120',
+        'product_type'        => 'require|checkEnum',
     ];
 
     /**

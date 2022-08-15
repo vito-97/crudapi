@@ -33,29 +33,30 @@ class DeviceIndex extends Index
     protected $hidden = [];
 
     protected $queryField = [
-        'agent_id', 'status',
+        'agent_id', 'status', 'product_type',
     ];
 
     protected $labelCallback = [
-        'get_status_enum' => ['name' => '状态', 'key' => 'status'],
-        'get_state_enum'  => ['name' => '使用状态', 'key' => 'state'],
-        'get_type_enum'   => ['name' => '类型', 'key' => 'type'],
+        'get_status_enum'       => ['name' => '状态', 'key' => 'status'],
+        'get_state_enum'        => ['name' => '使用状态', 'key' => 'state'],
+        'get_type_enum'         => ['name' => '类型', 'key' => 'type'],
+        'get_product_type_enum' => ['name' => '套餐类型'],
     ];
 
     protected $validate = [
         DeviceValidate::class => Enum::VALID_LIST_SCENE,
     ];
 
-/*    protected $middleware = [
-        'queryMiddleware',
-    ];
+    /*    protected $middleware = [
+            'queryMiddleware',
+        ];
 
-    protected function queryMiddleware($next)
-    {
-        $response = $next();
+        protected function queryMiddleware($next)
+        {
+            $response = $next();
 
 
 
-        return $response;
-    }*/
+            return $response;
+        }*/
 }

@@ -15,6 +15,7 @@ use app\model\traits\DisabledTrait;
 use app\model\traits\SiteScopeTrait;
 use app\model\traits\WaterworksTrait;
 use think\db\Query;
+use think\facade\Cache;
 use think\Model;
 
 class Device extends BaseModel
@@ -23,6 +24,8 @@ class Device extends BaseModel
     use DisabledTrait;
     use SiteScopeTrait;
     use WaterworksTrait;
+
+    protected $productTypeEnum = Product::TYPE_ENUM;
 
     protected $waterworksForeignKey = 'agent_id';
 
@@ -106,6 +109,11 @@ class Device extends BaseModel
         }
     }
 
+    public static function onAfterUpdate(Model $model): void
+    {
+        Cache::tag('device')->clear();
+    }
+
     /**
      * 关联设备提示信息
      * @return \think\model\relation\HasOne
@@ -183,13 +191,26 @@ class Device extends BaseModel
         return Agent::where('id', $this->agent_id)->cache(60)->value('phone');
     }
 
-    protected function getProductTypeAttr()
+    protected function getProductTypeAttr($value)
     {
         // 当前是简易设备
         if ($this->getData('type') == self::EASY_TYPE) {
             return Product::TIME_TYPE;
         }
-        return (int)Agent::where('id', $this->agent_id)->cache(60)->value('product_type');
+
+        return $value;
+//        return (int)Agent::where('id', $this->agent_id)->cache(60)->value('product_type');
+    }
+
+    protected function setProductTypeAttr($value, $data)
+    {
+        $type = $data['type'] ?? self::SCREEN_TYPE;
+
+        if ($type == self::EASY_TYPE) {
+            $value = Product::TIME_TYPE;
+        }
+
+        return $value;
     }
 
     /**

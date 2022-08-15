@@ -50,7 +50,7 @@ class DeviceLogic extends BaseLogic
         /**
          * @var $detail Device
          */
-        $detail = $this->getModel()->where('device_no', $deviceNo)->cache(30)->find();
+        $detail = $this->getModel()->where('device_no', $deviceNo)->cache(true, 30, 'device')->find();
 
         $this->checkDevice($detail);
 
@@ -189,12 +189,16 @@ class DeviceLogic extends BaseLogic
 
         $useFlow = $service->userUseFLow($userID) ?: 0;
         $flow    = $user->flow - $useFlow;
-
+        $time    = $user->expire_time - time();
+        if ($time < 0) {
+            $time = 0;
+        }
         return [
             'is_user_control' => $isUserControl,
             'flow'            => $user->flow,
             'has_flow'        => $flow,
             'used_flow'       => $useFlow,
+            'time'            => $time,
             'state'           => $lastControl ? $lastControl->state : DeviceControl::STATE_FINISH,
             'state_key'       => $lastControl ? $lastControl->getStateKey() : DeviceControl::STATE_KEY[DeviceControl::STATE_FINISH],
         ];

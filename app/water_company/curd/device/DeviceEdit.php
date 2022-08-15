@@ -22,5 +22,6 @@ class DeviceEdit extends Edit
     //追加标签数据
     protected $labelCallback = [
         'get_status_enum' => ['name' => '状态', 'key' => 'status'],
+        'get_product_type_enum' => ['name' => '套餐类型'],
     ];
 }

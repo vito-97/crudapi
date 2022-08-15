@@ -40,6 +40,7 @@ class DeviceIndex extends Index
 
     protected $labelCallback = [
         'get_status_enum' => ['name' => '状态', 'key' => 'status'],
+        'get_product_type_enum' => ['name' => '套餐类型'],
     ];
 
     protected $validate = [
