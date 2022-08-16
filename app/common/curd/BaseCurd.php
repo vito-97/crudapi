@@ -1082,6 +1082,7 @@ abstract class BaseCurd
         }
 
         if ($this->append) {
+//            dump($this->append);
             $model->append($this->append);
         }
 

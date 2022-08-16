@@ -15,7 +15,7 @@ class DeviceRead extends Read
     //排除字段
     protected $withoutField = false;
     //追加输出的属性
-    protected $append = ['adverts_light_desc', 'status_desc', 'state_desc'];
+    protected $append = ['adverts_light_desc', 'status_desc', 'state_desc', 'product_type_desc'];
     protected $hidden = ['service_charge' => ['agent_id', 'device_id', 'delete_time']];
     //条件
     protected $where = [];

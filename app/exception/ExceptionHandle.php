@@ -62,7 +62,7 @@ class ExceptionHandle extends Handle
     public function render($request, Throwable $e): Response
     {
         $code = $e->getCode();
-        $msg  = $this->getMessage($e);
+        $msg  = $e->getMessage();
         $data = [];
 
         //获取数据
@@ -74,8 +74,8 @@ class ExceptionHandle extends Handle
             $info = [
                 'file'    => $e->getFile(),
                 'line'    => $e->getLine(),
-                'message' => $msg,
-                'code'    => $code,
+                'message' => $this->getMessage($e),
+                'code'    => $this->getCode($e),
             ];
 
             if (is_array($info['code'])) {
@@ -92,9 +92,6 @@ class ExceptionHandle extends Handle
 
         if (!$e instanceof BaseException || $e instanceof ErrorException) {
             if (!($e instanceof ErrorException)) {
-                if (env('app_debug')) {
-                    return parent::render($request, $e);
-                }
                 $code = ErrorCode::SERVICE_ERROR;
             }
 
@@ -103,36 +100,17 @@ class ExceptionHandle extends Handle
             if ($e instanceof RouteNotFoundException) {
                 $code = ErrorCode::ROUTE_NOT_FOUND;
             }
-
         }
 
-        if (env('app_debug') && !$e instanceof BaseException) {
-            Log::write($this->getMessage($e), 'error');
-            return parent::render($request, $e);
+        if (!env('app_debug')) {
+            $msg = '服务器内部错误，请稍后再试';
         }
 
-        try {
+        if ($request->isAjax() || $request->isOptions() || !env('app_debug')) {
             $response = error($code, $msg, $data);
             return $response;
-        } catch (Throwable $e) {
-            return parent::render($request, $e);
-        }
-    }
-
-    /**
-     * 获取错误消息
-     * @param Throwable $exception
-     * @return string
-     */
-    protected function getMessage(Throwable $exception): string
-    {
-        $vars = $exception instanceof BaseException ? $exception->getVars() : [];
-        if ($vars) {
-            $msg  = $exception->getMessage();
-            $lang = $this->app->lang;
-            return $lang->has($msg) ? $lang->get($msg, $vars) : $msg;
         } else {
-            return parent::getMessage($exception);
+            return parent::render($request, $e);
         }
     }
 }

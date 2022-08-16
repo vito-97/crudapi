@@ -186,6 +186,11 @@ class Device extends BaseModel
         return $this->getEnumDesc('adverts_light', $data);
     }
 
+    protected function getProductTypeDescAttr($value, $data)
+    {
+        return $this->getEnumDesc(__FUNCTION__, $data);
+    }
+
     protected function getPhoneAttr()
     {
         return Agent::where('id', $this->agent_id)->cache(60)->value('phone');

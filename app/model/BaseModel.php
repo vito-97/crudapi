@@ -791,6 +791,7 @@ class BaseModel extends Model
     {
         if (preg_match('/get(\w*?)DescAttr/', $key, $match)) {
             $key = Str::snake($match[1]);
+
         }
 
         return $this->getEnum($key, $data[$key] ?? '');

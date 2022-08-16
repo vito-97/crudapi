@@ -17,11 +17,11 @@ class DeviceEdit extends Edit
     //关联
     protected $with = ['service_charge'];
     //追加字段
-    protected $append = ['adverts_light_desc', 'status_desc'];
+    protected $append = ['adverts_light_desc', 'status_desc', 'product_type_desc'];
     protected $hidden = ['service_charge' => ['agent_id', 'device_id', 'delete_time']];
     //追加标签数据
     protected $labelCallback = [
-        'get_status_enum' => ['name' => '状态', 'key' => 'status'],
+        'get_status_enum'       => ['name' => '状态', 'key' => 'status'],
         'get_product_type_enum' => ['name' => '套餐类型'],
     ];
 }
