@@ -72,7 +72,7 @@ class User extends BaseModel
         self::ADD_PLATFORM => '后台添加',
     ];
 
-    //代理
+    //运营商
     const AGENT_TYPE = 9;
     //普通取水用户
     const NORMAL_TYPE = 1;
@@ -103,7 +103,7 @@ class User extends BaseModel
         self::FACTORY_TYPE       => '出厂设置员',
     ];
 
-    // 普通用户不设置代理查询条件
+    // 普通用户不设置运营商查询条件
     public function scopeAgent(Query $query, $id)
     {
         if($this->getName() !== 'user'){

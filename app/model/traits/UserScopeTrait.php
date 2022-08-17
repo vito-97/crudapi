@@ -14,7 +14,7 @@ trait UserScopeTrait
     protected $auto = ['type'];
 
     /**
-     * 代理类型
+     * 运营商类型
      * @param $query
      */
     public function scopeType($query)

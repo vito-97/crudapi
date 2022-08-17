@@ -21,7 +21,7 @@ class AttachmentSave extends Save
         AttachmentValidate::class => Enum::VALID_SAVE_SCENE,
     ];
     //追加数据
-    protected $appendParams = [];
+    protected $appendParams = ['category' => 'un'];
     //允许新增的数据字段
     protected $field = ['category'];
 

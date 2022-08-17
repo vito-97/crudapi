@@ -707,9 +707,9 @@ class BaseModel extends Model
     }
 
     /**
-     * 代理查询范围
+     * 运营商查询范围
      * @param Query $query
-     * @param int $id 代理ID
+     * @param int $id 运营商ID
      */
     public function scopeAgent(Query $query, $id)
     {

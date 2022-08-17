@@ -31,7 +31,7 @@ class BaseController extends \app\BaseController
     }
 
     /**
-     * 设置查询代理的数据
+     * 设置查询运营商的数据
      * @return $this
      */
     protected function setScope()

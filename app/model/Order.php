@@ -62,7 +62,7 @@ class Order extends BaseModel
 
     //用户充值
     const RECHARGE_TYPE = 1;
-    //代理服务费
+    //运营商服务费
     const SERVICE_CHARGE_TYPE = 2;
 
     protected $typeEnum = [

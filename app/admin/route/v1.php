@@ -26,7 +26,7 @@ Route::group('<api_version>', function () {
     Route::resource('admin', 'Admin');
     //更新个人信息接口
     Route::put('profile', 'Profile/update');
-    //代理
+    //运营商
     Route::resource('agent', 'Agent');
     //出厂设置员
     Route::resource('factory_user', 'FactoryUser');

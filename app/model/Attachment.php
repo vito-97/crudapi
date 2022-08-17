@@ -83,7 +83,7 @@ class Attachment extends BaseModel
 
     protected function setCategoryAttr($value, $data = [])
     {
-        if ($value === self::UNKNOWN_CATEGORY && isset($data['type'])) {
+        if ((!$value || $value === self::UNKNOWN_CATEGORY) && isset($data['type'])) {
             $value = self::getCategoryByExt($data['type']);
         }
 

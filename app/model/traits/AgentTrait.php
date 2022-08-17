@@ -11,7 +11,7 @@ namespace app\model\traits;
 trait AgentTrait
 {
     /**
-     * 关联代理
+     * 关联运营商
      * @return \think\model\relation\BelongsTo
      */
     public function agent()

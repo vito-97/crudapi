@@ -326,7 +326,7 @@ class OrderLogic extends BaseLogic
     }
 
     /**
-     * 生成代理缴费订单
+     * 生成运营商缴费订单
      * @param $userID
      * @param string|int $serviceChargeId 服务费ID
      * @return \app\model\BaseModel|false

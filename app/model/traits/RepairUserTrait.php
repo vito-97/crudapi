@@ -13,6 +13,6 @@ trait RepairUserTrait
 {
     public function repairUser()
     {
-        return $this->belongsTo('User')->field($this->repairUserField ?? 'id,username,nickname');
+        return $this->belongsTo('RepairUser', $this->repairUserForegnKey ?? 'repair_user_id')->field($this->repairUserField ?? 'id,username,nickname');
     }
 }
