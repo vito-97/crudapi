@@ -343,13 +343,6 @@ class BaseModel extends Model
         //获取query
         $query = $this->db($withoutGlobalScope);
 
-        //设置别名
-        $query = $query->alias($this->getName());
-
-        //搜索器
-        if ($args['with_search']) {
-            $query = $query->withSearch(array_keys($args['with_search']), $args['with_search']);
-        }
         //并条件
         if ($args['where']) {
             $query = $query->where($args['where']);
@@ -364,10 +357,6 @@ class BaseModel extends Model
         if ($args['where_or']) {
             $query = $query->whereOr($args['where_or']);
         }
-        //指定having查询
-        if ($args['having']) {
-            $query = $query->having($args['having']);
-        }
         //分组
         if ($args['group']) {
             $query = $query->group($args['group']);
@@ -381,9 +370,18 @@ class BaseModel extends Model
                 $query = $query->field($args['field']);
             }
         }
+        //搜索器
+        if ($args['with_search']) {
+            $query = $query->withSearch(array_keys($args['with_search']), $args['with_search']);
+        }
         //关联
         if ($args['with']) {
             $query = $query->with($args['with']);
+        }
+
+        //关联统计
+        if ($args['with_count']) {
+            $query = $query->withCount($args['with_count']);
         }
 
 //        if ($args['together']) {
@@ -422,7 +420,7 @@ class BaseModel extends Model
         if ($select) {
             //需要分页
             if ($args['paginate'] && !$args['fetch_sql']) {
-                $query = $query->paginate(['page' => (int)$args['page'], 'list_rows' => (int)$args['limit']], $args['simple']);
+                $query = $query->paginate(['page' => (int)$args['page'], 'list_rows' => (int)$args['limit']]);
             } else {
                 //分页
                 if ($args['page'] && $args['limit']) {
@@ -458,16 +456,15 @@ class BaseModel extends Model
             'field'                => '*',
             'without_field'        => false,
             'with'                 => null,
+            'with_count'           => null,
             'page'                 => 0,
             'limit'                => $this->defaultLimit,
             'paginate'             => false,
-            'simple'               => false,
             'with_search'          => null,
             'query'                => [],
             'scope'                => null,
             'together'             => [],//关联操作
             'without_global_scope' => [],
-            'having'               => '',
             'fetch_sql'            => false,
             'cache'                => false,
         ];
@@ -707,9 +704,9 @@ class BaseModel extends Model
     }
 
     /**
-     * 运营商查询范围
+     * 代理查询范围
      * @param Query $query
-     * @param int $id 运营商ID
+     * @param int $id 代理ID
      */
     public function scopeAgent(Query $query, $id)
     {
@@ -791,7 +788,6 @@ class BaseModel extends Model
     {
         if (preg_match('/get(\w*?)DescAttr/', $key, $match)) {
             $key = Str::snake($match[1]);
-
         }
 
         return $this->getEnum($key, $data[$key] ?? '');

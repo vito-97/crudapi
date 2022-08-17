@@ -8,6 +8,7 @@
 
 namespace app\common\curd;
 
+
 use app\common\Util;
 use think\helper\Str;
 use think\Paginator;
@@ -51,23 +52,16 @@ class Index extends BaseCurd
     protected $group;
 
     /**
-     * @var having
-     */
-    protected $having;
-
-    /**
      * @var Paginator 分页
      */
     protected $paginate;
-
-    protected $simple = false;
 
     /**
      * @var bool 是否使用分页类
      */
     protected $usePaginate = true;
 
-    protected $queryArgs = ['field', 'where', 'whereOr', 'with', 'scope', 'page', 'limit', 'order', 'group', 'usePaginate' => 'paginate', 'withoutField', 'having', 'simple'];
+    protected $queryArgs = ['field', 'where', 'whereOr', 'with', 'scope', 'page', 'limit', 'order', 'group', 'usePaginate' => 'paginate', 'withoutField', 'withCount'];
 
     protected $modeExcludeQueryArgs = [
         //下拉选择不需要关联
@@ -121,7 +115,7 @@ class Index extends BaseCurd
         $this->limit = $this->getLimit();
         $this->mode  = $this->request->param('mode', self::PAGE_MODE, 'trim');
 
-        if (!$this->mode || !isset($this->mode)) {
+        if (!$this->mode || empty(self::MODE_DESC[$this->mode])) {
             $this->mode = self::PAGE_MODE;
         }
 
@@ -155,7 +149,8 @@ class Index extends BaseCurd
      */
     protected function query()
     {
-        $args   = $this->getQueryArgs();
+        $args = $this->getQueryArgs();
+
         $result = $this->getLogic()->getAll($args);
 
         if ($this->fetchSql) {
@@ -166,27 +161,27 @@ class Index extends BaseCurd
 
         $this->formatModel($result);
 
-        $paginate = $this->paginate = $result;
-
         //使用分页类
         if ($this->usePaginate) {
-            $getter      = $paginate && !$this->simple;
-            $this->total = $getter ? $result->total() : $result->count();
+            $paginate = $this->paginate = $result;
+
+            $this->total = $result->total();
+
             $this->setData([
-                'total'     => $this->total,
-                'last_page' => $getter ? $paginate->lastPage() : ceil($this->total / $this->limit),
-                'page'      => $getter ? $paginate->currentPage() : $this->page,
-                'limit'     => $getter ? $paginate->listRows() : $this->limit,
+                'total'     => $paginate ? $paginate->total() : $this->total,
+                'last_page' => $paginate ? $paginate->lastPage() : ceil($this->total / $this->limit),
+                'page'      => $paginate ? $paginate->currentPage() : $this->page,
+                'limit'     => $paginate ? $paginate->listRows() : $this->limit,
                 'list'      => $paginate ? $paginate->items() : $this->data,
             ]);
         } else {
 
             $this->setData([
-                'list' => $paginate,
+                'list' => $result,
             ]);
         }
 
-        return $paginate;
+        return $result;
     }
 
     /**
@@ -283,6 +278,15 @@ class Index extends BaseCurd
     }
 
     /**
+     * 是否有搜索字段
+     * @return bool
+     */
+    protected function hasSearch()
+    {
+        return !!trim($this->request->param('kw'));
+    }
+
+    /**
      * 获取查询参数
      * @param array $args
      * @return array
@@ -299,7 +303,7 @@ class Index extends BaseCurd
         //关键词
         if ($keyword) {
             foreach ($this->keywordQueryArgs as $field) {
-                $args['with_search'][$field] = $keyword;
+                $args['where'][$field] = $keyword;
             }
         }
 

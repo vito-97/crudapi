@@ -80,6 +80,11 @@ abstract class BaseCurd
     protected $with = [];
 
     /**
+     * @var array 关联统计
+     */
+    protected $withCount = [];
+
+    /**
      * @var 查询范围
      */
     protected $scope;

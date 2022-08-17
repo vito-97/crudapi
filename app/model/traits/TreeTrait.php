@@ -13,6 +13,8 @@ trait TreeTrait
 {
     public function children()
     {
-        return $this->hasMany($this->getName(), $this->parentKey ?? 'pid', $this->getPk())->with(['children']);
+        $name = str_replace('\\', '/', static::class);
+        $name = basename($name);
+        return $this->hasMany($name, $this->parentKey ?? 'pid', $this->getPk())->with(['children']);
     }
 }
