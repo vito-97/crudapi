@@ -106,7 +106,7 @@ class ExceptionHandle extends Handle
             $msg = '服务器内部错误，请稍后再试';
         }
 
-        if ($request->isAjax() || $request->isOptions() || !env('app_debug')) {
+        if ($request->isAjax() || $request->isOptions() || !env('app_debug') || $e instanceof BaseException) {
             $response = error($code, $msg, $data);
             return $response;
         } else {
