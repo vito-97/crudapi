@@ -340,8 +340,11 @@ class BaseModel extends Model
             ?
             (is_array($args['without_global_scope']) ? $args['without_global_scope'] : []) : [];
 
-        //获取query
-        $query = $this->db($withoutGlobalScope);
+        //获取模型名称
+        $name = $this->getName();
+
+        //获取query并设置上别名
+        $query = $this->db($withoutGlobalScope)->alias($name);
 
         //并条件
         if ($args['where']) {

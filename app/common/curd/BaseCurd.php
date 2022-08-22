@@ -394,6 +394,9 @@ abstract class BaseCurd
 
 
         foreach ($filters as $field => $value) {
+            if (!preg_match('/^[\w_\-\.]+$/', $field)) {
+                continue;
+            }
             //获取逻辑操作符
             $op = strtoupper($ops[$field] ?? self::DEFAULT_OP);
             if (!in_array($op, self::OP)) {
@@ -751,7 +754,7 @@ abstract class BaseCurd
      * 调用原生query
      * @param $query
      */
-    protected function queryCallback($query)
+    protected function queryCallback(Query $query)
     {
     }
 
