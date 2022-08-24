@@ -9,6 +9,8 @@ declare (strict_types=1);
 namespace app\model;
 
 use app\model\traits\UserScopeTrait;
+use app\service\WechatService;
+use think\Model;
 
 class Customer extends User
 {
@@ -25,5 +27,33 @@ class Customer extends User
     public function waterCompany()
     {
         return $this->belongsTo('WaterCompany', 'user_id', 'id')->field($this->waterCompanyField ?? 'id,nickname,username,status');
+    }
+
+    public static function onAfterWrite(Model $model): void
+    {
+        self::createWaterFetcherRegisterQrcode($model);
+    }
+
+    public static function createWaterFetcherRegisterQrcode($model)
+    {
+        if (!$model->extend || empty($model->extend['water_fetcher_register_qrcode'])) {
+            $wechat = new WechatService();
+
+            $result = $wechat->qrcode->forever('water_fetcher_register_' . $model->id);
+            if (isset($result['url'])) {
+                if (!$model->extend) {
+                    $model->extend = [];
+                }
+                $extend                                  = $model->extend;
+                $extend['water_fetcher_register_url']    = $result['url'];
+                $extend['water_fetcher_register_qrcode'] = 'https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=' . $result['ticket'];
+                $model->extend                           = $extend;
+                return $model->save();
+            } else {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

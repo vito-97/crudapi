@@ -11,6 +11,7 @@ namespace app\service;
 
 use app\common\Enum;
 use app\job\DeviceControlJob;
+use app\logic\SystemConfigLogic;
 use PhpMqtt\Client\MqttClient;
 use think\facade\App;
 use think\facade\Log;
@@ -44,7 +45,7 @@ class DeviceControlService
         'adverts_light_open'  => '00cc0001',
         'adverts_light_close' => '00cc0000',
         'finish_timeout'      => '00D3',
-        'query_easy_status'   => '0101000000083DCC',
+        'query_easy_status'   => "config,get,doout,1\r\n",
     ];
 
     protected static $lastControlTime = 0;
@@ -101,6 +102,26 @@ class DeviceControlService
         $this->mqtt->publish($this->getSendTopic(), $data, MqttClient::QOS_EXACTLY_ONCE);
     }
 
+    /**
+     * @param $msg
+     * @return $this
+     * @throws \PhpMqtt\Client\Exceptions\DataTransferException
+     * @throws \PhpMqtt\Client\Exceptions\RepositoryException
+     */
+    public function easySwitch($status, $msg)
+    {
+        $data = json_encode([
+            'CMD' => $status ? 'on' : 'off',
+            'TTS' => $msg,
+            'VOL' => 9,
+            'CHN' => 1,
+        ]);
+
+        $this->writeLog('简易设备' . ($status ? '开' : '关'), $data);
+
+        return $this->writePush($data, false, false);
+    }
+
     public function init()
     {
         $address = self::ADDRESS['init'];
@@ -112,6 +133,10 @@ class DeviceControlService
 
     public function open($type = 1)
     {
+        if ($type == 2) {
+            return $this->easySwitch(true, SystemConfigLogic::get('easy_device_start_tip'));
+        }
+
         $address = self::ADDRESS['open' . $type];
 
         $this->writeLog('强制开启', $address);
@@ -121,6 +146,10 @@ class DeviceControlService
 
     public function close($type = 1)
     {
+        if ($type == 2) {
+            return $this->easySwitch(false, SystemConfigLogic::get('easy_device_finish_tip'));
+        }
+
         $address = self::ADDRESS['close' . $type];
 
         $this->writeLog('强制结束', $address);
@@ -315,9 +344,9 @@ class DeviceControlService
     {
         $address = self::ADDRESS['query_easy_status'];
 
-        $this->writeLog('查询简易设备的继电器状态', $address);
+        $this->writeLog('查询简易设备的状态', $address);
 
-        return $this->writePush($address, false);
+        return $this->writePush($address, false, false);
     }
 
     /**
@@ -384,29 +413,37 @@ class DeviceControlService
      * @throws \PhpMqtt\Client\Exceptions\DataTransferException
      * @throws \PhpMqtt\Client\Exceptions\RepositoryException
      */
-    protected function writePush($address, $crc = true)
+    protected function writePush($address, $crc = true, $func = 'hex2str')
     {
-        $data = $address . ($crc ? crc16($address) : '');
+        if ($crc) {
+            $data = $address . crc16($address);
+        } else {
+            $data = $address;
+        }
         //010600D309607E4B  240秒
 
         if ($this->queue) {
-            $this->queuePush($data);
+            $this->queuePush($data, $func);
         } else {
-            $this->send($data);
+            $this->send($data, $func);
         }
 
         return $this;
     }
 
-    protected function queuePush($data)
+    protected function queuePush($data, $func = 'hex2str')
     {
-        $msg = ['imei' => $this->imei, 'msg' => $data];
+        $msg = ['imei' => $this->imei, 'msg' => $data, 'func' => $func];
 
         $n = get_float_time() - self::$lastControlTime;
 
         if ($n >= self::$laterTime) {
 //            dump('now');
-            Queue::push(DeviceControlJob::class, $msg, Enum::JOB_DEVICE_CONTROL);
+            if (is_integer($this->queue)) {
+                Queue::later($this->queue, DeviceControlJob::class, $msg, Enum::JOB_DEVICE_CONTROL_LATER);
+            } else {
+                Queue::push(DeviceControlJob::class, $msg, Enum::JOB_DEVICE_CONTROL);
+            }
             self::$laterTime = $this->laterIncTime;
         } else {
             $later = (int)ceil(self::$laterTime - $n);

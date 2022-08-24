@@ -21,6 +21,7 @@ use app\job\DeviceTimeoutJob;
 use app\model\Device;
 use app\model\DeviceControl;
 use app\model\Product;
+use app\model\User;
 use app\service\DeviceService;
 use app\service\user\UserService;
 use app\validate\DeviceValidate;
@@ -291,8 +292,29 @@ class DeviceLogic extends BaseLogic
      */
     protected function control($deviceNo, $state, $send = false, $switch = false)
     {
-        $device       = $this->getDevice($deviceNo);
-        $user         = $this->user->getUserInfo();
+        $device = $this->getDevice($deviceNo);
+        $user   = $this->user->getUserInfo();
+
+        //取水员
+        if ($user->type === User::WATER_FETCHER_TYPE) {
+            //操作了货车加水设备
+            if ($device->site_id === Enum::SITE_ONE) {
+                throw new MessageException('你只能使用市政设备！');
+            }
+
+            //获取水厂ID
+            $waterworksID = $device->agent_id;
+            //获取水务公司下所有的水厂ID SQL
+            $sql = (new WaterworksLogic())->field('id')->where('user_id', $waterworksID)->buildSql();
+
+            //判断是否有该设备
+            $has = $this->getModel()->where('agent_id', 'EXP', 'IN' . $sql)->where('id', $device->id)->field('id')->cache(60)->find();
+
+            if (!$has) {
+                throw new MessageException('你只能操作所属水务公司下的设备');
+            }
+        }
+
         $service      = new DeviceService();
         $lastIsSwitch = $state === DeviceControl::STATE_FINISH && $service->deviceIsSwitch($deviceNo);
         $isSwitch     = $device->type === Device::EASY_TYPE || ($user->expire_time > time() || $switch || $lastIsSwitch);

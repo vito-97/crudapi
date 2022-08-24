@@ -19,6 +19,7 @@ class WaterFetcherValidate extends UserValidate
         self::LOGIN_SCENE  => ['username', 'password'],
         'profile'          => ['password', 'nickname', 'avatar'],
         'bind'             => ['username', 'password'],
+        'register'         => ['username', 'password', 'tel', 'real_name', 'nickname'],
     ];
 
     protected function sceneProfile()
@@ -29,7 +30,8 @@ class WaterFetcherValidate extends UserValidate
         return $this;
     }
 
-    protected function sceneBind(){
+    protected function sceneBind()
+    {
         $this->only($this->getSceneOnly(__FUNCTION__));
         $this->removeOnlyRule([], 'requireWithout|unique');
 

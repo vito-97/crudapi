@@ -475,7 +475,7 @@ function get_device_online_type($hex, $default = 1)
 
     $type = $match[0] ?? $default;
 
-    return $type;
+    return (int)$type;
 }
 
 /**

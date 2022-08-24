@@ -124,6 +124,19 @@ class Test extends BaseController
         dump($a);
     }
 
+    public function deviceType()
+    {
+        dump(str2hex('online2'));
+        dump(get_device_online_type(str2hex('online2')));
+    }
+
+    public function queryEasyStatus()
+    {
+        $service = new DeviceControlService('869298052176187');
+
+        $service->queryEasyStatus();
+    }
+
     public function device()
     {
         $imei = $this->request->param('imei');
@@ -175,17 +188,34 @@ class Test extends BaseController
             $controlService->writePulse($n);
             return success('已设置脉冲参数' . $n);
         } elseif ('open' == $mode) {
-            $controlService->open();
+            $type = $this->getDeviceType();
+            $controlService->open($type);
             return success('已强制开启');
         } elseif ('close' == $mode) {
-            $controlService->close();
+            $type = $this->getDeviceType();
+            $controlService->close($type);
             return success('已强制结束');
         } elseif ('clear_finish_flow' == $mode) {
             $controlService->clearFinishFlow();
             return success('已清除结算流量');
+        } elseif ('msg' == $mode) {
+            $msg = $this->request->param('msg', '未输入消息');
+            $controlService->easySwitch(1, $msg);
+            return success('已提示信息');
         } else {
             return success('未知操作');
         }
+    }
+
+    protected function getDeviceType()
+    {
+        $type = (int)$this->request->param('device_type', 1);
+
+        if (!in_array($type, [1, 2])) {
+            $type = 1;
+        }
+
+        return $type;
     }
 
     public function mqttLog()

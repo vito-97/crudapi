@@ -11,9 +11,11 @@ namespace app\api\controller\v1;
 use app\api\controller\BaseController;
 use app\common\ErrorCode;
 use app\common\EventName;
+use app\common\Hash;
 use app\common\Util;
 use app\exception\MessageException;
 use app\logic\AgentLogic;
+use app\logic\CustomerLogic;
 use app\logic\SystemConfigLogic;
 use app\logic\UserLogic;
 use app\logic\UserOauthLogic;
@@ -172,6 +174,10 @@ class Wechat extends BaseController
                 [, $agentID] = $matches;
 
                 return $this->repairRegister($agentID);
+            } elseif (preg_match("/water_fetcher_register_(\d*?)$/", $eventKey, $matches)) {
+                [, $customerID] = $matches;
+
+                return $this->waterFetcherRegister($customerID);
             }
         }
 
@@ -202,7 +208,34 @@ class Wechat extends BaseController
                 'title'       => '注册[' . $agent->nickname . ']的维护员',
                 'description' => '点击进入注册',
                 'url'         => web('repair_host') . web('repair_register_uri') . '?' . http_build_query(['agent_id' => $agentID]),
-                'image'       => Util::link(SystemConfigLogic::get('wechat_share_img')),
+                'image'       => Util::link(SystemConfigLogic::get('wechat_card_img')),
+            ]),
+        ];
+
+        return new News($items);
+    }
+
+    protected function waterFetcherRegister($customerID)
+    {
+        $logic = new CustomerLogic();
+
+        $customer = $logic->getByID($customerID);
+        if (!$customer) {
+            return '找不到相关取水客户';
+        }
+
+        if ($customer->isDisabled()) {
+            return '取水客户已下线';
+        }
+        $query = ['customer_id' => $customer->id, 'time' => time()];
+        ksort($query);
+        $query['sign'] = Hash::encode(http_build_query($query));
+        $items         = [
+            new NewsItem([
+                'title'       => '注册[' . $customer->nickname . ']的取水员',
+                'description' => '点击进入注册',
+                'url'         => web('client_host') . web('water_fetcher_uri') . '?' . http_build_query($query),
+                'image'       => Util::link(SystemConfigLogic::get('wechat_card_img')),
             ]),
         ];
 

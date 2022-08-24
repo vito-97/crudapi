@@ -23,9 +23,8 @@ class DeviceControlJob extends BaseJob
     protected function execute($data, Job $job): bool
     {
         if (isset($data['imei']) && isset($data['msg'])) {
-            dump($data['msg']);
             $this->deviceControlService->setImei($data['imei']);
-            $this->deviceControlService->send($data['msg']);
+            $this->deviceControlService->send($data['msg'], $data['func'] ?? 'hex2str');
         }
 
         return true;

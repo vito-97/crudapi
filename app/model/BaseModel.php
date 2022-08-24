@@ -343,8 +343,14 @@ class BaseModel extends Model
         //获取模型名称
         $name = $this->getName();
 
-        //获取query并设置上别名
-        $query = $this->db($withoutGlobalScope)->alias($name);
+        //获取query
+        $query = $this->db($withoutGlobalScope);
+
+        //设置上别名
+        if ($args['alias']) {
+            $alias = is_string($args['alias']) ? $args['alias'] : $name;
+            $query->alias($alias);
+        }
 
         //并条件
         if ($args['where']) {
@@ -359,6 +365,10 @@ class BaseModel extends Model
         //或条件
         if ($args['where_or']) {
             $query = $query->whereOr($args['where_or']);
+        }
+        // having
+        if ($args['having']) {
+            $query = $query->having($args['having']);
         }
         //分组
         if ($args['group']) {
@@ -423,7 +433,7 @@ class BaseModel extends Model
         if ($select) {
             //需要分页
             if ($args['paginate'] && !$args['fetch_sql']) {
-                $query = $query->paginate(['page' => (int)$args['page'], 'list_rows' => (int)$args['limit']]);
+                $query = $query->paginate(['page' => (int)$args['page'], 'list_rows' => (int)$args['limit']], $args['simple']);
             } else {
                 //分页
                 if ($args['page'] && $args['limit']) {
@@ -451,6 +461,8 @@ class BaseModel extends Model
         }
 
         $default = [
+            'alias'                => true,
+            'having'               => null,
             'where'                => null,
             'where_or'             => null,
             'where_in'             => '',
@@ -463,6 +475,7 @@ class BaseModel extends Model
             'page'                 => 0,
             'limit'                => $this->defaultLimit,
             'paginate'             => false,
+            'simple'               => false,
             'with_search'          => null,
             'query'                => [],
             'scope'                => null,

@@ -36,6 +36,8 @@ return [
     'repair_host'         => 'http://mainten.aijkl.com/',
     //注册地址
     'repair_register_uri' => 'pages/register/register',
+    //取水员注册地址
+    'water_fetcher_uri'   => 'pages/water_fetcher/register',
     //短链
     'short_host'          => 'https://s.aijkl.com/',
 ];

@@ -24,11 +24,11 @@ class DeviceStartControlListener extends DeviceHandleListener
     {
         if ($this->switch) {
             $type = $this->device->type;
-            $this->deviceControlService->open($type)->sleep(0.1)->open($type);
+            $this->deviceControlService->open($type);
 
             //简易主板 查询状态
             if ($type == Device::EASY_TYPE) {
-                $this->deviceControlService->queryEasyStatus()->sleep(0.1)->queryEasyStatus();
+                $this->deviceControlService->setQueue(2)->queryEasyStatus();
             }
 
         } else {

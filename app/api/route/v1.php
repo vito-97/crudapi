@@ -89,6 +89,8 @@ Route::group('<api_version>', function () {
     })->prefix('User/')->middleware([USER_AUTH_MIDDLEWARE]);
 
     Route::group('water_fetcher', function () {
+        //注册
+        Route::post('register', 'register');
         //详情
         Route::post('bind', 'bind');
     })->prefix('WaterFetcher/')->middleware([USER_AUTH_MIDDLEWARE]);

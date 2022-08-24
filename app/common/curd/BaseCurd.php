@@ -46,6 +46,11 @@ abstract class BaseCurd
     protected $validate = [];
 
     /**
+     * @var bool|string 表别名
+     */
+    protected $alias = true;
+
+    /**
      * @var array 字段
      */
     protected $field = [];
@@ -63,6 +68,11 @@ abstract class BaseCurd
      * @var bool 是否排除字段
      */
     protected $withoutField = false;
+
+    /**
+     * @var null having条件
+     */
+    protected $having = null;
 
     /**
      * @var array where条件
@@ -492,7 +502,12 @@ abstract class BaseCurd
                 $field = $item[0];
 
                 if (!strpos($field, '.')) {
-                    $item[0] = "${name}.${field}";
+                    if ($this->alias) {
+                        $alias   = is_string($this->alias) ? $this->alias : $name;
+                        $item[0] = "${alias}.${field}";
+                    } else {
+                        $item[0] = $field;
+                    }
                 }
 
                 $map[$key] = $item;

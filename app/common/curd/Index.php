@@ -57,11 +57,16 @@ class Index extends BaseCurd
     protected $paginate;
 
     /**
+     * @var bool 简洁模式
+     */
+    protected $simple = false;
+
+    /**
      * @var bool 是否使用分页类
      */
     protected $usePaginate = true;
 
-    protected $queryArgs = ['field', 'where', 'whereOr', 'with', 'scope', 'page', 'limit', 'order', 'group', 'usePaginate' => 'paginate', 'withoutField', 'withCount'];
+    protected $queryArgs = ['field', 'where', 'whereOr', 'with', 'scope', 'page', 'limit', 'order', 'group', 'usePaginate' => 'paginate', 'withoutField', 'withCount', 'alias', 'having', 'simple'];
 
     protected $modeExcludeQueryArgs = [
         //下拉选择不需要关联
@@ -160,28 +165,26 @@ class Index extends BaseCurd
         }
 
         $this->formatModel($result);
-
+        $paginate = $this->paginate = $result;
         //使用分页类
         if ($this->usePaginate) {
-            $paginate = $this->paginate = $result;
-
-            $this->total = $result->total();
-
+            $getter      = $paginate && !$this->simple;
+            $this->total = $getter ? $result->total() : $result->count();
             $this->setData([
-                'total'     => $paginate ? $paginate->total() : $this->total,
-                'last_page' => $paginate ? $paginate->lastPage() : ceil($this->total / $this->limit),
-                'page'      => $paginate ? $paginate->currentPage() : $this->page,
-                'limit'     => $paginate ? $paginate->listRows() : $this->limit,
+                'total'     => $this->total,
+                'last_page' => $getter ? $paginate->lastPage() : ceil($this->total / $this->limit),
+                'page'      => $getter ? $paginate->currentPage() : $this->page,
+                'limit'     => $getter ? $paginate->listRows() : $this->limit,
                 'list'      => $paginate ? $paginate->items() : $this->data,
             ]);
         } else {
 
             $this->setData([
-                'list' => $result,
+                'list' => $paginate,
             ]);
         }
 
-        return $result;
+        return $paginate;
     }
 
     /**

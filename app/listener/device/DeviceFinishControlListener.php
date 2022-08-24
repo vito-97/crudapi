@@ -24,7 +24,7 @@ class DeviceFinishControlListener extends DeviceHandleListener
 
             //简易主板 查询状态
             if ($type == Device::EASY_TYPE) {
-                $this->deviceControlService->queryEasyStatus()->sleep(0.1)->queryEasyStatus();
+                $this->deviceControlService->setQueue(2)->queryEasyStatus();
             }
 
         } else {

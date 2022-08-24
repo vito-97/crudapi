@@ -12,6 +12,7 @@ use app\common\Enum;
 use app\common\EventName;
 use app\job\DeviceRestartJob;
 use app\logic\DeviceLogic;
+use app\model\Device;
 use app\model\DeviceControl;
 use app\model\User;
 use app\service\DeviceControlService;
@@ -25,6 +26,10 @@ use think\facade\Request;
 
 class DeviceSubscribeMessageListener
 {
+    /**
+     * @var Device
+     */
+    protected $device;
     protected $deviceNo;
     protected $deviceID;
     protected $hex;
@@ -55,6 +60,11 @@ class DeviceSubscribeMessageListener
         '010101031189'           => 'easyDeviceOn',
     ];
 
+    //简易设备回调
+    protected $easyCmdMethod = [
+        'Bck' => 'easyBck',
+    ];
+
     public function handle($params)
     {
         $deviceNo       = $this->deviceNo = $params['device_no'];
@@ -65,9 +75,28 @@ class DeviceSubscribeMessageListener
         $this->control  = $params['control'];
         $this->imei     = $params['imei'];
         $this->date     = date('Y-m-d H:i:s');
+        $device         = $this->device = (new DeviceLogic())->getByDeviceNo($deviceNo);
 
         if (Env::get('APP_DEBUG') || Env::get('MQTT_DEBUG')) {
             $this->e($hex);
+        }
+        //简易设备
+        if ($device->type === Device::EASY_TYPE) {
+            $data = @json_decode($this->msg, true);
+            if (!empty($data['CMD'])) {
+                $name = $this->easyCmdMethod[$data['CMD']] ?? null;
+                if ($name) {
+                    Container::getInstance()->invokeMethod([$this, $name], [$deviceNo, $hex, $data]);
+                    return;
+                }
+            } elseif (strpos($this->msg, 'config,doout,ok') !== false) {
+                [, , , $status] = explode(',', trim($this->msg));
+                if (in_array($status, ['0', '1'])) {
+                    $this->e('正在查询简易设备状态');
+                    $this->easyControl($status);
+                    return;
+                }
+            }
         }
 
         foreach ($this->method as $start => $name) {
@@ -161,6 +190,15 @@ class DeviceSubscribeMessageListener
         $deviceControl->send('0106000A0000A9C8');*/
     }
 
+    public function easyBck($deviceNo, $hex, $data)
+    {
+        $this->e('简易设备返回Res:' . $data['Res']);
+
+        /*$status = $this->control && $this->control->isStartState() ? true : false;
+
+        $this->easyControl($status);*/
+    }
+
     /**
      * 当前剩余流量
      * @param $deviceNo
@@ -227,7 +265,7 @@ class DeviceSubscribeMessageListener
         $logic = new DeviceLogic();
         $type  = get_device_online_type($hex);
         $logic->online($this->imei, $type);
-        if (!$this->control->isFinishState()) {
+        if ($this->control && !$this->control->isFinishState()) {
             $this->e('上次操作未结算，正在结算');
             $this->stop(app()->request, $deviceNo, $hex);
         }
@@ -327,17 +365,17 @@ class DeviceSubscribeMessageListener
         }
     }
 
-    public function easyDeviceOn($deviceNo, $hex)
-    {
-        $this->e('简易设备继电器状态全开');
-        $this->easyControl(true);
-    }
+    /*    public function easyDeviceOn($deviceNo, $hex)
+        {
+            $this->e('简易设备继电器状态全开');
+            $this->easyControl(true);
+        }
 
-    public function easyDeviceOff($deviceNo, $hex)
-    {
-        $this->e('简易设备继电器状态全关');
-        $this->easyControl(false);
-    }
+        public function easyDeviceOff($deviceNo, $hex)
+        {
+            $this->e('简易设备继电器状态全关');
+            $this->easyControl(false);
+        }*/
 
     protected function easyControl($status)
     {
@@ -350,14 +388,16 @@ class DeviceSubscribeMessageListener
                 $this->checkUserExpireTime($user);
                 //需要启动 但是继电器状态是关闭的
             } elseif ($control->isStartState() && !$status) {
-                $this->e('正在启动继电器');
+                $this->e('正在启动简易设备');
                 $logic = new DeviceLogic();
                 $logic->start($this->deviceNo, false, true);
                 //需要停止 但是继电器状态是打开的
             } elseif ($control->isFinishState() && $status) {
-                $this->e('正在关闭继电器');
+                $this->e('正在关闭简易设备');
                 $logic = new DeviceLogic();
                 $logic->finish($this->deviceNo, false, true);
+            } else {
+                $this->e('简易设备状态正常');
             }
         }
     }

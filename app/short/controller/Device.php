@@ -27,7 +27,8 @@ class Device extends BaseController
             return $e->getMessage();
         }
 
-        $url = web('client_host') . ($device->site_id == Enum::SITE_TWO ? 'pages/water/fetcher' : '') . '?device_no=' . $deviceNo;
+//        $url = web('client_host') . ($device->site_id == Enum::SITE_TWO ? 'pages/water/fetcher' : '') . '?device_no=' . $deviceNo;
+        $url = web('client_host') . '?device_no=' . $deviceNo;
         return redirect($url);
     }
 }

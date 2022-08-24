@@ -11,15 +11,9 @@ class UserValidate extends BaseValidate
     const LOGIN_SCENE = 'login';
     const REGISTER_SCENE = 'register';
 
-    /**
-     * 验证规则
-     * 可设置语言包字段 语言包分组为valid_field
-     * 例如 name|valid_field.name 或 name|name_alias 或 name
-     * @var array
-     */
-    protected $rule = [
+    const RULE = [
         'username'     => 'require|alphaDash|length:4,20|unique:user',
-        'nickname'     => 'require|length:2,20|unique:user',
+        'nickname'     => 'require|length:2,20',
         'password'     => 'requireWithout:id|checkPassword|length:8,20',
         'tel'          => 'mobile|unique:user',
         'phone'        => 'alphaDash|max:15',
@@ -39,6 +33,14 @@ class UserValidate extends BaseValidate
         'product_type' => 'checkEnum',
         'flow'         => 'isPositiveInteger:zero',
     ];
+
+    /**
+     * 验证规则
+     * 可设置语言包字段 语言包分组为valid_field
+     * 例如 name|valid_field.name 或 name|name_alias 或 name
+     * @var array
+     */
+    protected $rule = self::RULE;
 
     /**
      * 字段对应的名称
