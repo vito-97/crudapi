@@ -318,7 +318,8 @@ class DeviceLogic extends BaseLogic
         $service      = new DeviceService();
         $lastIsSwitch = $state === DeviceControl::STATE_FINISH && $service->deviceIsSwitch($deviceNo);
         $isSwitch     = $device->type === Device::EASY_TYPE || ($user->expire_time > time() || $switch || $lastIsSwitch);
-        $this->checkCanControl($device, $state, $isSwitch);
+        $service->deviceIsSwitch($deviceNo, $isSwitch);
+        $this->checkCanControl($device, $state, $isSwitch ? 1 : 0);
 
         // 简易设备 或者 用户有剩余时长
         if ($isSwitch) {

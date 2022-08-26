@@ -27,8 +27,8 @@ class OrderWaitRefundListener
             throw new MessageException('退款金额不能为0元');
         }
         Db::transaction(function () use ($order, $refundMoney, $reason) {
-            $order->status       = Order::STATUS_WAIT_REFUND;
-            $order->refund_money = $refundMoney;
+            $order->status        = Order::STATUS_WAIT_REFUND;
+            $order->refund_money  = $refundMoney;
             if ($reason) {
                 $order->refund_mark = $reason;
             }

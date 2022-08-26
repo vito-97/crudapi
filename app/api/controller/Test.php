@@ -9,6 +9,7 @@
 namespace app\api\controller;
 
 use app\common\EventName;
+use app\logic\OrderLogic;
 use app\model\Device;
 use app\model\Order;
 use app\model\User;
@@ -122,6 +123,32 @@ class Test extends BaseController
         $a = str_pad(dechex(3), 2, '0', STR_PAD_LEFT);
         dump(hexdec('ffffffff'));
         dump($a);
+    }
+
+    public function updateOrder()
+    {
+        $orders = (new OrderLogic())->getModel()->getAll(['where' => [['refund_money', '>', 0]]]);
+
+        foreach ($orders as $order) {
+            $order->refund_amount = $order->refund_money;
+            $order->save();
+        }
+
+        return 'ok';
+    }
+
+    public function money()
+    {
+        $realUseFlow = 30;
+        $orderFlow   = 1000;
+        $price       = 0.1;
+        $flow        = $orderFlow - $realUseFlow;
+        //获取退款的金额
+        $amount = round($flow / $orderFlow * $price, 2, PHP_ROUND_HALF_EVEN);
+
+        dump($amount);
+
+        dump($flow / $orderFlow * $price);
     }
 
     public function deviceType()

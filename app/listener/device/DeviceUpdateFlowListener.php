@@ -58,13 +58,15 @@ class DeviceUpdateFlowListener extends DeviceHandleListener
             }
 
             //获取最后一张订单
-            $order = Order::where(['user_id' => $userID, 'status' => Order::STATUS_PAID, 'is_recharged' => Order::SWITCH_ON])->order('id', 'desc')->find();
-
-            if ($order && $order->is_vip && $order->allow_refund && $order->flow > $useFlow) {
-                $flow = $order->flow - $useFlow;
+            $order  = Order::where(['user_id' => $userID, 'status' => Order::STATUS_PAID, 'is_recharged' => Order::SWITCH_ON])->order('id', 'desc')->find();
+            $refund = false;
+            //非VIP套餐才可退
+            if ($order && !$order->is_vip && $order->allow_refund && $order->flow > $realUseFlow) {
+                $refund = true;
+                $flow   = $order->flow - $realUseFlow;
                 //获取退款的金额
                 $amount = round($flow / $order->flow * $order->pay_price, 2);
-
+                $this->e("退回金额：${amount}元");
                 if ($amount > 0) {
                     $params = [
                         'order'        => $order,
@@ -73,6 +75,8 @@ class DeviceUpdateFlowListener extends DeviceHandleListener
                     ];
                     //触发等待退款事件
                     Event::trigger(EventName::ORDER_WAIT_REFUND, $params);
+                } else {
+                    $this->e('无金额可退回');
                 }
             }
 
@@ -82,7 +86,7 @@ class DeviceUpdateFlowListener extends DeviceHandleListener
                 $user->flow = 0;
             } else {
                 // 普通用户只要有使用就清空流量
-                if ($user->type == User::NORMAL_TYPE) {
+                if ($user->type == User::NORMAL_TYPE && (!$order || !$order->is_vip)) {
                     $user->flow = 0;
                 } else {
                     $user->flow = ['dec', $useFlow];
@@ -104,7 +108,7 @@ class DeviceUpdateFlowListener extends DeviceHandleListener
                 'flow'      => $realUseFlow,
                 'site_id'   => $this->device->site_id,
             ]);
-            $this->e("已使用流量{$useFlow}L");
+            $this->e("清空流量{$useFlow}L");
         }
 
 //        $this->e('正在清除结算余额');

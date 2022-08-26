@@ -30,7 +30,8 @@ class OrderRefundListener
             $code   = $pay->getPayStatus($result);
             $status = $pay->payIsSuccess($result);
             if ($status && $code === 'refund') {
-                $order->status = Order::STATUS_REFUND;
+                $order->refund_amount = bcadd($order->refund_amount, $order->refund_money, 2);
+                $order->status        = Order::STATUS_REFUND;
                 $order->save();
 
                 $args = ['order' => $order];

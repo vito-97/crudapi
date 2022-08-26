@@ -22,7 +22,8 @@ class DeviceEdit extends Edit
     protected $appendCallback = [];
 
     protected $labelCallback = [
-        'get_status_enum' => ['name' => '状态', 'key' => 'status'],
+        'get_status_enum'       => ['name' => '状态', 'key' => 'status'],
         'get_product_type_enum' => ['name' => '套餐类型'],
+        'get_type_enum'         => ['name' => '类型', 'key' => 'type'],
     ];
 }

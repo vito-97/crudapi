@@ -118,7 +118,7 @@ class AllInPay extends Payment implements PaymentInterface
             'version'  => self::VERSION,
             'signtype' => 'RSA',
             'charset'  => 'UTF-8',
-            'cusid'    => $this->config['mch_id']??$this->config['cus_id'],
+            'cusid'    => $this->config['mch_id'] ?? $this->config['cus_id'],
             'appid'    => $this->config['app_id'],
         ];
     }
@@ -183,7 +183,7 @@ class AllInPay extends Payment implements PaymentInterface
             $param['oldreqsn'] = $param['order_no'];
 
             if (empty($param['reqsn'])) {
-                $param['reqsn'] = 'refund' . $param['order_no'];
+                $param['reqsn'] = 'r' . $param['order_no'] . rand(100, 999);
             }
 
             unset($param['order_no']);
@@ -191,7 +191,7 @@ class AllInPay extends Payment implements PaymentInterface
 
         $param = $this->formatArgs($param, __FUNCTION__);
 
-        dump($param);
+//        dump($param);
 
         $result = $this->request('refund', $param);
 

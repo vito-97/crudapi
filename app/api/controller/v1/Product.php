@@ -47,9 +47,9 @@ class Product extends BaseController
             $device      = $deviceLogic->getByDeviceNo($deviceNo);
         }
 
-        $user = $this->getUserinfo();
-
-        $product = $this->logic->getProductByDevice($device,$user ? $user->is_vip : false);
+        $user    = $this->getUserinfo();
+        $vip     = $user ? $user->is_vip : false;
+        $product = $this->logic->getProductByDevice($device, $vip);
 
         $data = ['list' => $product];
 

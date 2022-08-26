@@ -126,11 +126,13 @@ class DeviceSubscribeMessageListener
 
 //            $this->e($num);
 //            $this->e($n1 . $n2);
-            $this->e("剩余流量：{$n}L");
+//            $this->e("剩余流量：{$n}L");
+            $this->e("实际使用流量：{$n}L");
             $service = $this->service;
             $userID  = $service->deviceLastControlUserID($deviceNo) ?: 0;
             if ($userID) {
-                $service->userStopFlow($userID, $n);
+                $startFlow = $service->userStartFlow($userID);
+                $service->userStopFlow($userID, $startFlow - $n);
             }
 
             $this->e('正在清除结算余额');

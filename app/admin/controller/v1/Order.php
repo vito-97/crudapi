@@ -38,7 +38,7 @@ class Order extends BaseController
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
      */
-    public function refund($id = 0, $mark = '')
+    public function refund($id = 0, $mark = '', $refundMoney = 0)
     {
         /**
          * @var $order \app\model\Order
@@ -49,15 +49,26 @@ class Order extends BaseController
             throw new DataNotFoundException();
         }
 
-        if (!$order->is_pay) {
+        $canRefundMoney = bcsub($order->pay_price, $order->refund_amount, 2);
+
+        if ($refundMoney <= 0) {
+            $refundMoney = $canRefundMoney;
+        }
+
+        if (!$order->is_pay && !$order->is_refund) {
             throw new MessageException('订单状态错误');
         }
 
-//        $order->status      = \app\model\Order::STATUS_WAIT_REFUND;
-//        $order->refund_mark = $mark;
-//        $order->save();
+        if ($order->pay_price <= $order->refund_amount) {
+            throw new MessageException('订单金额已全部退还');
+        }
+
+        if ($refundMoney > $canRefundMoney) {
+            throw new MessageException('退款金额不能大于' . $canRefundMoney . '元');
+        }
+
         // 待退款事件
-        Event::trigger(EventName::ORDER_WAIT_REFUND, ['order' => $order, 'refund_money' => $order->pay_price, 'refund_mark' => $mark]);
+        Event::trigger(EventName::ORDER_WAIT_REFUND, ['order' => $order, 'refund_money' => $refundMoney, 'refund_mark' => $mark]);
 
         return $this->success('申请退款成功');
     }
