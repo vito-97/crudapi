@@ -2,8 +2,8 @@
 /**
  * Created by Command.
  * User: Vito
- * Date: 2022/08/23
- * Time: 11:23
+ * Date: 2022/08/31
+ * Time: 14:01
  */
 use app\common\ErrorCode;
 use app\common\Message;
@@ -186,6 +186,7 @@ return [
 	'valid.is_menu' => '是否为菜单',
 	'valid.icon' => '图标',
 	'valid.pid' => '上级ID',
+	'valid.system_config_tab_key' => '系统配置菜单键',
 	'valid.system_config_key' => '变量键',
 	'valid.system_config_tab_id' => '系统配置菜单ID',
 	'valid.opts' => '组件配置项',

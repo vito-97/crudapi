@@ -256,7 +256,7 @@ abstract class BaseLogic
             halt($result);
         }
 
-        return $result['nums'] ?: 0;
+        return (float)$result['nums'] ?: 0;
     }
 
     /**
@@ -546,7 +546,7 @@ abstract class BaseLogic
 
         foreach ($result as $item) {
             if (isset($dateResult[$item['create_date']])) {
-                $dateResult[$item['create_date']] = $item['nums'];
+                $dateResult[$item['create_date']] = (float)$item['nums'];
             }
         }
 

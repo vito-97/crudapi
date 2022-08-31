@@ -26,7 +26,7 @@ class CardIndex extends Index
     //排除字段
     protected $withoutField = false;
 
-    protected $with = ['agent'];
+    protected $with = ['agent', 'user'];
 
     protected $queryField = [
         'status', 'agent_id',

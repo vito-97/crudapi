@@ -177,7 +177,7 @@ class DeviceService
             }
 
             return $detail;
-        },false);
+        }, false);
 
         if ($data) {
             if (isset($data['create_time']) && is_string($data['create_time'])) {
@@ -247,16 +247,22 @@ class DeviceService
      * @param $userID
      * @return int|mixed|null
      */
-    public function userUseFLow($userID)
+    public function userUseFLow($userID, $data = null)
     {
-        $start = $this->userStartFlow($userID);
-        $stop  = $this->userStopFlow($userID);
+        /*        $start = $this->userStartFlow($userID);
+                $stop  = $this->userStopFlow($userID);
 
-        if (!$start || !is_numeric($stop)) {
-            return 0;
-        }
+                if (!$start || !is_numeric($stop)) {
+                    return 0;
+                }
 
-        return $start - $stop;
+                return $start - $stop;*/
+        $table = __FUNCTION__;
+        $key   = $userID;
+
+        $data = RedisStoreService::tableRemember($table, $key, $data);
+
+        return $data;
     }
 
     /**
@@ -268,6 +274,7 @@ class DeviceService
     {
         $this->userStartFlow($userID, false);
         $this->userStopFlow($userID, false);
+        $this->userUseFlow($userID, false);
 
         return $this;
     }

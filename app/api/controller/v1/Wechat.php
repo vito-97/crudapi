@@ -242,25 +242,25 @@ class Wechat extends BaseController
         return new News($items);
     }
 
-    protected function register($nickname, $avatar = '')
-    {
-        $userLogic = new UserLogic();
-//        $nickname  = trim_emoji($nickname);
-        if (!$nickname) {
-            $nickname = '微信授权';
+        protected function register($nickname, $avatar = '')
+        {
+            $userLogic = new UserLogic();
+    //        $nickname  = trim_emoji($nickname);
+            if (!$nickname) {
+                $nickname = '微信授权';
+            }
+
+            $userinfo = $userLogic->register([
+                'username' => 'oauth_' . Str::random(10),
+                'nickname' => $nickname . Str::random(5),
+                'password' => 'a123456.',
+                'avatar'   => $avatar,
+                'money'    => 0,
+                'flow'     => 0,
+                'add_ip'   => $this->request->ip(),
+                'platform' => \app\model\User::WX_PLATFORM,
+            ]);
+
+            return $userinfo;
         }
-
-        $userinfo = $userLogic->register([
-            'username' => 'oauth_' . Str::random(10),
-            'nickname' => $nickname . Str::random(5),
-            'password' => 'a123456.',
-            'avatar'   => $avatar,
-            'money'    => 0,
-            'flow'     => 0,
-            'add_ip'   => $this->request->ip(),
-            'platform' => \app\model\User::WX_PLATFORM,
-        ]);
-
-        return $userinfo;
-    }
 }

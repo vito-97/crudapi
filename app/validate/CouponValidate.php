@@ -18,7 +18,7 @@ class CouponValidate extends BaseValidate
         'name'           => 'max:50',
         'full_minus'     => 'require|float',
         'amount'         => 'require|float',
-        'total'          => 'requireIf:is_infinite,1|isPositiveInteger',
+        'total'          => 'requireIf:is_infinite,0|isPositiveInteger:zero',
         'is_infinite'    => 'require|checkEnum',
         'product_id'     => 'require|checkHas:product',
         'get_start_time' => 'date',

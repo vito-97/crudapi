@@ -26,7 +26,7 @@ class FlowCouponIndex extends Index
     //排除字段
     protected $withoutField = true;
 
-    protected $with = ['coupon_user'];
+    protected $with = ['coupon_user', 'agent'];
 
     protected $scope = ['sort'];
 

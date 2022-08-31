@@ -15,12 +15,12 @@ class FlowCouponEdit extends Edit
     //查询条件
     protected $where = [];
     //关联
-    protected $with = ['coupon_user'];
+    protected $with = ['coupon_user', 'agent'];
     //追加字段
-    protected $append = [];
+    protected $append = ['get_time', 'use_time'];
     //追加标签数据
     protected $labelCallback = [
-        'get_status_enum' => ['name' => '状态', 'key' => 'status'],
+        'get_status_enum'     => ['name' => '状态', 'key' => 'status'],
         'get_limit_type_enum' => ['name' => '限制领取类型', 'key' => 'limit_type'],
     ];
 }

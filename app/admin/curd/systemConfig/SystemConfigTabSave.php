@@ -19,5 +19,5 @@ class SystemConfigTabSave extends Save
     //追加数据
     protected $appendParams = [];
     //允许新增的数据字段
-    protected $field = ['pid', 'name', 'status', 'icon', 'sort'];
+    protected $field = ['pid', 'name', 'status', 'icon', 'sort', 'key'];
 }

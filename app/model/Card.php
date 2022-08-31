@@ -8,14 +8,15 @@
 
 namespace app\model;
 
-
 use app\model\traits\AgentTrait;
 use app\model\traits\UserTrait;
 use think\db\Query;
+use think\helper\Str;
 
 class Card extends BaseModel
 {
     use AgentTrait;
+    use UserTrait;
 
     /**
      * 搜索列表时的模糊搜索条件

@@ -15,11 +15,12 @@ class SystemConfigTabValidate extends BaseValidate
      * @var array
      */
     protected $rule = [
-        'name' => 'require|max:50|unique:system_config_tab',
-        'pid' => 'require|checkHasCanEmpty:system_config_tab',
-        'status' => 'require|checkEnum',
-        'icon' => 'max:30',
-        'sort' => 'number|between:0,255',
+        'name'                      => 'require|max:50',
+        'key|system_config_tab_key' => 'require|alphaDash|unique:system_config_tab',
+        'pid'                       => 'require|checkHasCanEmpty:system_config_tab',
+        'status'                    => 'require|checkEnum',
+        'icon'                      => 'max:30',
+        'sort'                      => 'number|between:0,255',
     ];
 
     /**
@@ -46,8 +47,8 @@ class SystemConfigTabValidate extends BaseValidate
      * @var array
      */
     protected $scene = [
-        self::SAVE_SCENE => 'all',
+        self::SAVE_SCENE   => 'all',
         self::UPDATE_SCENE => 'all',
-        self::LIST_SCENE => ['pid', 'status',],
+        self::LIST_SCENE   => ['pid', 'status',],
     ];
 }

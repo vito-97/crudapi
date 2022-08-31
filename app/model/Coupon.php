@@ -384,6 +384,13 @@ class Coupon extends BaseModel
         return $value;
     }
 
+    protected function getGetTimeAttr($value, $data)
+    {
+        return array_map(function ($it) {
+            return date('Y-m-d H:i:s', $it);
+        }, [$data['get_start_time'], $data['get_end_time']]);
+    }
+
     protected function setUseTimeAttr($value)
     {
         if (is_array($value) && count($value) === 2) {
@@ -391,6 +398,13 @@ class Coupon extends BaseModel
             $this->use_end_time   = $this->_setTimeAttr($value[1], 'end');
         }
         return $value;
+    }
+
+    protected function getUseTimeAttr($value, $data)
+    {
+        return array_map(function ($it) {
+            return date('Y-m-d H:i:s', $it);
+        }, [$data['use_start_time'], $data['use_end_time']]);
     }
 
     protected function getLimitTypeDescAttr($value, $data)
