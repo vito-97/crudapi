@@ -24,7 +24,7 @@ class DeviceSave extends Save
     //允许新增的数据字段
     protected $field = ['used_flow'];
     //关联写入
-//    protected $together = ['tip' => Device::TIP_FIELD];
+    protected $together = ['tip' => Device::TIP_FIELD];
     //排除
     protected $withoutField = true;
 

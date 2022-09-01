@@ -26,7 +26,7 @@ class DeviceUpdate extends Update
     protected $exclude = [];
     //条件
     protected $where = [];
-//    protected $together = ['tip' => Device::TIP_FIELD];
+    protected $together = ['tip' => Device::TIP_FIELD];
 
     protected function saveMiddleware($next, Model $model, array $params)
     {

@@ -26,7 +26,7 @@ class DeviceIndex extends Index
     //排除字段
     protected $withoutField = false;
 
-    protected $with = ['agent'];
+    protected $with = ['agent', 'tip'];
 
     protected $append = ['qrcode_url', 'state_desc'];
 

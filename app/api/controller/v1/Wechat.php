@@ -19,6 +19,9 @@ use app\logic\CustomerLogic;
 use app\logic\SystemConfigLogic;
 use app\logic\UserLogic;
 use app\logic\UserOauthLogic;
+use app\logic\WaterworksLogic;
+use app\model\Member;
+use app\model\User;
 use app\model\UserOauth;
 use app\service\RedisStoreService;
 use app\service\TokenService;
@@ -193,8 +196,8 @@ class Wechat extends BaseController
      */
     protected function repairRegister($agentID)
     {
-        $logic = new AgentLogic();
-        $agent = $logic->getByID($agentID);
+        $agent = Member::where('type', 'IN', [User::AGENT_TYPE, User::WATERWORKS_TYPE])->find($agentID);
+
         if (!$agent) {
             return '找不到相关运营商';
         }
@@ -242,25 +245,25 @@ class Wechat extends BaseController
         return new News($items);
     }
 
-        protected function register($nickname, $avatar = '')
-        {
-            $userLogic = new UserLogic();
-    //        $nickname  = trim_emoji($nickname);
-            if (!$nickname) {
-                $nickname = '微信授权';
-            }
-
-            $userinfo = $userLogic->register([
-                'username' => 'oauth_' . Str::random(10),
-                'nickname' => $nickname . Str::random(5),
-                'password' => 'a123456.',
-                'avatar'   => $avatar,
-                'money'    => 0,
-                'flow'     => 0,
-                'add_ip'   => $this->request->ip(),
-                'platform' => \app\model\User::WX_PLATFORM,
-            ]);
-
-            return $userinfo;
+    protected function register($nickname, $avatar = '')
+    {
+        $userLogic = new UserLogic();
+        //        $nickname  = trim_emoji($nickname);
+        if (!$nickname) {
+            $nickname = '微信授权';
         }
+
+        $userinfo = $userLogic->register([
+            'username' => 'oauth_' . Str::random(10),
+            'nickname' => $nickname . Str::random(5),
+            'password' => 'a123456.',
+            'avatar'   => $avatar,
+            'money'    => 0,
+            'flow'     => 0,
+            'add_ip'   => $this->request->ip(),
+            'platform' => \app\model\User::WX_PLATFORM,
+        ]);
+
+        return $userinfo;
+    }
 }

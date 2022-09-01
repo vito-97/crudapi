@@ -18,9 +18,9 @@ class RepairUserUpdate extends Update
     ];
     //允许新增的数据字段
     protected $field = ['agent_id', 'type', 'platform', 'money', 'flow'];
-    protected $withoutField = true;
+    protected $withUser = 'agent_id';
     //获取对象时追加的字段
-    protected $appendField = [];
+    protected $appendField = ['site_id' => Enum::SITE_TWO];
     //排除的数据
     protected $exclude = [];
     //条件

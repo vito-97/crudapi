@@ -11,6 +11,7 @@ namespace app\logic;
 use app\common\ErrorCode;
 use app\common\EventName;
 use app\common\Hash;
+use app\exception\AccountDisabledException;
 use app\exception\AdminNotFoundException;
 use app\exception\PasswordErrorException;
 use app\exception\RegisterErrorException;
@@ -111,6 +112,10 @@ class UserLogic extends BaseLogic
 
         if (!$valid) {
             throw new PasswordErrorException(ErrorCode::USER_PASSWORD_ERROR);
+        }
+
+        if ($user->isDisabled()) {
+            throw new AccountDisabledException();
         }
 
         //触发登录事件

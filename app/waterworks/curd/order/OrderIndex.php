@@ -21,7 +21,9 @@ class OrderIndex extends Index
     //追加数据
     protected $appendCallback = [];
     //查询条件
-    protected $where = [];
+    protected $where = [
+        ['type', '=', Order::RECHARGE_TYPE],
+    ];
     //字段
     protected $field = [];
     //排除字段

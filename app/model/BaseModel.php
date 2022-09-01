@@ -282,6 +282,18 @@ class BaseModel extends Model
         $obj->setAttrs($data);
         $status = $obj->together($together)->allowField($allowField)->save() ? $obj : false;
 
+        if ($status) {
+            // 关联更新之前没先关联会更新不上 所以需要获取相关内容进行更新
+            foreach ($obj->relationWrite as $key => $name) {
+                $value = $obj->getRelation($key);
+                if (!$value) {
+                    if (is_array($name)) {
+                        $obj->$key()->save($name);
+                    }
+                }
+            }
+        }
+
         return $status;
     }
 
@@ -341,7 +353,7 @@ class BaseModel extends Model
             (is_array($args['without_global_scope']) ? $args['without_global_scope'] : []) : [];
 
         //获取模型名称
-        $name = $this->getName();
+        $name = get_class_name(static::class);
 
         //获取query
         $query = $this->db($withoutGlobalScope);

@@ -209,6 +209,18 @@ function hex_xor($hex1, $hex2 = null)
 }
 
 /**
+ * 获取类名
+ * @param $class
+ * @return string
+ */
+function get_class_name($class)
+{
+    $name = str_replace('\\', '/', $class);
+    $name = basename($name);
+    return $name;
+}
+
+/**
  * 客户端链接
  * @param string $uri PATH地址
  * @param array $query 参数

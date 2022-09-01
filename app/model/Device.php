@@ -36,7 +36,7 @@ class Device extends BaseModel
     const STATUS_FAULT = 2;
 
     //消息的字段
-    const TIP_FIELD = ['tip1', 'tip2', 'tip3', 'tip4'];
+    const TIP_FIELD = ['start_tip', 'finish_tip'];
 
     //场景
     protected $scene = [

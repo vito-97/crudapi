@@ -9,6 +9,7 @@
 namespace app\repair_user\controller;
 
 
+use app\common\Enum;
 use app\common\ErrorCode;
 use app\logic\RepairUserLogic;
 use app\model\Member;
@@ -54,8 +55,11 @@ class Register extends BaseController
         if (empty($params['username'])) {
             $params['username'] = $params['tel'] ?? '';
         }
-        $params['status'] = User::STATUS_OFF;
-        $params['mark']   = '申请注册';
+//        $params['status']  = User::STATUS_OFF;
+        $params['status']  = User::STATUS_ON;
+        $params['mark']    = '申请注册';
+        $params['site_id'] = $agent->type === User::AGENT_TYPE ? Enum::SITE_ONE : Enum::SITE_TWO;
+        $params['add_ip']  = $this->request->ip();
 
         $user = $this->logic->register($params, User::REPAIR_TYPE);
 

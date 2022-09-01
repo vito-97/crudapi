@@ -15,7 +15,7 @@ class DeviceEdit extends Edit
     //查询条件
     protected $where = [];
     //关联
-    protected $with = ['agent'];
+    protected $with = ['agent', 'tip'];
     //追加字段
     protected $append = [];
     //追加数据回调

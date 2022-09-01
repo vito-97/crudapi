@@ -22,12 +22,13 @@ class RepairUserSave extends Save
     //允许新增的数据字段
     protected $field = ['agent_id', 'type', 'platform', 'money', 'flow'];
     protected $withoutField = true;
-    protected $withUser = true;
+    protected $withUser = 'agent_id';
 
     protected function saveMiddleware($next, $params)
     {
-        $params['add_ip']   = $this->request->ip();
-        $params['type']     = User::REPAIR_TYPE;
+        $params['add_ip']  = $this->request->ip();
+        $params['type']    = User::REPAIR_TYPE;
+        $params['site_id'] = Enum::SITE_TWO;
 
         return $next($params);
     }
