@@ -9,6 +9,7 @@
 namespace app\common\curd;
 
 
+use app\common\Enum;
 use app\common\Util;
 use think\helper\Str;
 use think\Paginator;
@@ -39,7 +40,7 @@ class Index extends BaseCurd
     /**
      * @var int 每页数量的最大取值
      */
-    protected $maxLimit = 200;
+    protected $maxLimit = Enum::MAX_LIMIT;
 
     /**
      * @var 排序

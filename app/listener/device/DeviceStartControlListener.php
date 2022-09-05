@@ -24,7 +24,12 @@ class DeviceStartControlListener extends DeviceHandleListener
     {
         if ($this->switch) {
             $type = $this->device->type;
-            $this->deviceControlService->open($type);
+            $msg  = '';
+            if ($type == Device::EASY_TYPE) {
+                $tip = $this->device->tip;
+                $msg = $tip['start_tip'] ?? '';
+            }
+            $this->deviceControlService->open($type, $msg);
 
             //简易主板 查询状态
             if ($type == Device::EASY_TYPE) {

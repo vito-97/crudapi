@@ -13,6 +13,9 @@ php think queue:listen --queue order_refund
 系统访问日志
 php think queue:listen --queue system_log
 
+流量结算
+php think queue:listen --queue device_update_flow
+
 监听mqtt消息
 php think mqtt
 

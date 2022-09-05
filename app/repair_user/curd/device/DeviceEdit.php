@@ -15,7 +15,7 @@ class DeviceEdit extends Edit
     //查询条件
     protected $where = [];
     //关联
-    protected $with = [];
+    protected $with = ['tip'];
     //追加字段
     protected $append = ['adverts_light_desc', 'status_desc'];
     protected $hidden = [];

@@ -20,7 +20,12 @@ class DeviceFinishControlListener extends DeviceHandleListener
         $type = $this->device->type;
         $this->e('正在停止');
         if ($this->switch) {
-            $this->deviceControlService->close($type);
+            $msg = '';
+            if ($type == Device::EASY_TYPE) {
+                $tip = $this->device->tip;
+                $msg = $tip['finish_tip'] ?? '';
+            }
+            $this->deviceControlService->close($type, $msg);
 
             //简易主板 查询状态
             if ($type == Device::EASY_TYPE) {

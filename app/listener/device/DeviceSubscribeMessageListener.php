@@ -11,6 +11,7 @@ namespace app\listener\device;
 use app\common\Enum;
 use app\common\EventName;
 use app\job\DeviceRestartJob;
+use app\job\DeviceUpdateFlowJob;
 use app\logic\DeviceLogic;
 use app\model\Device;
 use app\model\DeviceControl;
@@ -360,8 +361,12 @@ class DeviceSubscribeMessageListener
                 $logic->finish($deviceNo);
             }
 
-            $params = ['device' => $this->control->device, 'control' => $this->control];
-            Event::trigger(EventName::DEVICE_UPDATE_FLOW, $params);
+/*            $params = ['device' => $this->control->device, 'control' => $this->control];
+            Event::trigger(EventName::DEVICE_UPDATE_FLOW, $params);*/
+
+            //延时5秒去执行结算更新流量 因为64流量在结算状态后面才上发
+            $params = ['device_id' => $this->device->id, 'user_id' => $user->id];
+            Queue::later(10,DeviceUpdateFlowJob::class,$params,Enum::JOB_DEVICE_UPDATE_FLOW);
 
             //清除该设备想控制的用户ID
 //            $this->service->deviceWantControlUserID($this->deviceNo, false);

@@ -25,9 +25,10 @@ class DeviceIndex extends Index
     //排除字段
     protected $withoutField = false;
     //关联
-    protected $with = ['service_charge'];
+    protected $with = ['service_charge', 'tip'];
 
-    protected $append = ['adverts_light_desc', 'status_desc', 'state_desc'];
+    protected $append = ['adverts_light_desc', 'status_desc', 'state_desc', 'qrcode_url'];
+
     /**
      * 需要查询条件的字段
      * 数据库字段和参数字段名不一样 'db_field' => 'param_field'
@@ -39,9 +40,10 @@ class DeviceIndex extends Index
     ];
 
     protected $labelCallback = [
-        'get_status_enum' => ['name' => '状态', 'key' => 'status'],
-        'get_state_enum'  => ['name' => '使用状态', 'key' => 'state'],
+        'get_status_enum'       => ['name' => '状态', 'key' => 'status'],
+        'get_state_enum'        => ['name' => '使用状态', 'key' => 'state'],
         'get_product_type_enum' => ['name' => '套餐类型'],
+        'get_type_enum'         => ['name' => '类型', 'key' => 'type'],
     ];
 
     protected $validate = [

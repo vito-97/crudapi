@@ -52,6 +52,7 @@ class Enum
     const JOB_DEVICE_CONTROL_CHECK = 'device_control_check';
     const JOB_DEVICE_TIMEOUT_CHECK = 'device_timeout_check';
     const JOB_CREATE_SERVICE_CHARGE = 'create_service_charge';
+    const JOB_DEVICE_UPDATE_FLOW = 'device_update_flow';
 
     //订单退款
     const JOB_ORDER_REFUND = 'order_refund';
@@ -73,6 +74,9 @@ class Enum
     const DEVICE_STOP_FINISH_CODE = '0103000E0000';//结束完成
     const DEVICE_STOP_CODE = '010300090003';//已结束
     const DEVICE_IS_SET_FLOW = '0103000A0001';//已下发余额
+
+    // 最大每页显示数量
+    const MAX_LIMIT = 1000;
 
     //居科乐
     const SITE_ONE = 1;

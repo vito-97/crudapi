@@ -15,7 +15,7 @@ class DeviceEdit extends Edit
     //查询条件
     protected $where = [];
     //关联
-    protected $with = ['service_charge'];
+    protected $with = ['service_charge', 'tip'];
     //追加字段
     protected $append = ['adverts_light_desc', 'status_desc', 'product_type_desc'];
     protected $hidden = ['service_charge' => ['agent_id', 'device_id', 'delete_time']];

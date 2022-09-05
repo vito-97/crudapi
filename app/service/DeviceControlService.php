@@ -131,10 +131,10 @@ class DeviceControlService
         return $this->writePush($address, false);
     }
 
-    public function open($type = 1)
+    public function open($type = 1, $msg = null)
     {
         if ($type == 2) {
-            return $this->easySwitch(true, SystemConfigLogic::get('easy_device_start_tip'));
+            return $this->easySwitch(true, $msg ?: SystemConfigLogic::get('easy_device_start_tip'));
         }
 
         $address = self::ADDRESS['open' . $type];
@@ -144,10 +144,10 @@ class DeviceControlService
         return $this->writePush($address, false);
     }
 
-    public function close($type = 1)
+    public function close($type = 1, $msg = null)
     {
         if ($type == 2) {
-            return $this->easySwitch(false, SystemConfigLogic::get('easy_device_finish_tip'));
+            return $this->easySwitch(false, $msg ?: SystemConfigLogic::get('easy_device_finish_tip'));
         }
 
         $address = self::ADDRESS['close' . $type];

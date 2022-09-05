@@ -20,5 +20,5 @@ class DeviceRead extends Read
     //条件
     protected $where = [];
     //关联
-    protected $with = ['service_charge'];
+    protected $with = ['service_charge', 'tip'];
 }

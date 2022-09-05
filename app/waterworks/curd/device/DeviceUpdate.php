@@ -6,6 +6,7 @@
 
 namespace app\waterworks\curd\device;
 
+use app\model\Device;
 use app\waterworks\curd\Update;
 use app\common\Enum;
 use app\common\EventName;
@@ -28,6 +29,7 @@ class DeviceUpdate extends Update
     protected $exclude = [];
     //条件
     protected $where = [];
+    protected $together = ['tip' => Device::TIP_FIELD];
 
     protected function saveMiddleware($next, Model $model, array $params)
     {

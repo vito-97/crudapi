@@ -9,6 +9,7 @@ namespace app\agent\curd\device;
 use app\agent\curd\Update;
 use app\common\Enum;
 use app\common\EventName;
+use app\model\Device;
 use app\validate\DeviceValidate;
 use think\facade\Event;
 use think\Model;
@@ -28,6 +29,9 @@ class DeviceUpdate extends Update
     protected $exclude = [];
     //条件
     protected $where = [];
+
+    protected $together = ['tip' => Device::TIP_FIELD];
+
 
     protected function saveMiddleware($next, Model $model, array $params)
     {

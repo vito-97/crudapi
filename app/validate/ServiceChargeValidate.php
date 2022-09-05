@@ -16,11 +16,11 @@ class ServiceChargeValidate extends BaseValidate
      */
     protected $rule = [
         'title'   => 'require|max:100',
-        'agent_id' => 'require|isPositiveInteger|checkHas:agent',
+        'agent_id' => 'require|isPositiveInteger|checkHas:agent/waterworks',
         'amount'  => 'require|float',
         'time'    => 'require|date',
         'is_pay'  => 'require|checkSwitch',
-        'mark'    => 'require|max:100',
+        'mark'    => 'max:100',
     ];
 
     /**

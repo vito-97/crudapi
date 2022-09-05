@@ -25,7 +25,7 @@ class DeviceIndex extends Index
     //排除字段
     protected $withoutField = false;
     //关联
-    protected $with = ['service_charge'];
+    protected $with = ['service_charge', 'tip'];
 
     protected $append = ['adverts_light_desc', 'status_desc', 'state_desc', 'product_type_desc'];
     /**
