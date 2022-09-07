@@ -17,7 +17,7 @@ class AttachmentUpdate extends Update
         AttachmentValidate::class => Enum::VALID_UPDATE_SCENE,
     ];
     //允许新增的数据字段
-    protected $field = [];
+    protected $field = ['name'];
     //获取对象时追加的字段
     protected $appendField = [];
     //排除的数据
