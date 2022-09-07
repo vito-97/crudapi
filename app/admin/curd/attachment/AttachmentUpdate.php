@@ -14,7 +14,7 @@ class AttachmentUpdate extends Update
 {
     //验证器
     protected $validate = [
-        AttachmentValidate::class => Enum::VALID_SAVE_SCENE,
+        AttachmentValidate::class => Enum::VALID_UPDATE_SCENE,
     ];
     //允许新增的数据字段
     protected $field = [];
