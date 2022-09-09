@@ -24,7 +24,7 @@ class SystemAuth extends BaseController
 
     protected $registerCurd = true;
 
-    protected $registerCurdDir = 'system';
+    protected $registerCurdDir = 'system_auth';
 
     protected function initialize()
     {

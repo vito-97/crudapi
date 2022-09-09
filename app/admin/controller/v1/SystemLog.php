@@ -12,7 +12,7 @@ class SystemLog extends BaseController
 
     protected $registerCurd = ['index', 'read', 'delete'];
 
-    protected $registerCurdDir = 'system';
+    protected $registerCurdDir = 'system_log';
 
     protected function initialize()
     {
