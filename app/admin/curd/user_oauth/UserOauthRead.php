@@ -4,11 +4,11 @@
  * User: Vito
  */
 
-namespace app\admin\curd\adverts;
+namespace app\admin\curd\user_oauth;
 
 use app\common\curd\Read;
 
-class AdvertsRead extends Read
+class UserOauthRead extends Read
 {
     //需要展示的字段
     protected $field = [];
@@ -19,5 +19,5 @@ class AdvertsRead extends Read
     //条件
     protected $where = [];
     //关联
-    protected $with = ['admin'];
+    protected $with = [];
 }

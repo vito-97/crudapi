@@ -8,15 +8,20 @@
 
 namespace app\common;
 
+use IteratorAggregate;
+use ArrayIterator;
+use Traversable;
 use think\contract\Arrayable;
 use think\contract\Jsonable;
+use JsonSerializable;
 
-class ArrayObject implements \ArrayAccess, Arrayable, Jsonable
+class ArrayObject implements \ArrayAccess, Arrayable, Jsonable, IteratorAggregate,JsonSerializable
 {
     protected $data = [];
 
     public function __construct($data = [])
     {
+        $data       = $this->getData($data);
         $this->data = $data;
     }
 
@@ -32,7 +37,7 @@ class ArrayObject implements \ArrayAccess, Arrayable, Jsonable
 
     public function offsetGet($offset)
     {
-        return $this->data[$offset] ?? null;
+        return $this->data[$offset] ?? '';
     }
 
     public function offsetSet($offset, $value)
@@ -70,5 +75,34 @@ class ArrayObject implements \ArrayAccess, Arrayable, Jsonable
         $this->data = array_merge($this->data, ...$array);
 
         return $this;
+    }
+
+    private function getData($data)
+    {
+        if ($data instanceof self) {
+            $data = $data->toArray();
+        }
+
+        return $data;
+    }
+
+    public function getIterator(): Traversable
+    {
+        return new ArrayIterator($this->data);
+    }
+
+    public function __get($name)
+    {
+        return $this->offsetGet($name);
+    }
+
+    public function __set($name, $value)
+    {
+        return $this->offsetSet($name, $value);
+    }
+
+    public function jsonSerialize()
+    {
+        return $this->toArray();
     }
 }

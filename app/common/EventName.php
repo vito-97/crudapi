@@ -23,11 +23,6 @@ class EventName
 
     //仪表盘
     const ADMIN_DASHBOARD = 'admin_dashboard';
-    const AGENT_DASHBOARD = 'agent_dashboard';
-    const WATER_COMPANY_DASHBOARD = 'water_company_dashboard';
-    const REPAIR_USER_DASHBOARD = 'repair_user_dashboard';
-    const WATERWORKS_DASHBOARD = 'waterworks_dashboard';
-    const CUSTOMER_DASHBOARD = 'customer_dashboard';
 
     //定时任务的事件名称
     const CRONTAB_TASK = 'task_%s';
@@ -55,41 +50,8 @@ class EventName
      */
     const USER_LOGOUT = 'user_logout';
 
-    //支付成功
-    const PAY_SUCCESS = 'pay_success';
-    //支付回调
-    const PAY_CALLBACK = 'pay_callback';
-    const PAY_CANCEL = 'pay_cancel';
-    const PAY_REFUND = 'pay_refund';
-
-    const ORDER_WAIT_REFUND = 'order_wait_refund';
-    const ORDER_REFUND = 'order_refund';
-    const ORDER_REFUND_SUCCESS = 'order_refund_success';
-    const ORDER_REFUND_ERROR = 'order_refund_error';
-
-    //直接发送指令
-    const DEVICE_CONTROL_START = 'device_control_start';
-    const DEVICE_CONTROL_PAUSE = 'device_control_pause';
-    const DEVICE_CONTROL_FINISH = 'device_control_finish';
-
-    //设备操作
-    const DEVICE_WAIT = 'device_wait';
-    const DEVICE_START = 'device_start';
-    const DEVICE_PAUSE = 'device_pause';
-    const DEVICE_FINISH = 'device_finish';
-    const DEVICE_WAIT_TIMEOUT = 'device_wait_timeout';
-    const DEVICE_CONTROL = 'device_control';
-    const DEVICE_SET_QRCODE_URL = 'device_set_qrcode_url';
-    const DEVICE_SET_DEVICE_NO = 'device_set_device_no';
-    const DEVICE_SET_TEMPERATURE = 'device_set_temperature';
-    const DEVICE_SET_PULSE = 'device_set_pulse';
-    const DEVICE_UPDATE_FLOW = 'device_update_flow';
-    const DEVICE_SAVE = 'device_save';
-
     //MQTT订阅的信息
     const MQTT_SUBSCRIBE_MSG = 'mqtt_subscribe_msg';
-
-    const CREATE_ORDER = 'create_order';
 
     //更新用户的流量
     const GET_USER_DETAIL = 'get_user_detail';

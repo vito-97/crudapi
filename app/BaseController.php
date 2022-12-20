@@ -1,5 +1,5 @@
 <?php
-declare (strict_types=1);
+declare (strict_types = 1);
 
 namespace app;
 
@@ -74,7 +74,7 @@ abstract class BaseController
      */
     protected $user;
 
-    protected $exceptParams = ['api_version', 'lang', '_label'];
+    protected $exceptParams = ['api_version', 'lang', 'with_label'];
 
     /**
      * 构造方法
@@ -83,11 +83,11 @@ abstract class BaseController
      */
     public function __construct(App $app)
     {
-        $this->app     = $app;
+        $this->app = $app;
         $this->request = $this->app->request;
 
         $this->version = $this->request->param('api_version');
-        $this->user    = $this->request->getUser();
+        $this->user = $this->request->getUser();
 
         //在需要调用CURD的方法才自动注册
         if (in_array($this->request->action(), Enum::CURD) && empty($this->curd[$this->request->action()])) {
@@ -135,7 +135,7 @@ abstract class BaseController
                 [$validate, $scene] = explode('.', $validate);
             }
             $class = false !== strpos($validate, '\\') ? $validate : $this->app->parseClass('validate', $validate);
-            $v     = new $class();
+            $v = new $class();
             if (!empty($scene)) {
                 $v->scene($scene);
             }

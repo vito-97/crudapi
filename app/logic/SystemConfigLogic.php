@@ -5,9 +5,7 @@ namespace app\logic;
 
 use app\exception\MessageException;
 use app\model\SystemConfig;
-use app\validate\BaseValidate;
 use app\validate\CustomRuleValidate;
-
 
 class SystemConfigLogic extends BaseLogic
 {

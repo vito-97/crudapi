@@ -28,10 +28,10 @@ class SystemStatusMiddleware
     {
         $response = $next($request);
 
-        $user = $request->getUser();
-
-        if ($user) {
-            $role = $user->getUserInfo()->role;
+        $user     = $request->getUser();
+        $userinfo = $user ? $user->getUserInfo() : false;
+        if ($userinfo) {
+            $role = $userinfo->role;
             //只有非超管角色才进入判断网站后台状态
             if (!$role->isSuper()) {
                 $logic = new SystemConfigLogic();

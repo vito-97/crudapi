@@ -61,8 +61,8 @@ class Wechat extends BaseController
         $this->wechat = $wechat = new WechatService();
 
         $this->message = $wechat->server->getMessage();
-        $this->openid  = $this->message['FromUserName'] ?? '';
-        $this->toUser  = $this->message['ToUserName'] ?? '';
+        $this->openid = $this->message['FromUserName'] ?? '';
+        $this->toUser = $this->message['ToUserName'] ?? '';
         $wechat->server->push([$this, 'event'], Message::EVENT);
 
         $response = $wechat->server->serve();
@@ -84,19 +84,19 @@ class Wechat extends BaseController
 
             if ($cache->has($code)) {
                 $attribute = $cache->get($code);
-                $user      = new \Overtrue\Socialite\User(unserialize($attribute));
+                $user = new \Overtrue\Socialite\User(unserialize($attribute));
             } else {
                 $this->wechat = $wechat = new WechatService();
-                $user         = $wechat->oauth->userFromCode($code);
-                $attribute    = $user->serialize();
+                $user = $wechat->oauth->userFromCode($code);
+                $attribute = $user->serialize();
                 // 缓存授权信息
                 $cache->set($code, $attribute, is_dev() ? 86400 : 60);
             }
 
 
-            $id         = $user->getId();
-            $nickname   = $user->getNickname();
-            $avatar     = $user->getAvatar();
+            $id = $user->getId();
+            $nickname = $user->getNickname();
+            $avatar = $user->getAvatar();
             $oauthLogic = new UserOauthLogic();
 
             $oauth = $oauthLogic->getModel()->where('openid', $id)->where('type', UserOauth::TYPE_WECHAT)->find();
@@ -133,7 +133,7 @@ class Wechat extends BaseController
                 $userinfo = $oauth->user;
 
                 if (!$userinfo) {
-                    $userinfo       = $this->register($nickname, $avatar);
+                    $userinfo = $this->register($nickname, $avatar);
                     $oauth->user_id = $userinfo->id;
                     $oauth->save();
                 }
@@ -168,98 +168,29 @@ class Wechat extends BaseController
     public function event($message)
     {
 
-        $event    = $message['Event'];
+        $event = $message['Event'];
         $eventKey = $message['EventKey'] ? $message['EventKey'] : $message['Event'];
 
         if (in_array($event, ['subscribe', 'SCAN'])) {
-            //扫码注册维护员二维码
-            if (preg_match("/repair_register_(\d*?)$/", $eventKey, $matches)) {
-                [, $agentID] = $matches;
-
-                return $this->repairRegister($agentID);
-            } elseif (preg_match("/water_fetcher_register_(\d*?)$/", $eventKey, $matches)) {
-                [, $customerID] = $matches;
-
-                return $this->waterFetcherRegister($customerID);
-            }
+            // 扫描二维码
         }
 
-    }
-
-    /**
-     * 响应运营商注册维护员链接
-     * @param $agentID
-     * @return News|string
-     * @throws \think\db\exception\DataNotFoundException
-     * @throws \think\db\exception\DbException
-     * @throws \think\db\exception\ModelNotFoundException
-     */
-    protected function repairRegister($agentID)
-    {
-        $agent = Member::where('type', 'IN', [User::AGENT_TYPE, User::WATERWORKS_TYPE])->find($agentID);
-
-        if (!$agent) {
-            return '找不到相关运营商';
-        }
-
-        if ($agent->isDisabled()) {
-            return '运营商已下线';
-        }
-
-        $items = [
-            new NewsItem([
-                'title'       => '注册[' . $agent->nickname . ']的维护员',
-                'description' => '点击进入注册',
-                'url'         => web('repair_host') . web('repair_register_uri') . '?' . http_build_query(['agent_id' => $agentID]),
-                'image'       => Util::link(SystemConfigLogic::get('wechat_card_img')),
-            ]),
-        ];
-
-        return new News($items);
-    }
-
-    protected function waterFetcherRegister($customerID)
-    {
-        $logic = new CustomerLogic();
-
-        $customer = $logic->getByID($customerID);
-        if (!$customer) {
-            return '找不到相关取水客户';
-        }
-
-        if ($customer->isDisabled()) {
-            return '取水客户已下线';
-        }
-        $query = ['customer_id' => $customer->id, 'time' => time()];
-        ksort($query);
-        $query['sign'] = Hash::encode(http_build_query($query));
-        $items         = [
-            new NewsItem([
-                'title'       => '注册[' . $customer->nickname . ']的取水员',
-                'description' => '点击进入注册',
-                'url'         => web('client_host') . web('water_fetcher_uri') . '?' . http_build_query($query),
-                'image'       => Util::link(SystemConfigLogic::get('wechat_card_img')),
-            ]),
-        ];
-
-        return new News($items);
     }
 
     protected function register($nickname, $avatar = '')
     {
         $userLogic = new UserLogic();
-        //        $nickname  = trim_emoji($nickname);
+
         if (!$nickname) {
-            $nickname = '微信授权';
+            $nickname = '微信授权' . Str::random(5);
         }
 
         $userinfo = $userLogic->register([
             'username' => 'oauth_' . Str::random(10),
-            'nickname' => $nickname . Str::random(5),
-            'password' => 'a123456.',
+            'nickname' => $nickname,
+            'password' => Str::random(10),
             'avatar'   => $avatar,
             'money'    => 0,
-            'flow'     => 0,
             'add_ip'   => $this->request->ip(),
             'platform' => \app\model\User::WX_PLATFORM,
         ]);

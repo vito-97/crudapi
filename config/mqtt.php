@@ -7,11 +7,11 @@
  */
 
 return [
-    'server'              => '175.178.63.7',
+    'server'              => '127.0.0.1',
     'port'                => 1883,
     'client_id'           => 'server',
-    'username'            => 'water',
-    'password'            => 'a123456.',
-    'clean_session'       => true,
+    'username'            => null,
+    'password'            => null,
+    'clean_session'       => false,
     'keep_alive_interval' => 60,
 ];

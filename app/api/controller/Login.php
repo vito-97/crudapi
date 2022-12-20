@@ -8,7 +8,6 @@
 
 namespace app\api\controller;
 
-
 use app\logic\UserLogic;
 
 class Login extends BaseController
@@ -25,11 +24,6 @@ class Login extends BaseController
         $this->logic = new UserLogic();
     }
 
-//    public function login()
-//    {
-//
-//    }
-
     //游客登录
     public function tourist()
     {
@@ -43,10 +37,5 @@ class Login extends BaseController
         $this->logic->logout();
 
         return success();
-    }
-
-    public function register()
-    {
-
     }
 }

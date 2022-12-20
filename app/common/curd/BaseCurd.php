@@ -5,10 +5,9 @@
  * Date: 2022/3/25
  * Time: 10:15
  */
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace app\common\curd;
-
 
 use app\exception\DataInoperableException;
 use app\exception\EmptyParamsException;
@@ -26,12 +25,12 @@ abstract class BaseCurd
     /**
      * 验证器验证方法
      */
-    const VALIDATE_METHOD_CHECK = 'batchCheck';
+    const VALIDATE_CHECK_METHOD = 'batchCheck';
 
     /**
      * 验证器的获取数据方法
      */
-    const VALIDATE_METHOD_DATA = 'getDataByRule';
+    const VALIDATE_DATA_METHOD = 'getDataByRule';
 
     /**
      * 使用全局查询范围
@@ -95,12 +94,12 @@ abstract class BaseCurd
     protected $withCount = [];
 
     /**
-     * @var 查询范围
+     * @var string 查询范围
      */
     protected $scope;
 
     /**
-     * @var 关联操作
+     * @var array 关联操作
      */
     protected $together = [];
 
@@ -151,7 +150,7 @@ abstract class BaseCurd
      * 获取参数时排除的参数
      * @var array
      */
-    protected $getParamsExcept = ['id', 'lang', 'api_version', '_label', 'with_label'];
+    protected $getParamsExcept = ['id', 'lang', 'api_version', 'with_label'];
 
     /**
      * @var array 追加设置的数据
@@ -255,10 +254,10 @@ abstract class BaseCurd
      */
     public function __construct()
     {
-        $this->app     = app();
+        $this->app = app();
         $this->request = $this->app->request;
-        $this->user    = $this->request->getUser();
-        $this->params  = $this->request->only($this->paramsName);
+        $this->user = $this->request->getUser();
+        $this->params = $this->request->only($this->paramsName);
 
         $this->then($this->getInitMiddleware(), function () {
             return 'ok';
@@ -380,15 +379,15 @@ abstract class BaseCurd
      */
     protected function buildParams($params = [])
     {
-        $params     = $params ?: $this->request->param();
+        $params = $params ?: $this->request->param();
         $tableField = $this->getLogic()->getTableFields();
-        $pk         = $this->getLogic()->getPk();
+        $pk = $this->getLogic()->getPk();
 
         //需要排序
         if (!empty($params['order'])) {
             //排序
             $order_key = $params['order'] ?? $pk;
-            $sort      = $params['sort'] ?? 'DESC';
+            $sort = $params['sort'] ?? 'DESC';
 
             if (!in_array($order_key, $tableField)) {
                 $order_key = $pk;
@@ -398,7 +397,7 @@ abstract class BaseCurd
         }
 
         $filters = $this->getJsonParams('filter', $params);
-        $ops     = $this->getJsonParams('op', $params);
+        $ops = $this->getJsonParams('op', $params);
 
         $where = [];
 
@@ -423,7 +422,7 @@ abstract class BaseCurd
                 //如果是引号没内容 则查找空字符串的
                 if (in_array($value, ['""', "''"])) {
                     $value = '';
-                    $op    = '=';
+                    $op = '=';
                 }
             }
 
@@ -480,12 +479,12 @@ abstract class BaseCurd
                         continue;
                     }
 
-                    $op      = str_replace('RANGE', 'BETWEEN', $data[0]) . ' TIME';
+                    $op = str_replace('RANGE', 'BETWEEN', $data[0]) . ' TIME';
                     $where[] = [$field, $op, $data[1]];
 
                     //NULL查询
                 } else if (in_array($op, ['NULL', 'IS NULL', 'NOT NULL', 'IS NOT NULL',])) {
-                    $op      = str_replace('IS ', '', $op);
+                    $op = str_replace('IS ', '', $op);
                     $where[] = [$field, $op];
                 }
             }
@@ -495,7 +494,7 @@ abstract class BaseCurd
             /**
              * @var $query Query
              */
-            $map  = [];
+            $map = [];
             $name = $query->getName();
 
             foreach ($where as $key => $item) {
@@ -503,7 +502,7 @@ abstract class BaseCurd
 
                 if (!strpos($field, '.')) {
                     if ($this->alias) {
-                        $alias   = is_string($this->alias) ? $this->alias : $name;
+                        $alias = is_string($this->alias) ? $this->alias : $name;
                         $item[0] = "${alias}.${field}";
                     } else {
                         $item[0] = $field;
@@ -556,10 +555,10 @@ abstract class BaseCurd
 
         //当出现一边为空时改变操作符
         if ($array[0] === '') {
-            $op    = $op == $nullExpOp ? '<=' : '>';
+            $op = $op == $nullExpOp ? '<=' : '>';
             $array = $array[1];
         } elseif ($array[1] === '') {
-            $op    = $op == $nullExpOp ? '>=' : '<';
+            $op = $op == $nullExpOp ? '>=' : '<';
             $array = $array[0];
         }
 
@@ -639,7 +638,7 @@ abstract class BaseCurd
         $data = $default;
 
         foreach ($validate as $key => $value) {
-            $data = array_merge($data, $this->callValidateMethod($key, $value, self::VALIDATE_METHOD_DATA) ?? []);
+            $data = array_merge($data, $this->callValidateMethod($key, $value, self::VALIDATE_DATA_METHOD) ?? []);
         }
 
         return $data;
@@ -703,7 +702,7 @@ abstract class BaseCurd
             $this->data = $key;
         } else {
             if (strpos($key, '.')) {
-                $keys  = explode('.', $key);
+                $keys = explode('.', $key);
                 $count = count($keys);
                 switch ($count) {
                     case 1:
@@ -813,7 +812,7 @@ abstract class BaseCurd
      * @return mixed
      * @throw ValidateException
      */
-    protected function callValidateMethod($key, $value, $method = self::VALIDATE_METHOD_CHECK)
+    protected function callValidateMethod($key, $value, $method = self::VALIDATE_CHECK_METHOD)
     {
         if (is_integer($key)) {
             return Container::getInstance()->invokeMethod($value . '::' . $method);
@@ -833,7 +832,7 @@ abstract class BaseCurd
             $name = $this->getLogicClass() ?: (new \ReflectionClass($this))->getShortName();
 
             $search = ['Index', 'Change', 'Delete', 'Edit', 'Read', 'Save', 'Update'];
-            $name   = str_replace($search, '', $name) . 'Logic';
+            $name = str_replace($search, '', $name) . 'Logic';
 
             $class = 'app\logic\\' . $name;
 
@@ -952,7 +951,7 @@ abstract class BaseCurd
 
                 if ($args['field'])
                     $args['field'] = array_unique(array_merge($this->appendField, $args['field']));
-                $args['limit']    = 0;
+                $args['limit'] = 0;
                 $args['where_in'] = ['id' => $getID];
 
                 $result = $this->getLogic()->getAll($args);
@@ -1017,7 +1016,7 @@ abstract class BaseCurd
             if (in_array($do, ['enum', 'switch'])) {
                 preg_match('#get_(?<field>\w*?)_' . $do . '#', $snake, $match);
                 $item['field'] = $item['field'] ?? $match['field'];
-                $name          = $match['field'];
+                $name = $match['field'];
 
                 switch ($do) {
                     case 'enum':
@@ -1029,11 +1028,11 @@ abstract class BaseCurd
                 }
             } else {
                 $method = Str::camel($method);
-                $data   = Container::getInstance()->invokeMethod([$this, $method]);
+                $data = Container::getInstance()->invokeMethod([$this, $method]);
             }
 
             if (!empty($data)) {
-                $key   = $item['key'] ?? $item['field'];
+                $key = $item['key'] ?? $item['field'];
                 $field = $item['field'] ?? $item['key'];
                 $this->setLabel($key, $item['name'], $field, $data);
             }
@@ -1084,7 +1083,7 @@ abstract class BaseCurd
     {
         $response = $next();
 
-        $append = $this->request->param('with_label', $this->request->param('_label'));
+        $append = $this->request->param('with_label');
 
         if ($append) {
             $this->labelCallback();
@@ -1105,7 +1104,6 @@ abstract class BaseCurd
         }
 
         if ($this->append) {
-//            dump($this->append);
             $model->append($this->append);
         }
 

@@ -19,5 +19,3 @@ Route::rest('change', ['PUT', '/<id>/change', 'change']);
 Route::post('login', 'Login/login');
 //登出
 Route::post('logout', 'Login/logout')->middleware([AdminAuthTokenMiddleware::class]);
-
-Route::get('test','Test/index');

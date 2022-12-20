@@ -8,7 +8,6 @@
 
 namespace app\admin\controller\v1;
 
-
 use app\admin\controller\BaseController;
 use app\logic\UserLogic;
 
@@ -18,7 +17,7 @@ class UserOauth extends BaseController
 
     protected $registerCurd = ['index', 'delete', 'read', 'change'];
 
-    protected $registerCurdDir = 'user';
+    protected $registerCurdDir = true;
 
     protected function initialize()
     {

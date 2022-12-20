@@ -31,6 +31,9 @@ class Delete extends BaseCurd
 
     protected $deleteMiddleware = ['deleteMiddleware'];
 
+    //强制删除
+    protected $force = false;
+
     protected function query()
     {
         $this->with = $this->together;
@@ -47,7 +50,7 @@ class Delete extends BaseCurd
                 //删除数据
                 $this->then($this->deleteMiddleware, function (Model $obj) {
                     $logic = $this->getLogic();
-                    $args  = $this->getQueryArgs(['where', 'together']);
+                    $args  = $this->getQueryArgs(['where', 'together', 'force']);
 
                     return $logic->deleteByID($obj, $args);
                 }, $obj);

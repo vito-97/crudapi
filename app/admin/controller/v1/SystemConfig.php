@@ -12,7 +12,7 @@ class SystemConfig extends BaseController
 
     protected $registerCurd = true;
 
-    protected $registerCurdDir = 'systemConfig';
+    protected $registerCurdDir = true;
 
     protected $methodName = [
         'config' => '更新配置',

@@ -37,9 +37,9 @@ abstract class BaseValidate extends Validate
 
     protected $checkHasWhere = [];
 
-    const SAVE_SCENE = Enum::VALID_SAVE_SCENE;
+    const SAVE_SCENE   = Enum::VALID_SAVE_SCENE;
     const UPDATE_SCENE = Enum::VALID_UPDATE_SCENE;
-    const LIST_SCENE = Enum::VALID_LIST_SCENE;
+    const LIST_SCENE   = Enum::VALID_LIST_SCENE;
     const CREATE_SCENE = Enum::VALID_CREATE_SCENE;
     const DETAIL_SCENE = Enum::VALID_DETAIL_SCENE;
 
@@ -67,8 +67,9 @@ abstract class BaseValidate extends Validate
 
         $params = Request::param();
 
-        if (is_array($data) && $data)
+        if (is_array($data) && $data) {
             $params = array_merge($params, $data);
+        }
 
         /**
          * @var $class Validate
@@ -239,39 +240,50 @@ abstract class BaseValidate extends Validate
     protected function checkHas($value, $rule = '', $data = [], $field = '')
     {
         if (empty($rule)) {
-            throw new ErrorException('check has 必须传入验证规则');
+            throw new ErrorException('checkHas 必须传入验证规则');
         }
 
         $array = explode(',', $rule);
 
         $names = explode('/', $array[0]);
 
+        $value = is_array($value) ? $value : array_filter(array_map(function ($it) {
+            return intval($it);
+        }, explode(',', $value)));
+
         foreach ($names as $name) {
             $model = model($name);
             $pk    = $array[1] ?? 'id';
 
-            $where = $this->checkHasWhere[$field] ?? [];
-
-            if (is_string($where) && method_exists($this, $where)) {
-                $where = $this->$where($name);
-
-                if (!is_array($where)) {
-                    $where = [];
-                }
+            if ($pk === 'id' && !$value) {
+                return '请先选择 :attribute';
             }
 
-            $where = array_merge($where, [$pk => $value]);
+            // 循环检测多个ID
+            foreach ($value as $id) {
+                $where = $this->checkHasWhere[$field] ?? [];
 
-            $has = $model
-                ->field($pk)->where($where)
-                ->cache(60)->useSoftDelete('delete_time', ['=', 0])->find();
+                if (is_string($where) && method_exists($this, $where)) {
+                    $where = $this->$where($name);
 
-            if ($has) {
-                return true;
+                    if (!is_array($where)) {
+                        $where = [];
+                    }
+                }
+
+                $where = array_merge($where, [$pk => $id]);
+
+                $has = $model
+                    ->field($pk)->where($where)
+                    ->cache(60)->useSoftDelete('delete_time', ['=', 0])->find();
+
+                if (!$has) {
+                    return ":attribute 选择的ID:${id}数据不存在";
+                }
             }
         }
 
-        return ':attribute 数据不存在';
+        return true;
     }
 
     /**
@@ -476,7 +488,7 @@ abstract class BaseValidate extends Validate
      * @param string $rule
      * @return $this
      */
-    protected function removeOnlyRule($fields = [], $rule = 'require')
+    protected function removeOnlyRule($fields = [], $rule = 'require|requireCallback')
     {
         $fields = $fields ?: $this->only;
         foreach ($fields as $field) {

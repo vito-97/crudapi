@@ -8,7 +8,6 @@
 
 namespace app\service;
 
-
 use app\exception\ErrorException;
 use think\captcha\Captcha;
 use think\Config;

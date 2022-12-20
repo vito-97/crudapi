@@ -21,7 +21,7 @@ class SystemRoleUpdate extends Update
         SystemRoleValidate::class => Enum::VALID_UPDATE_SCENE,
     ];
     //允许新增的数据字段
-    protected $field = ['mark', 'auth_ids'];
+    protected $field = ['mark', 'auth_ids', 'name'];
     //获取对象时追加的字段
     protected $appendField = [];
     //排除的数据

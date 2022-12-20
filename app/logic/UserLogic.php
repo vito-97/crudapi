@@ -130,7 +130,7 @@ class UserLogic extends BaseLogic
      */
     public function logout()
     {
-        $user = $this->request->user;
+        $user = $this->user;
 
         $status = $user->logout();
 

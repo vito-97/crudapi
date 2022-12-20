@@ -26,72 +26,13 @@ Route::group('<api_version>', function () {
     Route::resource('admin', 'Admin');
     //更新个人信息接口
     Route::put('profile', 'Profile/update');
-    //运营商
-    Route::resource('agent', 'Agent');
-    //出厂设置员
-    Route::resource('factory_user', 'FactoryUser');
-    //运营商维护员
-    Route::resource('repair_user', 'RepairUser');
-    //水务公司
-    Route::resource('water_company', 'WaterCompany');
-    //水厂
-    Route::resource('waterworks', 'Waterworks');
-    //取水客户
-    Route::resource('customer', 'Customer');
-    //取水员
-    Route::resource('water_fetcher', 'WaterFetcher');
     //广告
     Route::resource('adverts', 'Adverts');
-    //通联支付
-    Route::resource('all_in_pay', 'AllInPay');
-    //IC卡
-    Route::resource('card', 'Card');
-    //优惠券
-    Route::resource('coupon', 'Coupon');
-    //优惠券领取列表
-    Route::resource('coupon_card', 'CouponCard');
-    //现金券
-    Route::resource('cash_coupon', 'CashCoupon');
-    //现金券领取列表
-    Route::resource('cash_coupon_card', 'CashCouponCard');
-    //流量券
-    Route::resource('flow_coupon', 'FlowCoupon');
-    //流量券领取列表
-    Route::resource('flow_coupon_card', 'FlowCouponCard');
-    //服务费
-    Route::resource('service_charge', 'ServiceCharge');
-    //设备
-    Route::group('device', function () {
-        Route::get('state', 'state');
-    })->prefix('Device/');
-
-    Route::resource('device', 'Device');
-    //设备控制测试
-    Route::group('device_control_test', function () {
-
-        Route::post('<action>', '<action>')->pattern(['action'=> 'finishTimeout|start|pause|finish|clear|flow|temperature|pulse|qrcode|deviceNo|advertsLight']);
-
-    })->prefix('DeviceControlTest/');
-    //设备控制记录
-    Route::resource('device_control', 'DeviceControl');
-    //设备APP版本
-    Route::resource('device_app_version', 'DeviceAppVersion');
-    //订单
-    //权限
-    Route::group('order', function () {
-        //退款申请
-        Route::post('refund', 'refund');
-    })->prefix('Order/');
-    Route::resource('order', 'Order');
-    //套餐
-    Route::resource('product', 'Product');
-
     //权限
     Route::group('system_auth', function () {
         //刷新权限
         Route::post('flush', 'flush');
     })->prefix('SystemAuth/');
-    //资源路由放后面
     Route::resource('system_auth', 'SystemAuth');
 
     //配置
@@ -115,12 +56,6 @@ Route::group('<api_version>', function () {
     Route::resource('user', 'User');
     //用户第三方授权
     Route::resource('user_oauth', 'UserOauth');
-    //用户返利表
-    Route::resource('user_rebate', 'UserRebate');
-    //用户钱包
-    Route::resource('user_wallet', 'UserWallet');
-    //提现
-    Route::resource('withdrawal', 'Withdrawal');
 
 })->prefix('<api_version>.')->middleware([AdminAuthTokenMiddleware::class, AdminCheckAuthMiddleware::class]);
 

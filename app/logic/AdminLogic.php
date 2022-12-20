@@ -17,6 +17,7 @@ use app\model\Admin;
 use app\model\User;
 use app\service\JwtAuthService;
 use app\exception\AccountDisabledException;
+use app\validate\AdminValidate;
 use think\facade\Event;
 use think\facade\Request;
 
@@ -37,6 +38,7 @@ class AdminLogic extends BaseLogic
      */
     public function login($username, $password)
     {
+        AdminValidate::batchCheck(compact('username', 'password'), 'login');
         /**
          * @var $user User
          */
@@ -65,7 +67,7 @@ class AdminLogic extends BaseLogic
      */
     public function logout()
     {
-        $user = $this->request->user;
+        $user = $this->user;
 
         $status = $user->logout();
 

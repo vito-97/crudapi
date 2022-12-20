@@ -12,7 +12,7 @@ class SystemConfigTab extends BaseController
 
     protected $registerCurd = true;
 
-    protected $registerCurdDir = 'system_config_tab';
+    protected $registerCurdDir = true;
 
     protected function initialize()
     {

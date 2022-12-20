@@ -61,7 +61,7 @@ trait Curd
             }
 
             if (true === $this->registerCurdDir) {
-                $this->registerCurdDir = Str::camel($className);
+                $this->registerCurdDir = Str::snake($className);
             }
 
             if (!$this->registerCurdName) {

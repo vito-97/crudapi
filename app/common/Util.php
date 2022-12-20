@@ -138,7 +138,8 @@ class Util
                     $array[$key] = (array)$item;
                 }
             }
-
+            
+            $array[$key][$subKey] = [];
             $refs[$item[$pk]] = &$array[$key];
         }
 

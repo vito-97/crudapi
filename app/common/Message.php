@@ -27,19 +27,4 @@ class Message
     const SWITCH_NO = 'no';
 
     const ENUM_VALUE_ONT_IN = ':attribute value not in %s';
-
-    const NO_FLOW = 'No flow';
-
-    const DEVICE_IMEI_EMPTY = 'device imei empty';
-    const DEVICE_IMEI_EXISTS = 'device imei exists';
-    const DEVICE_ONLINE_ERROR = 'device online error';
-
-    const ORDER_STATUS = [
-        'wait'        => 'order pending payment',
-        'paid'        => 'order paid',
-        'cancel'      => 'order cancelled',
-        'timeout'     => 'order has timed out',
-        'refund'      => 'order refunded',
-        'wait_refund' => 'order refund in progress',
-    ];
 }

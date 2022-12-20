@@ -21,4 +21,6 @@ class AdvertsSave extends Save
     protected $field = [];
 
     protected $withoutField = false;
+
+    protected $withUser = 'admin';
 }

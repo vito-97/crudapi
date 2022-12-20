@@ -29,10 +29,8 @@ class Login extends BaseController
 
     public function login()
     {
-        AdminValidate::batchCheck('login');
-
-        ['username' => $username, 'password' => $password] = AdminValidate::getDataByRule('login');
-
+        $username = $this->request->param('username');
+        $password = $this->request->param('password');
         $user = $this->logic->login($username, $password);
 
         return success($user);

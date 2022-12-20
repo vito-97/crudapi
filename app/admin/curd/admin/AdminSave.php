@@ -26,17 +26,13 @@ class AdminSave extends Save
     //追加数据
     protected $appendParams = [];
     //允许新增的数据字段
-    protected $field = ['nickname', 'username', 'status', 'password', 'role_id', 'tel', 'email', 'mark', 'disabled_mark', 'site_id'];
+    protected $field = ['nickname', 'username', 'status', 'password', 'role_id', 'tel', 'email', 'mark', 'disabled_mark'];
 
     protected function saveMiddleware($next, $params)
     {
         $roleID = $params['role_id'] ?? 0;
 
         $this->canSetRole($roleID);
-
-        if (empty($params['site_id'])) {
-            $params['site_id'] = $this->getUserRole()->site_id;
-        }
 
         return parent::saveMiddleware($next, $params);
     }

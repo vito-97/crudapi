@@ -12,7 +12,7 @@ class SystemRole extends BaseController
 
     protected $registerCurd = true;
 
-    protected $registerCurdDir = 'system_role';
+    protected $registerCurdDir = true;
 
     const NOT_NEED_AUTH = ['menu', 'auth'];
 

@@ -10,27 +10,18 @@ namespace app\service\user;
 
 use app\exception\AccountDisabledException;
 use app\exception\NotLoginException;
-use app\logic\UserLogic;
 use app\model\User;
 use app\service\TokenService;
 
 class UserService extends BaseUserService
 {
     const TYPE = [
-        User::NORMAL_TYPE        => 'user',
-        User::WATER_COMPANY_TYPE => 'water_company',
-        User::WATERWORKS_TYPE    => 'waterworks',
-        User::CUSTOMER_TYPE      => 'customer',
-        User::WATER_FETCHER_TYPE => 'water_fetcher',
-        User::AGENT_TYPE         => 'agent',
-        User::REPAIR_TYPE        => 'repair_user',
-        User::COUPON_TYPE        => 'coupon_user',
-        User::FACTORY_TYPE       => 'factory_user',
+        User::NORMAL_TYPE => 'user',
     ];
 
     // 类型对应的模型
     const TYPE_MODEL = [
-        self::TYPE[User::NORMAL_TYPE] => 'member',
+        TokenService::USER    => 'member',
     ];
 
     protected function userinfo()
@@ -39,7 +30,7 @@ class UserService extends BaseUserService
             $name  = self::TYPE_MODEL[$this->type] ?? $this->type;
             $model = model($name);
 
-            $user  = $model->getByID($this->uid());
+            $user = $model->getByID($this->uid());
 
             if (!$user) {
                 throw new NotLoginException();

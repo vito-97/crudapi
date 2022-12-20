@@ -34,7 +34,7 @@ return [
             'timeout' => 0,
             'expire' => 0,
             'persistent' => false,
-            'prefix' => 'water_',
+            'prefix' => 'tp6_',
             'tag_prefix' => 'tag:',
             'serialize' => [],
         ],

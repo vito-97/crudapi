@@ -9,12 +9,12 @@
 namespace app\model;
 
 use app\common\Util;
-use app\model\traits\AgentTrait;
+use app\model\traits\AdminTrait;
 use think\db\Query;
 
 class Adverts extends BaseModel
 {
-    use AgentTrait;
+    use AdminTrait;
 
     protected $append = ['status_desc'];
 

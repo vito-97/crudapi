@@ -103,7 +103,7 @@ class Index extends BaseCurd
 
     const MODE_DESC = [
         self::PAGE_MODE   => '列表',
-        self::SELECT_MODE => '下拉选择',
+        self::SELECT_MODE => '选择',
     ];
 
     /**

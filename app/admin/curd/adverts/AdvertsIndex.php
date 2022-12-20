@@ -16,7 +16,7 @@ class AdvertsIndex extends Index
      * 关键词查询指定字段
      * @var string[]
      */
-    protected $keywordQueryArgs = [];
+    protected $keywordQueryArgs = ['index'];
     //追加数据
     protected $appendCallback = [];
     protected $labelCallback = ['get_status_enum' => ['name' => '状态', 'key' => 'status']];
@@ -27,13 +27,13 @@ class AdvertsIndex extends Index
     //排除字段
     protected $withoutField = false;
 
-    protected $with = ['agent'];
+    protected $with = ['admin'];
 
     protected $validate = [
         AdvertsValidate::class => Enum::VALID_LIST_SCENE,
     ];
 
     protected $queryField = [
-        'status', 'agent_id',
+        'status', 'admin_id',
     ];
 }

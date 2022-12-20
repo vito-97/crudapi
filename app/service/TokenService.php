@@ -8,20 +8,10 @@
 
 namespace app\service;
 
-use app\model\User;
-
 class TokenService
 {
     const ADMIN = 'admin';
     const USER = 'user';
-    const AGENT = 'agent';
-    const WATER_COMPANY = 'water_company';
-    const WATERWORKS = 'waterworks';
-    const CUSTOMER = 'customer';
-    const WATER_FETCHER = 'water_fetcher';
-    const REPAIR = 'repair_user';
-    const COUPON = 'coupon_user';
-    const FACTORY = 'factory_user';
 
     const DEFAULT = 'default';
 

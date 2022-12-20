@@ -68,87 +68,8 @@ class Mqtt extends Command
                 $service  = new DeviceService();
                 $deviceNo = $service->deviceNo($imei);
 
-                if ($deviceNo) {
-                    $deviceID = $service->deviceID($deviceNo);
-                    $control  = $service->deviceLastControl($deviceNo);
-
-                    if (!is_dev() && env('MQTT_DEV_TEST') && in_array($deviceID, [1])) {
-                        $this->output->writeln("[$deviceNo]正在本地测试，线上不予操作");
-                        return;
-                    }
-
-                    $params = [
-                        'service'   => $service,
-                        'imei'      => $imei,
-                        'device_no' => $deviceNo,
-                        'device_id' => $deviceID,
-                        'control'   => $control,
-                        'msg'       => $message,
-                        'hex'       => $hex,
-                        'mqtt'      => $this->mqtt,
-                    ];
-
-                    if (Env::get('APP_DEBUG')) {
-//                        $date = date('Y-m-d H:i:s');
-
-//                        dump("[{$date}]Mqtt:{$deviceNo}:{$hex}");
-                    }
-
-                    Event::trigger(EventName::MQTT_SUBSCRIBE_MSG, $params);
-
-                } else {
-                    if (strpos($hex, Enum::DEVICE_ONLINE_CODE) === 0) {
-                        //允许上线的白名单
-                        $white = [];
-
-                        if (is_dev() && !in_array($imei, $white)) {
-                            $this->output->writeln('本地测试不进行上线，需要上线请添加到白名单 IMEI:' . $imei);
-                            return;
-                        }
-
-                        $type = get_device_online_type($hex);
-
-                        $logic = new DeviceLogic();
-
-                        $device = $logic->online($imei, $type);
-
-                        if ($device->onlineSetting) {
-                            $logic->setting($device);//设置
-                        }
-
-                        $this->output->writeln('设备上线成功 IMEI:' . $imei);
-
-//                        $this->output->writeln('设备上线失败：' . $exception->getMessage());
-                    } else {
-                        $this->output->writeln("未知IMEI号：{$imei}");
-                        $this->output->writeln('消息：' . $hex);
-                    }
-                }
-
             } catch (\Throwable $e) {
                 dump('Error:' . $e->getMessage() . ' in ' . $e->getFile() . ' on line ' . $e->getLine());
-
-                //设备状态错误
-                if ($e->getCode() === ErrorCode::STATUS_ERROR[0]) {
-
-                    if ($control && $control->user) {
-                        $device = new Device([
-                            'id'        => $deviceID,
-                            'device_no' => $deviceNo,
-                            'imei'      => $imei,
-                            'status'    => 1,
-                        ]);
-                        $user   = $control->user;
-                        Request::setUser(new UserService($user, '', UserService::TYPE[$user->type] ?? ''));
-                        $logic = new DeviceLogic();
-                        $logic->addDeviceControl($device, DeviceControl::STATE_FINISH);
-                    }
-                    /**
-                     * @var DeviceControlService $deviceControlService
-                     */
-                    $deviceControlService = Container::getInstance()->invokeClass(DeviceControlService::class);
-                    $deviceControlService->setImei($imei)->finish()->sleep()->init()->sleep()->clearFlow();
-                }
             }
         });
 

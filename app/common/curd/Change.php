@@ -51,7 +51,6 @@ class Change extends BaseCurd
             throw new EmptyParamsException();
         }
 
-
         foreach ($objs as $obj) {
             Db::startTrans();
 

@@ -18,9 +18,7 @@ return [
     // 应用映射（自动多应用模式有效）
     'app_map'          => [],
     // 域名绑定（自动多应用模式有效）
-    'domain_bind'           => [
-        's' => 'short',
-    ],
+    'domain_bind'           => [],
     // 禁止URL访问的应用列表（自动多应用模式有效）
     'deny_app_list'    => ['common', 'http', 'event', 'listener', 'exception', 'job', 'service', 'validate', 'logic', 'command', 'lang'],
 

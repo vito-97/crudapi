@@ -44,6 +44,7 @@ class SystemCityValidate extends BaseValidate
      * @var array
      */
     protected $scene = [
-
+        self::SAVE_SCENE   => 'all',
+        self::UPDATE_SCENE => 'all'
     ];
 }

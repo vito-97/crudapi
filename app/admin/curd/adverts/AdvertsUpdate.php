@@ -24,4 +24,6 @@ class AdvertsUpdate extends Update
     protected $exclude = [];
     //条件
     protected $where = [];
+
+    protected $withUser = 'admin';
 }

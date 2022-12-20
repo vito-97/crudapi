@@ -8,12 +8,11 @@
 
 namespace app\model;
 
-
+use app\common\Enum;
 use app\common\Message;
 use app\exception\ErrorException;
 use think\db\BaseQuery;
 use think\db\Query;
-use think\facade\Db;
 use think\facade\Lang;
 use think\helper\Str;
 use think\Model;
@@ -33,8 +32,8 @@ class BaseModel extends Model
 
     protected $append = ['status_desc'];
 
-    const SWITCH_OFF = 0;
-    const SWITCH_ON = 1;
+    const SWITCH_OFF = Enum::SWITCH_OFF;
+    const SWITCH_ON  = Enum::SWITCH_ON;
 
     //开关可选项
     const SWITCH_ENUM = [
@@ -135,9 +134,10 @@ class BaseModel extends Model
                     $args = null;
                 }
 
-                $key = Str::studly($key);
-
-                $query->scope($key, $args);
+                if (!$scope || !in_array($key, $scope)) {
+                    $key = Str::studly($key);
+                    $query->scope($key, $args);
+                }
             }
         }
 
@@ -309,6 +309,7 @@ class BaseModel extends Model
     public function deleteByID($id, $args = [])
     {
         $together = $args['together'] ?? [];
+        $force    = $args['force'] ?? false;
 
         if (is_object($id)) {
             $obj = $id;
@@ -319,7 +320,7 @@ class BaseModel extends Model
             }
         }
 
-        $status = $obj->together($together)->delete();
+        $status = $obj->together($together)->force($force)->delete();
 
         return $status;
     }
@@ -732,16 +733,6 @@ class BaseModel extends Model
     }
 
     /**
-     * 代理查询范围
-     * @param Query $query
-     * @param int $id 代理ID
-     */
-    public function scopeAgent(Query $query, $id)
-    {
-        $this->scopeFiled($query, 'agent_id', $id);
-    }
-
-    /**
      * 用户查询范围
      * @param Query $query
      * @param int $id 用户
@@ -749,26 +740,6 @@ class BaseModel extends Model
     public function scopeUser(Query $query, $id)
     {
         $this->scopeFiled($query, 'user_id', $id);
-    }
-
-    /**
-     * 商户查询范围
-     * @param Query $query
-     * @param $id
-     */
-    public function scopeCouponUser(Query $query, $id)
-    {
-        $this->scopeFiled($query, 'coupon_user_id', $id);
-    }
-
-    /**
-     * 取水客户查询范围
-     * @param Query $query
-     * @param $id
-     */
-    public function scopeCustomer(Query $query, $id)
-    {
-        $this->scopeFiled($query, 'customer', $id);
     }
 
     /**

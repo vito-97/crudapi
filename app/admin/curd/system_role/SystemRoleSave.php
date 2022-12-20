@@ -8,7 +8,6 @@ namespace app\admin\curd\system_role;
 
 use app\common\curd\Save;
 use app\common\Enum;
-use app\exception\DataInoperableException;
 use app\validate\SystemRoleValidate;
 
 class SystemRoleSave extends Save
@@ -20,7 +19,7 @@ class SystemRoleSave extends Save
     //追加数据
     protected $appendParams = [];
     //允许新增的数据字段
-    protected $field = ['name', 'site_id', 'key', 'mark', 'auth_ids'];
+    protected $field = ['name', 'key', 'mark', 'auth_ids'];
 
     protected function saveMiddleware($next, $params)
     {

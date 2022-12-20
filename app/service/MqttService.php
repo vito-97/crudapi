@@ -24,11 +24,11 @@ use think\helper\Str;
 class MqttService
 {
     protected $config = [
-        'server'              => '175.178.63.7',
+        'server'              => '127.0.0.1',
         'port'                => 1883,
         'client_id'           => 'server',
-        'username'            => 'water',
-        'password'            => 'a123456.',
+        'username'            => null,
+        'password'            => null,
         'clean_session'       => false,
         'keep_alive_interval' => 60,
     ];
@@ -75,33 +75,6 @@ class MqttService
         return $this->setting;
     }
 
-    /**
-     * 获取MQTT客户端
-     * @param string $clientID
-     * @return MqttClient
-     * @throws \PhpMqtt\Client\Exceptions\ConfigurationInvalidException
-     * @throws \PhpMqtt\Client\Exceptions\ConnectingToBrokerFailedException
-     * @throws \PhpMqtt\Client\Exceptions\ProtocolNotSupportedException
-     */
-//    public function mqtt($clientID = null)
-//    {
-//        $this->setClientID($clientID);
-//        $alias = self::$alias[$this->config['client_id']];
-//
-//        if (empty(self::$mqtt[$alias])) {
-//            if (Request::isCli()) {
-//                dump(date('Y-m-d H:i:s') . ' Mqtt Client ID:' . $alias);
-//            }
-////            self::$mqtt[$clientID] = App::make(MqttClient::class, [$this->config['server'], $this->config['port'], $clientID]);
-//            self::$mqtt[$alias] = new MqttClient($this->config['server'], $this->config['port'], $this->config['client_id']);
-//
-//            if (!self::$mqtt[$alias]->isConnected()) {
-//                self::$mqtt[$alias]->connect($this->getSetting(), $this->config['clean_session']);
-//            }
-//        }
-//
-//        return self::$mqtt[$alias];
-//    }
 
     public function mqtt($clientID = null)
     {
@@ -112,7 +85,6 @@ class MqttService
             if (Request::isCli()) {
                 dump(date('Y-m-d H:i:s') . ' Mqtt Client ID:' . $alias);
             }
-//            self::$mqtt[$clientID] = App::make(MqttClient::class, [$this->config['server'], $this->config['port'], $clientID]);
             self::$mqtt = new MqttClient($this->config['server'], $this->config['port'], $this->config['client_id']);
 
             if (!self::$mqtt->isConnected()) {

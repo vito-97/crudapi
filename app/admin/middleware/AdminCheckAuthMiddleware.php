@@ -40,10 +40,10 @@ class AdminCheckAuthMiddleware
     public function handle(Request $request, \Closure $next)
     {
         //获取到最新的用户信息
-        $adminService = $request->getUser();
-        $admin        = $adminService->getUserInfo();
-        $role_id      = $adminService->role_id();
-        $route = get_route();
+        $userService = $request->getUser();
+        $admin       = $userService->getUserInfo();
+        $role_id     = $userService->role_id();
+        $route       = get_route();
 
         $service     = new AuthRouteService();
         $class       = $service->getReflectionClassByRoute($route);

@@ -10,16 +10,12 @@ namespace app\model;
 
 use app\common\Util;
 use app\model\traits\AdminTrait;
-use app\model\traits\AgentTrait;
-use app\model\traits\SiteScopeTrait;
 use app\model\traits\UserTrait;
 use think\db\Query;
 
 class Attachment extends BaseModel
 {
-    use AdminTrait, UserTrait, AgentTrait;
-
-    use SiteScopeTrait;
+    use AdminTrait, UserTrait;
 
     protected $append = ['category_desc', 'storage_desc', 'link'];
 
