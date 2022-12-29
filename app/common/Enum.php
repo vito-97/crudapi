@@ -48,4 +48,7 @@ class Enum
         'api'           => '接口',
         'admin'         => '后台',
     ];
+
+    //最大能保留账号多少个token
+    const MAX_LOGIN = 2;
 }
