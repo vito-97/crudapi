@@ -152,6 +152,26 @@ class TokenService
     }
 
     /**
+     * 移除所有登录的token
+     * @param $id
+     * @return $this
+     * @throws \Psr\SimpleCache\InvalidArgumentException
+     */
+    public function removeLoginToken($id)
+    {
+        $table  = $this->getTokensTable();
+        $tokens = RedisStoreService::tableGet($table, $id) ?? [];
+
+        foreach ($tokens as $token) {
+            $this->delete($token, false);
+        }
+
+        RedisStoreService::tableDel($table, $id);
+
+        return $this;
+    }
+
+    /**
      * 获取保存token的表
      * @return string
      */

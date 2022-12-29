@@ -65,11 +65,11 @@ class AdminLogic extends BaseLogic
      * 登出
      * @return mixed
      */
-    public function logout()
+    public function logout($all = false)
     {
         $user = $this->user;
 
-        $status = $user->logout();
+        $status = $user->logout($all);
 
         if ($status) {
             Event::trigger(EventName::ADMIN_LOGOUT, ['user' => $user]);

@@ -54,10 +54,16 @@ class UserService extends BaseUserService
      * @return bool
      * @throws \Psr\SimpleCache\InvalidArgumentException
      */
-    public function logout()
+    public function logout($all = false)
     {
         //删除token信息
         $tokenService = new TokenService($this->type);
-        return $tokenService->delete($this->token);
+
+        if ($all) {
+            $tokenService->removeLoginToken($this->uid());
+            return true;
+        } else {
+            return $tokenService->delete($this->token);
+        }
     }
 }

@@ -36,9 +36,9 @@ class Login extends BaseController
         return success($user);
     }
 
-    public function logout()
+    public function logout($all = false)
     {
-        $this->logic->logout();
+        $this->logic->logout($all);
 
         return success();
     }

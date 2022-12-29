@@ -127,5 +127,5 @@ abstract class BaseUserService
     abstract protected function userinfo();
 
     //登出
-    abstract public function logout();
+    abstract public function logout($all = false);
 }
