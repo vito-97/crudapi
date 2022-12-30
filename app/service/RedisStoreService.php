@@ -94,9 +94,9 @@ class RedisStoreService
         if ($data || $data === 0) {
             $len = mb_strlen($data);
 
-            if (is_string($data) && $data[0] === '{' && $data[$len - 1] === '}') {
+//            if (is_string($data) && $data[0] === '{' && $data[$len - 1] === '}') {
                 $data = json_decode($data, true);
-            }
+//            }
 
             return $data;
         }
@@ -138,8 +138,9 @@ class RedisStoreService
                 }
             }
 
-            $data = json_encode($data);
         }
+
+        $data = json_encode($data);
 
         return self::driver()->hset($table, $key, $data);
     }
