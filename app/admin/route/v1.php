@@ -35,6 +35,8 @@ Route::group('<api_version>', function () {
     })->prefix('SystemAuth/');
     Route::resource('system_auth', 'SystemAuth');
 
+    //配置信息
+    Route::get('config', 'Config/index');
     //配置
     Route::put('system_config/config', 'SystemConfig/config');
     Route::resource('system_config', 'SystemConfig');
