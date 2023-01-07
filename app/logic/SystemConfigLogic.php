@@ -70,7 +70,7 @@ class SystemConfigLogic extends BaseLogic
 
     /**
      * 获取配置信息
-     * @param null $key 获取的键名
+     * @param null|string|array $key 获取的键名
      * @param string $default 默认值
      * @return SystemConfig|SystemConfig[]|array|mixed|string|\think\Collection
      * @throws \think\db\exception\DataNotFoundException
@@ -89,7 +89,19 @@ class SystemConfigLogic extends BaseLogic
             self::$configs = $config;
         }
 
-        return $key ? (!empty(self::$configs[$key]) ? self::$configs[$key] : $default) : self::$configs;
+        if (is_array($key)) {
+            $data = [];
+            foreach ($key as $alias => $name) {
+                if (is_numeric($alias)) {
+                    $alias = $name;
+                }
+                $data[$alias] = (!empty(self::$configs[$name]) ? self::$configs[$name] : $default);
+            }
+
+            return $data;
+        } else {
+            return $key ? (!empty(self::$configs[$key]) ? self::$configs[$key] : $default) : self::$configs;
+        }
     }
 
     /**
