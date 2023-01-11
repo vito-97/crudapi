@@ -6,7 +6,7 @@
 
 namespace app\admin\curd\attachment;
 
-use app\common\curd\Change;
+use app\admin\curd\Change;
 
 class AttachmentChange extends Change
 {

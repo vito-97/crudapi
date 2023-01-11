@@ -6,7 +6,7 @@
 
 namespace app\admin\curd\user;
 
-use app\common\curd\Save;
+use app\admin\curd\Save;
 use app\common\Enum;
 use app\model\User;
 use app\validate\UserValidate;

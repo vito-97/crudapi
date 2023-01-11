@@ -6,7 +6,7 @@
 
 namespace app\admin\curd\adverts;
 
-use app\common\curd\Delete;
+use app\admin\curd\Delete;
 
 class AdvertsDelete extends Delete
 {

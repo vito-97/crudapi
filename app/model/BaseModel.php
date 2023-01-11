@@ -11,6 +11,7 @@ namespace app\model;
 use app\common\Enum;
 use app\common\Message;
 use app\exception\ErrorException;
+use app\model\traits\LangTrait;
 use think\db\BaseQuery;
 use think\db\Query;
 use think\facade\Lang;
@@ -22,6 +23,7 @@ use think\Paginator;
 class BaseModel extends Model
 {
     use SoftDelete;
+    use LangTrait;
 
     protected $defaultSoftDelete = 0;
 
@@ -187,6 +189,20 @@ class BaseModel extends Model
     public function hasEnum($field, $key = false)
     {
         $enum = $this->getFieldEnum($field);
+
+        if (empty($enum)) {
+            throw new ErrorException("${field}字段没有enum");
+        }
+
+        if (is_array($key)) {
+            foreach ($key as $index) {
+                if (!$this->hasEnum($field, $index)) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
 
         return false !== $key ? isset($enum[$key]) : !!$enum;
     }
@@ -365,6 +381,11 @@ class BaseModel extends Model
             $query->alias($alias);
         }
 
+        //搜索器
+        if ($args['with_search']) {
+            $query = $query->withSearch(array_keys($args['with_search']), $args['with_search']);
+        }
+
         //并条件
         if ($args['where']) {
             $query = $query->where($args['where']);
@@ -396,10 +417,6 @@ class BaseModel extends Model
                 $query = $query->field($args['field']);
             }
         }
-        //搜索器
-        if ($args['with_search']) {
-            $query = $query->withSearch(array_keys($args['with_search']), $args['with_search']);
-        }
         //关联
         if ($args['with']) {
             $query = $query->with($args['with']);
@@ -407,7 +424,7 @@ class BaseModel extends Model
 
         //关联统计
         if ($args['with_count']) {
-            $query = $query->withCount($args['with_count']);
+            $query = $query->withCount($args['with_count'], $args['with_count_sub_query']);
         }
 
 //        if ($args['together']) {
@@ -474,17 +491,19 @@ class BaseModel extends Model
         }
 
         $default = [
-            'alias'                => true,
+            //true改成了false
+            'alias'                => false,
             'having'               => null,
             'where'                => null,
             'where_or'             => null,
             'where_in'             => '',
             'group'                => null,
             'order'                => null,
-            'field'                => '*',
+            'field'                => [],
             'without_field'        => false,
             'with'                 => null,
             'with_count'           => null,
+            'with_count_sub_query' => true,
             'page'                 => 0,
             'limit'                => $this->defaultLimit,
             'paginate'             => false,
@@ -719,7 +738,7 @@ class BaseModel extends Model
      */
     public function scopeSort(Query $query)
     {
-        $query->order('sort', 'desc');
+        $query->order(['sort' => 'desc', 'id' => 'desc']);
     }
 
     /**
@@ -807,5 +826,29 @@ class BaseModel extends Model
         } else {
             return Lang::get($data);
         }
+    }
+
+    /**
+     * 获取多语言内容
+     * @param $name
+     * @return mixed
+     */
+    public function _($name)
+    {
+        $field = $this->getLangField();
+        $lang  = str_replace('-', '_', Lang::getLangSet());
+
+        if ($this->isExists() && $this->getLangStatus() && in_array($name, $field) && !is_default_lang_set()) {
+            $relation = $this->$lang;
+            if ($relation) {
+                $value = $relation->getAttr($name);
+
+                if ($value) {
+                    return $value;
+                }
+            }
+        }
+
+        return $this->getAttr($name);
     }
 }

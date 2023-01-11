@@ -6,7 +6,7 @@
 
 namespace app\admin\curd\system_role;
 
-use app\common\curd\Index;
+use app\admin\curd\Index;
 
 class SystemRoleIndex extends Index
 {

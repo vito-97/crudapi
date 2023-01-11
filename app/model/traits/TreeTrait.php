@@ -11,6 +11,12 @@ namespace app\model\traits;
 
 trait TreeTrait
 {
+    public function parent(){
+        $name = str_replace('\\', '/', static::class);
+        $name = basename($name);
+        return $this->belongsTo($name,$this->parentKey ?? 'pid');
+    }
+
     public function children()
     {
         $name = str_replace('\\', '/', static::class);

@@ -6,7 +6,7 @@
 
 namespace app\admin\curd\attachment;
 
-use app\common\curd\Index;
+use app\admin\curd\Index;
 
 class AttachmentIndex extends Index
 {

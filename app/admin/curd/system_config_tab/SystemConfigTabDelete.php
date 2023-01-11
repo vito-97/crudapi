@@ -6,7 +6,7 @@
 
 namespace app\admin\curd\system_config_tab;
 
-use app\common\curd\Delete;
+use app\admin\curd\Delete;
 use app\exception\MessageException;
 use app\model\SystemConfig;
 use think\Model;

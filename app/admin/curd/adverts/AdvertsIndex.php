@@ -6,7 +6,7 @@
 
 namespace app\admin\curd\adverts;
 
-use app\common\curd\Index;
+use app\admin\curd\Index;
 use app\common\Enum;
 use app\validate\AdvertsValidate;
 

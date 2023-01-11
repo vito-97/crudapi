@@ -47,7 +47,7 @@ abstract class BaseCurd
     /**
      * @var bool|string 表别名
      */
-    protected $alias = true;
+    protected $alias = false;
 
     /**
      * @var array 字段
@@ -92,6 +92,11 @@ abstract class BaseCurd
      * @var array 关联统计
      */
     protected $withCount = [];
+
+    /**
+     * @var bool 关联统计使用子查询
+     */
+    protected $withCountSubQuery = true;
 
     /**
      * @var string 查询范围
@@ -202,6 +207,7 @@ abstract class BaseCurd
      * 'methodName' => ['name' => '用户','key' => 'user','field'=>'user_id']
      * @var array
      */
+    protected $_labelCallback = [];
     protected $labelCallback = [];
 
     /**
@@ -254,10 +260,10 @@ abstract class BaseCurd
      */
     public function __construct()
     {
-        $this->app = app();
+        $this->app     = app();
         $this->request = $this->app->request;
-        $this->user = $this->request->getUser();
-        $this->params = $this->request->only($this->paramsName);
+        $this->user    = $this->request->getUser();
+        $this->params  = $this->request->only($this->paramsName);
 
         $this->then($this->getInitMiddleware(), function () {
             return 'ok';
@@ -379,15 +385,15 @@ abstract class BaseCurd
      */
     protected function buildParams($params = [])
     {
-        $params = $params ?: $this->request->param();
+        $params     = $params ?: $this->request->param();
         $tableField = $this->getLogic()->getTableFields();
-        $pk = $this->getLogic()->getPk();
+        $pk         = $this->getLogic()->getPk();
 
         //需要排序
         if (!empty($params['order'])) {
             //排序
             $order_key = $params['order'] ?? $pk;
-            $sort = $params['sort'] ?? 'DESC';
+            $sort      = $params['sort'] ?? 'DESC';
 
             if (!in_array($order_key, $tableField)) {
                 $order_key = $pk;
@@ -397,7 +403,7 @@ abstract class BaseCurd
         }
 
         $filters = $this->getJsonParams('filter', $params);
-        $ops = $this->getJsonParams('op', $params);
+        $ops     = $this->getJsonParams('op', $params);
 
         $where = [];
 
@@ -422,7 +428,7 @@ abstract class BaseCurd
                 //如果是引号没内容 则查找空字符串的
                 if (in_array($value, ['""', "''"])) {
                     $value = '';
-                    $op = '=';
+                    $op    = '=';
                 }
             }
 
@@ -479,12 +485,12 @@ abstract class BaseCurd
                         continue;
                     }
 
-                    $op = str_replace('RANGE', 'BETWEEN', $data[0]) . ' TIME';
+                    $op      = str_replace('RANGE', 'BETWEEN', $data[0]) . ' TIME';
                     $where[] = [$field, $op, $data[1]];
 
                     //NULL查询
                 } else if (in_array($op, ['NULL', 'IS NULL', 'NOT NULL', 'IS NOT NULL',])) {
-                    $op = str_replace('IS ', '', $op);
+                    $op      = str_replace('IS ', '', $op);
                     $where[] = [$field, $op];
                 }
             }
@@ -494,7 +500,7 @@ abstract class BaseCurd
             /**
              * @var $query Query
              */
-            $map = [];
+            $map  = [];
             $name = $query->getName();
 
             foreach ($where as $key => $item) {
@@ -502,7 +508,7 @@ abstract class BaseCurd
 
                 if (!strpos($field, '.')) {
                     if ($this->alias) {
-                        $alias = is_string($this->alias) ? $this->alias : $name;
+                        $alias   = is_string($this->alias) ? $this->alias : $name;
                         $item[0] = "${alias}.${field}";
                     } else {
                         $item[0] = $field;
@@ -554,11 +560,11 @@ abstract class BaseCurd
         }
 
         //当出现一边为空时改变操作符
-        if ($array[0] === '') {
-            $op = $op == $nullExpOp ? '<=' : '>';
+        if (!$array[0]) {
+            $op    = $op == $nullExpOp ? '<=' : '>';
             $array = $array[1];
-        } elseif ($array[1] === '') {
-            $op = $op == $nullExpOp ? '>=' : '<';
+        } elseif (!$array[1]) {
+            $op    = $op == $nullExpOp ? '>=' : '<';
             $array = $array[0];
         }
 
@@ -702,7 +708,7 @@ abstract class BaseCurd
             $this->data = $key;
         } else {
             if (strpos($key, '.')) {
-                $keys = explode('.', $key);
+                $keys  = explode('.', $key);
                 $count = count($keys);
                 switch ($count) {
                     case 1:
@@ -832,7 +838,7 @@ abstract class BaseCurd
             $name = $this->getLogicClass() ?: (new \ReflectionClass($this))->getShortName();
 
             $search = ['Index', 'Change', 'Delete', 'Edit', 'Read', 'Save', 'Update'];
-            $name = str_replace($search, '', $name) . 'Logic';
+            $name   = str_replace($search, '', $name) . 'Logic';
 
             $class = 'app\logic\\' . $name;
 
@@ -909,7 +915,7 @@ abstract class BaseCurd
         if (!empty($this->params['id'])) {
             $id = $this->params['id'];
             if (!isset($this->obj[$id])) {
-                $args = array_merge($this->getQueryArgs(['where', 'whereOr', 'with', 'scope', 'field', 'withoutField']), $args);
+                $args = array_merge($this->getQueryArgs(['where', 'whereOr', 'with', 'scope', 'field', 'withoutField', 'withCount']), $args);
                 if ($args['field'])
                     $args['field'] = array_unique(array_merge($this->appendField, $args['field']));
 
@@ -947,11 +953,11 @@ abstract class BaseCurd
             $getID = array_diff($ids, $hasID);
 
             if ($getID) {
-                $args = array_merge($this->getQueryArgs(['where', 'whereOr', 'with', 'scope', 'field', 'withoutField']), $args);
+                $args = array_merge($this->getQueryArgs(['where', 'whereOr', 'with', 'scope', 'field', 'withoutField', 'withCount']), $args);
 
                 if ($args['field'])
                     $args['field'] = array_unique(array_merge($this->appendField, $args['field']));
-                $args['limit'] = 0;
+                $args['limit']    = 0;
                 $args['where_in'] = ['id' => $getID];
 
                 $result = $this->getLogic()->getAll($args);
@@ -1006,7 +1012,9 @@ abstract class BaseCurd
      */
     protected function labelCallback()
     {
-        foreach ($this->labelCallback as $method => $item) {
+        $labelCallback = array_merge($this->_labelCallback, $this->labelCallback);
+
+        foreach ($labelCallback as $method => $item) {
             $snake = Str::snake($method);
 
             $array = explode('_', $snake);
@@ -1016,7 +1024,7 @@ abstract class BaseCurd
             if (in_array($do, ['enum', 'switch'])) {
                 preg_match('#get_(?<field>\w*?)_' . $do . '#', $snake, $match);
                 $item['field'] = $item['field'] ?? $match['field'];
-                $name = $match['field'];
+                $name          = $match['field'];
 
                 switch ($do) {
                     case 'enum':
@@ -1028,11 +1036,11 @@ abstract class BaseCurd
                 }
             } else {
                 $method = Str::camel($method);
-                $data = Container::getInstance()->invokeMethod([$this, $method]);
+                $data   = Container::getInstance()->invokeMethod([$this, $method]);
             }
 
             if (!empty($data)) {
-                $key = $item['key'] ?? $item['field'];
+                $key   = $item['key'] ?? $item['field'];
                 $field = $item['field'] ?? $item['key'];
                 $this->setLabel($key, $item['name'], $field, $data);
             }

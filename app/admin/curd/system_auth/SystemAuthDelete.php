@@ -6,7 +6,7 @@
 
 namespace app\admin\curd\system_auth;
 
-use app\common\curd\Delete;
+use app\admin\curd\Delete;
 use app\exception\MessageException;
 use app\admin\curd\system_role\SystemRoleTrait;
 use think\Model;

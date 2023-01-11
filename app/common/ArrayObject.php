@@ -50,6 +50,11 @@ class ArrayObject implements \ArrayAccess, Arrayable, Jsonable, IteratorAggregat
         unset($this->data[$offset]);
     }
 
+    public function isEmpty()
+    {
+        return empty($this->data);
+    }
+
     public function toArray(): array
     {
         return $this->data;

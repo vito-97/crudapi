@@ -6,7 +6,7 @@
 
 namespace app\admin\curd\system_config;
 
-use app\common\curd\Delete;
+use app\admin\curd\Delete;
 
 class SystemConfigDelete extends Delete
 {

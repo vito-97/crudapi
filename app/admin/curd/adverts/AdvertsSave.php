@@ -6,7 +6,7 @@
 
 namespace app\admin\curd\adverts;
 
-use app\common\curd\Save;
+use app\admin\curd\Save;
 use app\validate\AdvertsValidate;
 
 class AdvertsSave extends Save

@@ -8,7 +8,7 @@
 
 namespace app\admin\curd\system_log;
 
-use app\common\curd\Read;
+use app\admin\curd\Read;
 
 class SystemLogRead extends Read
 {

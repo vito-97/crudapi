@@ -6,7 +6,7 @@
 
 namespace app\admin\curd\system_role;
 
-use app\common\curd\Update;
+use app\admin\curd\Update;
 use app\common\Enum;
 use app\exception\MessageException;
 use app\validate\SystemRoleValidate;

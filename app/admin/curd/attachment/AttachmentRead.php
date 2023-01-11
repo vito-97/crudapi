@@ -6,7 +6,7 @@
 
 namespace app\admin\curd\attachment;
 
-use app\common\curd\Read;
+use app\admin\curd\Read;
 
 class AttachmentRead extends Read
 {

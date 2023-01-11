@@ -6,7 +6,7 @@
 
 namespace app\admin\curd\user_oauth;
 
-use app\common\curd\Read;
+use app\admin\curd\Read;
 
 class UserOauthRead extends Read
 {

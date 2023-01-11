@@ -8,8 +8,7 @@
 
 namespace app\admin\curd\admin;
 
-
-use app\common\curd\Change;
+use app\admin\curd\Change;
 use think\Model;
 
 class AdminChange extends Change

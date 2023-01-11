@@ -6,7 +6,7 @@
 
 namespace app\admin\curd\attachment;
 
-use app\common\curd\Edit;
+use app\admin\curd\Edit;
 
 class AttachmentEdit extends Edit
 {

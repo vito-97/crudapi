@@ -6,7 +6,7 @@
 
 namespace app\admin\curd\adverts;
 
-use app\common\curd\Read;
+use app\admin\curd\Read;
 
 class AdvertsRead extends Read
 {

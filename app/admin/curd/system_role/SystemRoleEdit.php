@@ -6,7 +6,7 @@
 
 namespace app\admin\curd\system_role;
 
-use app\common\curd\Edit;
+use app\admin\curd\Edit;
 use app\exception\MessageException;
 
 class SystemRoleEdit extends Edit

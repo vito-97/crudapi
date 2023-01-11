@@ -9,7 +9,7 @@
 namespace app\admin\curd\admin;
 
 
-use app\common\curd\Delete;
+use app\admin\curd\Delete;
 use app\exception\DataCannotBeDeletedException;
 use think\Model;
 

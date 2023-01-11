@@ -6,7 +6,7 @@
 
 namespace app\admin\curd\user;
 
-use app\common\curd\Edit;
+use app\admin\curd\Edit;
 
 class UserEdit extends Edit
 {

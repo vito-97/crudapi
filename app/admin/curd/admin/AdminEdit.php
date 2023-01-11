@@ -9,7 +9,7 @@
 namespace app\admin\curd\admin;
 
 
-use app\common\curd\Edit;
+use app\admin\curd\Edit;
 
 class AdminEdit extends Edit
 {

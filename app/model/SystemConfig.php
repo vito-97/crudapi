@@ -17,6 +17,8 @@ class SystemConfig extends BaseModel
 {
     use StringToArrayTrait;
 
+    public $langStatus = false;
+
     protected $type = [
         'value' => 'json',
         'opts'  => 'json',

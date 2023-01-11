@@ -6,7 +6,7 @@
 
 namespace app\admin\curd\system_role;
 
-use app\common\curd\Read;
+use app\admin\curd\Read;
 use app\exception\MessageException;
 
 class SystemRoleRead extends Read

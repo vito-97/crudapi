@@ -2,13 +2,14 @@
 // 应用公共文件
 use app\common\response\Response;
 use think\Container;
+use think\facade\Lang;
 use think\helper\Str;
 
 /**
  * 获取模型
  * @param $name
  * @param mixed ...$args
- * @return mixed
+ * @return \app\model\BaseModel
  */
 function model($name, ...$args)
 {
@@ -108,11 +109,15 @@ function filter_like_char($value)
 /**
  * 移除XSS攻击
  * @param $string
+ * @param bool $iframe
  * @return string|string[]|null
  */
-function remove_xss($string)
+function remove_xss($string, $iframe = true)
 {
-    $config        = HTMLPurifier_Config::createDefault();
+    $config = HTMLPurifier_Config::createDefault();
+    if ($iframe) {
+        $config->set('Filter.Custom', array(new \app\common\html\HTMLPurifier_Filter_MyIframe()));
+    }
     $html_purifier = new HTMLPurifier($config);
     $html          = $html_purifier->purify($string);
 
@@ -165,6 +170,10 @@ function hex2str($hex)
  */
 function get_class_name($class)
 {
+    if (is_object($class)) {
+        $class = get_class($class);
+    }
+
     $name = str_replace('\\', '/', $class);
     $name = basename($name);
     return $name;
@@ -360,4 +369,345 @@ function trim_emoji($str)
         $str);
 
     return $str;
+}
+
+/**
+ * 获取配置
+ * @param $key
+ * @param $default
+ * @param string $filter
+ * @return mixed
+ */
+function get_config($key = null, $default = '', $filter = 'htmlentities')
+{
+    /**
+     * @var $logic \app\logic\SystemConfigLogic
+     */
+    $logic = Container::getInstance()->make(\app\logic\SystemConfigLogic::class);
+
+    $value = $logic->config($key, $default);
+
+    if ($filter && is_callable($filter)) {
+        $value = $filter($value);
+    }
+
+    return $value;
+}
+
+/**
+ * 自定义生成URL
+ * @param string $url
+ * @param array $vars
+ * @param $suffix
+ * @param $domain
+ * @return string
+ */
+function url(string $url = '', array $vars = [], $suffix = true, $domain = false)
+{
+    if (!is_default_lang_set()) {
+        $vars['lang'] = Lang::getLangSet();
+    }
+
+    $u = \think\facade\Route::buildUrl($url, $vars)->suffix($suffix)->domain($domain);
+
+    $defaultApp = '/' . \think\facade\Config::get('app.default_app');
+
+    if (strpos((string)$u, $defaultApp) === 0) {
+        $u = preg_replace('#' . $defaultApp . '#', '', $u);
+    }
+
+    return $u;
+}
+
+/**
+ * 获取消息类里的内容
+ * @param $key
+ * @return mixed
+ */
+function msg_lang($key)
+{
+    $key = str_replace(' ', '_', $key);
+
+    return lang(constant(\app\common\Message::class . '::' . strtoupper($key)));
+}
+
+/**
+ * 获取广告列表
+ * @return \app\model\BaseModel|\app\model\BaseModel[]|array|mixed|\think\Collection|\think\db\BaseQuery|\think\Paginator
+ * @throws \think\db\exception\DataNotFoundException
+ * @throws \think\db\exception\DbException
+ * @throws \think\db\exception\ModelNotFoundException
+ */
+function get_adverts_list()
+{
+    return get_list('adverts', ['where' => ['status' => 1]]);
+}
+
+/**
+ * 获取数据
+ * @param $model
+ * @param $args
+ * @return \app\model\BaseModel|\app\model\BaseModel[]|array|mixed|\think\Collection|\think\db\BaseQuery|\think\Paginator
+ * @throws \think\db\exception\DataNotFoundException
+ * @throws \think\db\exception\DbException
+ * @throws \think\db\exception\ModelNotFoundException
+ */
+function get_list($model, $args = [])
+{
+    static $data = [];
+    $key = $model . '-' . md5(json_encode($args));
+
+    if (!isset($data[$key])) {
+        $model      = model($model);
+        $data[$key] = $model->getAll($args);
+    }
+
+    return $data[$key];
+}
+
+/**
+ * 获取文章分类
+ * @param $index
+ * @return \app\common\ArrayObject|mixed
+ * @throws \think\db\exception\DataNotFoundException
+ * @throws \think\db\exception\DbException
+ * @throws \think\db\exception\ModelNotFoundException
+ */
+function get_posts_cate($index = null)
+{
+    $logic = new \app\logic\PostsCategoryLogic();
+
+    $data = $logic->all();
+
+    return $index ? $logic->one($index) : $data;
+}
+
+/**
+ * 获取一级分类
+ * @return array|mixed
+ * @throws \think\db\exception\DataNotFoundException
+ * @throws \think\db\exception\DbException
+ * @throws \think\db\exception\ModelNotFoundException
+ */
+function get_posts_top_cate()
+{
+    $logic = new \app\logic\PostsCategoryLogic();
+
+    $data = $logic->top();
+
+    return $data;
+}
+
+/**
+ * 获取子类
+ * @param $index
+ * @return array|mixed
+ * @throws \think\db\exception\DataNotFoundException
+ * @throws \think\db\exception\DbException
+ * @throws \think\db\exception\ModelNotFoundException
+ */
+function get_posts_cate_children($index)
+{
+    $logic = new \app\logic\PostsCategoryLogic();
+
+    return $logic->getChildren($index);
+}
+
+/**
+ * 获取文章列表
+ * @param $index
+ * @param $args
+ * @return \app\model\BaseModel|\app\model\BaseModel[]|array|\think\Collection|\think\db\BaseQuery|\think\Paginator
+ * @throws \think\db\exception\DataNotFoundException
+ * @throws \think\db\exception\DbException
+ * @throws \think\db\exception\ModelNotFoundException
+ */
+function get_posts_list($index, $args = [])
+{
+    $logic = new \app\logic\PostsLogic();
+
+    return $logic->getListByCate($index, $args);
+}
+
+/**
+ * 获取该分类下最新的一条
+ * @param $index
+ * @return \app\model\BaseModel|\app\model\Posts|array|mixed|\think\db\BaseQuery|\think\Model|null
+ * @throws \think\db\exception\DataNotFoundException
+ * @throws \think\db\exception\DbException
+ * @throws \think\db\exception\ModelNotFoundException
+ */
+function get_new_posts($index)
+{
+    $logic = new \app\logic\PostsLogic();
+
+    return $logic->one($index);
+}
+
+/**
+ * 文章分类路由
+ * @param $index
+ * @return string
+ */
+function posts_cate_route($index)
+{
+    return url('Posts/index', ['index' => $index]);
+}
+
+/**
+ * 是否为默认语言
+ * @return bool
+ */
+function is_default_lang_set($lang = null)
+{
+    $lang        = $lang ?? Lang::getLangSet();
+    $defaultLang = Lang::defaultLangSet();
+
+    return $lang === $defaultLang;
+}
+
+/**
+ * 获取语言链接
+ * @param $lang
+ * @return string
+ */
+function get_lang_link($lang)
+{
+    $isDefault = is_default_lang_set($lang);
+    $baseUrl   = \think\facade\Request::baseUrl();
+    $param     = \think\facade\Request::get();
+    $langVar   = \think\facade\Config::get('lang.detect_var');
+
+    if ($isDefault) {
+        unset($param[$langVar]);
+    } else {
+        $param[$langVar] = $lang;
+    }
+
+    $queryString = http_build_query($param);
+
+    return $baseUrl . ($queryString ? '?' : '') . http_build_query($param);
+}
+
+/**
+ * 生成新的列表链接
+ * @param array $query 追加参数
+ * @param array $unset 要移除的参数
+ * @return string
+ */
+function get_list_url($query = [], $unset = [])
+{
+    $baseUrl = \think\facade\Request::baseUrl();
+
+    $param = \think\facade\Request::get();
+    unset($param['page']);
+
+    foreach ($query as $key => $value) {
+        $key   = str_replace(['[', ']'], ['.', ''], $key);
+        $array = explode('.', $key);
+        $len   = count($array);
+        switch ($len) {
+            case 2:
+                $param[$array[0]][$array[1]] = $value;
+                break;
+            case 3:
+                $param[$array[0]][$array[1]][$array[2]] = $value;
+                break;
+            default:
+                $param[$key] = $value;
+                break;
+        }
+    }
+
+    foreach ($unset as $field) {
+        $field = str_replace(['[', ']'], ['.', ''], $field);
+
+        $array = explode('.', $field);
+        $len   = count($array);
+        $p     = &$param;
+        foreach ($array as $i => $key) {
+            if (isset($p[$key])) {
+                if ($i == $len - 1) {
+                    unset($p[$key]);
+                } else {
+                    $p = &$p[$key];
+                }
+            } else {
+                break;
+            }
+        }
+
+        unset($p);
+    }
+
+    $queryString = http_build_query($param);
+
+    return $baseUrl . ($queryString ? '?' : '') . http_build_query($param);
+}
+
+/**
+ * 获取列表参数状态
+ * @param $query
+ * @return bool
+ */
+function get_list_option_status($query = [])
+{
+    $param  = \think\facade\Request::get();
+    $status = true;
+
+    foreach ($query as $field => $value) {
+        $field = str_replace(['[', ']'], ['.', ''], $field);
+        $array = explode('.', $field);
+        $val   = &$param;
+
+        foreach ($array as $i => $key) {
+            if (isset($val[$key])) {
+                $val = &$val[$key];
+            } else {
+                $val = '';
+                break;
+            }
+        }
+
+
+        if ($value != $val) {
+            return false;
+        }
+
+        unset($val);
+    }
+
+    return $status;
+}
+
+/**
+ * 获取条件里面指定值
+ * @param $field
+ * @param $where
+ * @return mixed
+ */
+function get_where_value($field, $where = [])
+{
+    foreach ($where as $key => $value) {
+        if (is_int($key)) {
+            if ($value[0] === $field) {
+                return $value[2];
+            }
+        } else {
+            if ($field === $key) {
+                return $value;
+            }
+        }
+    }
+
+    return '';
+}
+
+/**
+ * 获取设置的语言
+ * @return string
+ */
+function get_lang_set()
+{
+    return Lang::getLangSet();
 }

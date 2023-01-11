@@ -6,7 +6,7 @@
 
 namespace app\admin\curd\system_log;
 
-use app\common\curd\Delete;
+use app\admin\curd\Delete;
 
 class SystemLogDelete extends Delete
 {

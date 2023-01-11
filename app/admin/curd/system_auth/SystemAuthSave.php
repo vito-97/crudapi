@@ -6,7 +6,7 @@
 
 namespace app\admin\curd\system_auth;
 
-use app\common\curd\Save;
+use app\admin\curd\Save;
 
 class SystemAuthSave extends Save
 {

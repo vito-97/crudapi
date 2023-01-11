@@ -67,7 +67,7 @@ class Index extends BaseCurd
      */
     protected $usePaginate = true;
 
-    protected $queryArgs = ['field', 'where', 'whereOr', 'with', 'scope', 'page', 'limit', 'order', 'group', 'usePaginate' => 'paginate', 'withoutField', 'withCount', 'alias', 'having', 'simple'];
+    protected $queryArgs = ['field', 'where', 'whereOr', 'with', 'scope', 'page', 'limit', 'order', 'group', 'usePaginate' => 'paginate', 'withoutField', 'withCount', 'withCountSubQuery', 'alias', 'having', 'simple'];
 
     protected $modeExcludeQueryArgs = [
         //下拉选择不需要关联
@@ -98,7 +98,7 @@ class Index extends BaseCurd
         'formatMiddleware',
     ];
 
-    const PAGE_MODE = 'page';
+    const PAGE_MODE   = 'page';
     const SELECT_MODE = 'select';
 
     const MODE_DESC = [

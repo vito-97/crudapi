@@ -9,7 +9,7 @@
 namespace app\admin\curd\admin;
 
 
-use app\common\curd\Save;
+use app\admin\curd\Save;
 use app\common\Enum;
 use app\exception\MessageException;
 use app\logic\SystemRoleLogic;

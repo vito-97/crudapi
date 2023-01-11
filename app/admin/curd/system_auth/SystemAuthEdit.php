@@ -6,7 +6,7 @@
 
 namespace app\admin\curd\system_auth;
 
-use app\common\curd\Edit;
+use app\admin\curd\Edit;
 use app\exception\MessageException;
 use app\admin\curd\system_role\SystemRoleTrait;
 

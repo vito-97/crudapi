@@ -6,7 +6,7 @@
 
 namespace app\admin\curd\system_config;
 
-use app\common\curd\Read;
+use app\admin\curd\Read;
 
 class SystemConfigRead extends Read
 {

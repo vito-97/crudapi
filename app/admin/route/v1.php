@@ -45,6 +45,11 @@ Route::group('<api_version>', function () {
     //日志类
     Route::resource('system_log', 'SystemLog')->only(['index', 'delete', 'read']);
 
+    //文章
+    Route::resource('posts', 'Posts');
+    //文章分类
+    Route::resource('posts_category', 'PostsCategory');
+
     //角色
     Route::group('system_role', function () {
         //获取菜单

@@ -6,7 +6,7 @@
 
 namespace app\admin\curd\user_oauth;
 
-use app\common\curd\Change;
+use app\admin\curd\Change;
 
 class UserOauthChange extends Change
 {

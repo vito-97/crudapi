@@ -6,7 +6,7 @@
 
 namespace app\admin\curd\system_config_tab;
 
-use app\common\curd\Index;
+use app\admin\curd\Index;
 use app\common\Enum;
 use app\logic\SystemConfigLogic;
 use app\validate\SystemConfigTabValidate;

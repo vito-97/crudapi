@@ -6,7 +6,7 @@
 
 namespace app\admin\curd\attachment;
 
-use app\common\curd\Save;
+use app\admin\curd\Save;
 use app\common\Enum;
 use app\exception\FileIsExistsException;
 use app\exception\ValidateException;

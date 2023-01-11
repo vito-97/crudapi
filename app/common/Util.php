@@ -39,6 +39,16 @@ class Util
     }
 
     /**
+     * 去除包含域名的链接
+     * @param $url
+     * @return string|string[]
+     */
+    public static function unlink($url)
+    {
+        return str_replace(request()->domain(), '', $url);
+    }
+
+    /**
      * 设置域名
      * @param $url
      * @param array $params
@@ -138,7 +148,7 @@ class Util
                     $array[$key] = (array)$item;
                 }
             }
-            
+
             $array[$key][$subKey] = [];
             $refs[$item[$pk]] = &$array[$key];
         }

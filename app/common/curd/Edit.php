@@ -24,6 +24,7 @@ class Edit extends BaseCurd
         'labelCallbackMiddleware',
     ];
 
+    protected $_editMiddleware = [];
     protected $editMiddleware = ['editMiddleware'];
 
     protected function query()
@@ -38,7 +39,8 @@ class Edit extends BaseCurd
 
             $this->formatModel($obj);
 
-            $this->then($this->editMiddleware, function ($obj) {
+            $middleware = array_merge($this->_editMiddleware, $this->editMiddleware);
+            $this->then($middleware, function ($obj) {
                 return $obj;
             }, $obj);
 

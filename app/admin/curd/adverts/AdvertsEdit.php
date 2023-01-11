@@ -6,7 +6,7 @@
 
 namespace app\admin\curd\adverts;
 
-use app\common\curd\Edit;
+use app\admin\curd\Edit;
 
 class AdvertsEdit extends Edit
 {

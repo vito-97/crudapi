@@ -16,4 +16,6 @@ Route::group('login', function () {
 
 })->prefix('Login/');
 
+Route::get('captcha', 'Captcha/index');
+
 Route::any('test/<type>', 'Test/index');

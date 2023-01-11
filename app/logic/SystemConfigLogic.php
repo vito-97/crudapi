@@ -1,15 +1,20 @@
 <?php
-declare (strict_types=1);
+declare (strict_types = 1);
 
 namespace app\logic;
 
 use app\exception\MessageException;
 use app\model\SystemConfig;
+use app\model\SystemConfigLang;
 use app\validate\CustomRuleValidate;
+use think\facade\Config;
+use think\facade\Lang;
 
 class SystemConfigLogic extends BaseLogic
 {
     protected static $configList;
+
+    protected static $configLangList;
 
     protected static $configs;
 
@@ -37,6 +42,26 @@ class SystemConfigLogic extends BaseLogic
             $config = SystemConfig::scope('sort')->select();
 
             self::$configList = $config;
+        }
+
+        return $config;
+    }
+
+    /**
+     * 获取多语言配置内容
+     * @return SystemConfigLang[]|array|\think\Collection
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
+     * @throws \think\db\exception\ModelNotFoundException
+     */
+    public function getConfigLangList()
+    {
+        $config = self::$configLangList;
+
+        if (is_null($config)) {
+            $config = SystemConfigLang::select();
+
+            self::$configLangList = $config;
         }
 
         return $config;
@@ -79,11 +104,26 @@ class SystemConfigLogic extends BaseLogic
      */
     public function config($key = null, $default = '')
     {
+        $langStatus = $this->getLangStatus();
+        $method = __FUNCTION__;
+
         if (is_null(self::$configs)) {
             $config = $this->getConfigList();
 
             if (!$config->isEmpty()) {
                 $config = $config->column('value', 'key');
+            }
+
+            if ($langStatus) {
+                $configLang = $this->getConfigLangList();
+
+                if (!$configLang->isEmpty()) {
+
+                    foreach ($configLang as $item) {
+                        $k                      = str_replace('-', '_', $item->lang);
+                        $config[$k][$item->key] = $item->value;
+                    }
+                }
             }
 
             self::$configs = $config;
@@ -92,14 +132,25 @@ class SystemConfigLogic extends BaseLogic
         if (is_array($key)) {
             $data = [];
             foreach ($key as $alias => $name) {
-                if (is_numeric($alias)) {
+                if (is_numeric($alias) || !$alias) {
                     $alias = $name;
                 }
-                $data[$alias] = (!empty(self::$configs[$name]) ? self::$configs[$name] : $default);
+                if ($name) {
+                    $data[$alias] = $this->$method($name);
+                }
             }
 
             return $data;
         } else {
+            if ($key && $langStatus && !is_default_lang_set()) {
+                $lang   = str_replace('-', '_', Lang::getLangSet());
+                $config = self::$configs[$lang] ?? [];
+
+                if (!empty($config[$key])) {
+                    return $config[$key];
+                }
+            }
+
             return $key ? (!empty(self::$configs[$key]) ? self::$configs[$key] : $default) : self::$configs;
         }
     }
@@ -156,10 +207,34 @@ class SystemConfigLogic extends BaseLogic
             throw new MessageException('查询不到相关配置信息');
         }
 
-        $result->each(function ($item) use ($data) {
-            $item->value = $data[$item->key];
-            $item->save();
-        });
+        if ($this->getModel()->getLangStatus()) {
+
+            $langData = [];
+            $langList = Config::get('lang.lang_list');
+            $result->each(function ($item) use ($data, &$langData, $langList) {
+                $item->value = $data[$item->key];
+                $item->save();
+
+                //需要多语言
+                if ($item->lang) {
+                    foreach ($langList as $lang => $name) {
+                        $k     = str_replace('-', '_', $lang) . '_' . $item->key;
+                        $value = $data[$k] ?? null;
+                        if (!is_null($value)) {
+                            $langData[] = [
+                                'key'   => $item->key,
+                                'value' => $value,
+                                'lang'  => $lang
+                            ];
+                        }
+                    }
+                }
+            });
+
+            if ($langData) {
+                (new SystemConfigLang)->replace()->saveAll($langData);
+            }
+        }
 
         return $result;
     }

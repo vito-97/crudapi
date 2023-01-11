@@ -6,7 +6,7 @@
 
 namespace app\admin\curd\system_config;
 
-use app\common\curd\Change;
+use app\admin\curd\Change;
 
 class SystemConfigChange extends Change
 {

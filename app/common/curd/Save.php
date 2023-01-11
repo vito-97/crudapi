@@ -24,6 +24,7 @@ class Save extends BaseCurd
     protected $model;
 
     protected $saveMiddleware = ['saveMiddleware'];
+    protected $_saveMiddleware = [];
 
     protected function _init($next)
     {
@@ -51,7 +52,8 @@ class Save extends BaseCurd
         // 启动事务
         Db::startTrans();
         try {
-            $detail = $this->then($this->saveMiddleware, function ($params) use ($model) {
+            $middleware = array_merge($this->_saveMiddleware, $this->saveMiddleware);
+            $detail     = $this->then($middleware, function ($params) use ($model) {
 
                 if ($params instanceof Model) {
                     $detail = $params;

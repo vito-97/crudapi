@@ -25,6 +25,7 @@ class Read extends BaseCurd
 
     protected $validate = [IDMustBeIntValidate::class];
 
+    protected $_readMiddleware = [];
     protected $readMiddleware = ['readMiddleware'];
 
     /**
@@ -45,7 +46,8 @@ class Read extends BaseCurd
 
         $this->formatModel($obj);
 
-        $this->then($this->readMiddleware, function ($obj) {
+        $middleware = array_merge($this->_readMiddleware, $this->readMiddleware);
+        $this->then($middleware, function ($obj) {
             return $obj;
         }, $obj);
 

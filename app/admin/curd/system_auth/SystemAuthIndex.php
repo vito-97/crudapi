@@ -6,7 +6,7 @@
 
 namespace app\admin\curd\system_auth;
 
-use app\common\curd\Index;
+use app\admin\curd\Index;
 use app\admin\curd\system_role\SystemRoleTrait;
 
 class SystemAuthIndex extends Index

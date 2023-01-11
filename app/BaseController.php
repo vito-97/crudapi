@@ -152,28 +152,6 @@ abstract class BaseController
     }
 
     /**
-     * 成功返回
-     * @param $data
-     * @param string $msg
-     * @return array
-     */
-    protected function success($data = [], string $msg = '')
-    {
-        return success($data, $msg);
-    }
-
-    /**
-     * 失败返回
-     * @param $code
-     * @param string $msg
-     * @param array $data
-     */
-    protected function error($code, $msg = '', $data = [])
-    {
-        return error($code, $msg, $data);
-    }
-
-    /**
      * 获取所有参数
      * @return array|mixed
      */

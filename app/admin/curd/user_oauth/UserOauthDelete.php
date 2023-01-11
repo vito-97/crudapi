@@ -6,7 +6,7 @@
 
 namespace app\admin\curd\user_oauth;
 
-use app\common\curd\Delete;
+use app\admin\curd\Delete;
 
 class UserOauthDelete extends Delete
 {

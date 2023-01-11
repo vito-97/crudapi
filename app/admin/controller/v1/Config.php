@@ -26,7 +26,7 @@ class Config extends BaseController
     ];
 
     protected $methodName = [
-        'index' => '%信息'
+        'index' => '%s信息'
     ];
 
     /**

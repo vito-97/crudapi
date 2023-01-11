@@ -6,7 +6,7 @@
 
 namespace app\admin\curd\system_config_tab;
 
-use app\common\curd\Edit;
+use app\admin\curd\Edit;
 
 class SystemConfigTabEdit extends Edit
 {

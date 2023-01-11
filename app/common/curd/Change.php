@@ -28,6 +28,7 @@ class Change extends BaseCurd
 
     protected $_middleware = ['queryMiddleware'];
 
+    protected $_saveMiddleware = [];
     protected $saveMiddleware = ['saveMiddleware'];
 
     /**
@@ -57,7 +58,8 @@ class Change extends BaseCurd
             try {
                 $this->formatModel($obj);
 
-                $this->then($this->saveMiddleware, function (Model $obj, array $params) {
+                $middleware = array_merge($this->_saveMiddleware, $this->saveMiddleware);
+                $this->then($middleware, function (Model $obj, array $params) {
                     $logic = $this->getLogic();
                     return $logic->updateByID($obj, $params);
                 }, $obj, $params);

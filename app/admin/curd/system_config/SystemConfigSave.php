@@ -6,7 +6,7 @@
 
 namespace app\admin\curd\system_config;
 
-use app\common\curd\Save;
+use app\admin\curd\Save;
 use app\common\Enum;
 use app\validate\SystemConfigValidate;
 

@@ -29,6 +29,7 @@ class Delete extends BaseCurd
 
     protected $_middleware = ['queryMiddleware'];
 
+    protected $_deleteMiddleware = [];
     protected $deleteMiddleware = ['deleteMiddleware'];
 
     //强制删除
@@ -47,8 +48,9 @@ class Delete extends BaseCurd
         foreach ($objs as $obj) {
             Db::startTrans();
             try {
+                $middleware = array_merge($this->_deleteMiddleware, $this->deleteMiddleware);
                 //删除数据
-                $this->then($this->deleteMiddleware, function (Model $obj) {
+                $this->then($middleware, function (Model $obj) {
                     $logic = $this->getLogic();
                     $args  = $this->getQueryArgs(['where', 'together', 'force']);
 

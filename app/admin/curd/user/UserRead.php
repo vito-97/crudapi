@@ -6,7 +6,7 @@
 
 namespace app\admin\curd\user;
 
-use app\common\curd\Read;
+use app\admin\curd\Read;
 
 class UserRead extends Read
 {

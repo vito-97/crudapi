@@ -9,7 +9,7 @@
 namespace app\admin\curd\admin;
 
 
-use app\common\curd\Read;
+use app\admin\curd\Read;
 
 class AdminRead extends Read
 {

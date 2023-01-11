@@ -6,7 +6,7 @@
 
 namespace app\admin\curd\adverts;
 
-use app\common\curd\Change;
+use app\admin\curd\Change;
 
 class AdvertsChange extends Change
 {

@@ -6,7 +6,7 @@
 
 namespace app\admin\curd\system_config_tab;
 
-use app\common\curd\Change;
+use app\admin\curd\Change;
 
 class SystemConfigTabChange extends Change
 {

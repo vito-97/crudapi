@@ -6,7 +6,7 @@
 
 namespace app\admin\curd\attachment;
 
-use app\common\curd\Delete;
+use app\admin\curd\Delete;
 
 class AttachmentDelete extends Delete
 {

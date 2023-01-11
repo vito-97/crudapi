@@ -6,7 +6,7 @@
 
 namespace app\admin\curd\system_auth;
 
-use app\common\curd\Change;
+use app\admin\curd\Change;
 use app\exception\MessageException;
 use app\admin\curd\system_role\SystemRoleTrait;
 use think\Model;

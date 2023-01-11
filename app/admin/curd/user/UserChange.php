@@ -6,7 +6,7 @@
 
 namespace app\admin\curd\user;
 
-use app\common\curd\Change;
+use app\admin\curd\Change;
 
 class UserChange extends Change
 {
