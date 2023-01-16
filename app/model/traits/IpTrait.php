@@ -22,7 +22,7 @@ trait IpTrait
             $value = long2ip($value);
         }
 
-        return $value;
+        return $value ?: '';
     }
 
     /**
@@ -34,7 +34,7 @@ trait IpTrait
     {
         if ($value) {
             if (!is_numeric($value)) {
-                $value = ip2long($value);
+                $value = sprintf('%u', ip2long($value));;
             }
         }
 

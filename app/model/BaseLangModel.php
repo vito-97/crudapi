@@ -11,7 +11,7 @@ namespace app\model;
 /**
  * 语言表继承类
  */
-class BaseLangModel extends BaseModel
+abstract class BaseLangModel extends BaseModel
 {
     protected $pk = ['target_id', 'lang'];
 }

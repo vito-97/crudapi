@@ -20,7 +20,7 @@ use think\Model;
 use think\model\concern\SoftDelete;
 use think\Paginator;
 
-class BaseModel extends Model
+abstract class BaseModel extends Model
 {
     use SoftDelete;
     use LangTrait;

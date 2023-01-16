@@ -22,7 +22,7 @@ class Config extends BaseController
     const NOT_NEED_LOGIN = ['index'];
 
     protected $field = [
-        'site_name'
+        'site_name',
     ];
 
     protected $methodName = [
