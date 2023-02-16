@@ -35,22 +35,22 @@ class SystemRoleLogic extends BaseLogic
 
     /**
      * 检测是否有权限
-     * @param int $role_id 角色ID
+     * @param int $roleId 角色ID
      * @param string $route 权限
      * @return bool
      * @throws DataNotFoundException
      * @throws \Throwable
      */
-    public function check(int $role_id, string $route)
+    public function check(int $roleId, string $route)
     {
-        $role = $this->getRoleAuth($role_id);
+        $role = $this->getRoleAuth($roleId);
 
         if (!$role) {
             throw new DataNotFoundException(ErrorCode::ROLE_NOT_FOUND);
         }
 
         //为超级管理员
-        if ($this->isSuper($role_id)) {
+        if ($this->isSuper($roleId)) {
             return true;
         }
 
@@ -64,13 +64,13 @@ class SystemRoleLogic extends BaseLogic
 
     /**
      * 判断是否为超级管理员
-     * @param $role_id
+     * @param $roleId
      * @return bool
      * @throws \Throwable
      */
-    public function isSuper($role_id)
+    public function isSuper($roleId)
     {
-        $role = $this->getRoleAuth($role_id);
+        $role = $this->getRoleAuth($roleId);
 
         if (!$role) return false;
 
@@ -113,16 +113,16 @@ class SystemRoleLogic extends BaseLogic
 
     /**
      * 获取权限列表
-     * @param int $role_id
+     * @param int $roleId
      * @return array
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
      */
-    public function getAuthList($role_id = 0)
+    public function getAuthList($roleId = 0)
     {
         $user   = $this->user->getUserInfo();
-        $roleID = $role_id ?: $user->role_id;
+        $roleID = $roleId ?: $user->role_id;
         $role   = $this->getRoleByID($roleID);
 
         $data = $role->getAuth(app()->http->getName(), ['url']);
@@ -142,32 +142,32 @@ class SystemRoleLogic extends BaseLogic
 
     /**
      * 通过ID获取角色
-     * @param $role_id
+     * @param $roleId
      * @param null $with
      * @return \app\model\BaseModel|array|mixed|\think\Model|null
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
      */
-    public function getRoleByID($role_id, $with = null)
+    public function getRoleByID($roleId, $with = null)
     {
-        $result = $this->getByID($role_id, ['with' => $with]);
+        $result = $this->getByID($roleId, ['with' => $with]);
 
         return $result;
     }
 
     /**
      * 获取角色权限
-     * @param int $role_id
+     * @param int $roleId
      * @return mixed
      * @throws \Throwable
      */
-    protected function getRoleAuth(int $role_id)
+    protected function getRoleAuth(int $roleId)
     {
-        $key = $this->getCacheKey('role_auth', $role_id);
+        $key = $this->getCacheKey('role_auth', $roleId);
 
-        $role = $this->rememberCache($key, function () use ($role_id) {
-            $result = $this->getRoleByID($role_id);
+        $role = $this->rememberCache($key, function () use ($roleId) {
+            $result = $this->getRoleByID($roleId);
 
             if ($result && !$result->isSuper()) {
                 $result->append(['auth']);
