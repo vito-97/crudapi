@@ -629,16 +629,17 @@ abstract class BaseLogic
     protected function totalDate($field, $where = [], array $args = [])
     {
         $default = [
-            'num'  => 1,
-            'op'   => 'SUM',
-            'type' => 'day',
-            'now'  => 0,
-            'page' => 0,
+            'num'   => 1,
+            'op'    => 'SUM',
+            'type'  => 'day',
+            'now'   => 0,
+            'page'  => 0,
+            'group' => null
         ];
 
         $args = array_merge($default, $args);
 
-        ['op' => $op, 'type' => $type, 'now' => $now, 'num' => $num, 'page' => $page] = $args;
+        ['op' => $op, 'type' => $type, 'now' => $now, 'num' => $num, 'page' => $page, 'group' => $g] = $args;
 
         if (!$now) {
             $now = time();
@@ -662,7 +663,7 @@ abstract class BaseLogic
             //当前的时间
             $endTime = time();
             //数据库保存的最小时间
-            $minTime = (int)($this->getModel()->cache(3600)->min('create_time') ?: strtotime("-{$num} {$type}"));
+            $minTime = (int)($this->getModel()->where($where)->cache(3600)->min('create_time') ?: strtotime("-{$num} {$type}"));
             //获取偏移量
             $offset = ($page - 1) * $num;
             $now    = strtotime("-$offset {$type}");
@@ -726,7 +727,20 @@ abstract class BaseLogic
             $dateFormat = '%Y';
         }
 
-        $model = $model->fieldRaw("{$op}({$field}) as nums, DATE_FORMAT(FROM_UNIXTIME(create_time), \"{$dateFormat}\") AS create_date")->group('create_date');
+        $group    = ['create_date'];
+        $rawField = [
+            "{$op}({$field}) as nums",
+            "DATE_FORMAT(FROM_UNIXTIME(create_time), \"{$dateFormat}\") AS create_date"
+        ];
+        if ($g) {
+            $group[]    = $g;
+            $rawField[] = $g;
+        }
+
+        $group    = join(',', $group);
+        $rawField = join(',', $rawField);
+
+        $model = $model->fieldRaw($rawField)->group($group);
 
         $startDateTime = date('Y-m-d H:i:s', strtotime(date('Y-m-d 23:59:59', strtotime("- $num $type", $now))) + 1);
         $endDateTime   = date('Y-m-d', $now);
@@ -761,27 +775,40 @@ abstract class BaseLogic
             dump('total sql');
             halt($result);
         }
-
+        $groupData = [];
         foreach ($result as $item) {
             if (isset($dateResult[$item['create_date']])) {
-                $dateResult[$item['create_date']] = (float)$item['nums'];
+                if ($g) {
+                    if (!is_array($dateResult[$item['create_date']])) {
+                        $dateResult[$item['create_date']] = [];
+                    }
+                    $dateResult[$item['create_date']][$item[$g]] = (float)$item['nums'];
+                    $groupData[]                                 = $item[$g];
+                } else {
+                    $dateResult[$item['create_date']] = (float)$item['nums'];
+                }
             }
         }
 
         //需要分页
         if ($page) {
-            return [
+            $data = [
                 'total'     => $total,
                 'page'      => $page,
                 'last_page' => $lastPage,
                 'limit'     => $num,
                 'list'      => $dateResult,
             ];
+
+            if ($g) {
+                $data['group'] = $groupData;
+            }
+
+            return $data;
         } else {
-            return ['list' => $dateResult];
+            return $dateResult;
         }
     }
-
     /**
      * 获取指定时间的数据
      * @param int $time
