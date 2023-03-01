@@ -14,6 +14,7 @@ use app\exception\ErrorException;
 use app\model\traits\LangTrait;
 use think\db\BaseQuery;
 use think\db\Query;
+use think\db\Raw;
 use think\facade\Lang;
 use think\helper\Str;
 use think\Model;
@@ -78,6 +79,9 @@ abstract class BaseModel extends Model
      * @var array
      */
     protected static $withScope = [];
+
+    //字段别名 alias => db_field
+    protected $fieldAlias = [];
 
     /**
      * 设置查询范围
@@ -758,7 +762,11 @@ abstract class BaseModel extends Model
      */
     public function scopeUser(Query $query, $id)
     {
-        $this->scopeFiled($query, 'user_id', $id);
+        $field = 'user_id';
+        if ($this->name === 'User') {
+            $field = 'id';
+        }
+        $this->scopeFiled($query, $field, $id);
     }
 
     /**
@@ -770,8 +778,31 @@ abstract class BaseModel extends Model
     protected function scopeFiled(Query $query, $field, $value)
     {
         $fields = $query->getTableFields();
-        if (in_array($field, $fields)) {
-            $query->where($field, is_array($value) ? 'IN' : '=', $value);
+
+        if (!in_array($field, $fields)) {
+            if (isset($this->fieldAlias[$field])) {
+                $field = $this->fieldAlias[$field];
+            } else {
+                $field = null;
+            }
+        }
+
+        if ($field) {
+            if (strpos($field, '.') === false) {
+                $field = "__TABLE__.{$field}";
+            }
+
+            $op = $value instanceof Raw ? 'EXP' : (is_array($value) ? 'IN' : '=');
+
+            $where = [
+                [
+                    $field,
+                    $op,
+                    $value,
+                ]
+            ];
+
+            $query->where($where);
         }
     }
 
