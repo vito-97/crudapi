@@ -239,13 +239,16 @@ abstract class BaseValidate extends Validate
      */
     protected function checkHas($value, $rule = '', $data = [], $field = '')
     {
-        if (empty($rule)) {
+/*        if (empty($rule)) {
             throw new ErrorException('checkHas 必须传入验证规则');
+        }*/
+
+        if ($rule) {
+            $array = explode(',', $rule);
+            $names = explode('/', $array[0]);
+        } else {
+            $names = [substr($field, 0, -3)];
         }
-
-        $array = explode(',', $rule);
-
-        $names = explode('/', $array[0]);
 
         $value = is_array($value) ? $value : array_filter(array_map(function ($it) {
             return intval($it);
