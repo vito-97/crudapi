@@ -282,9 +282,11 @@ class AuthRouteService
         } else {
             //判断类里是否有自己重写的CURD方法
             foreach (Enum::CURD as $name) {
-                $method = $reflection->getMethod($name);
-                if ($method->class === $class) {
-                    $curd[] = $name;
+                if ($reflection->hasMethod($name)) {
+                    $method = $reflection->getMethod($name);
+                    if ($method->class === $class) {
+                        $curd[] = $name;
+                    }
                 }
             }
         }
@@ -399,7 +401,7 @@ class AuthRouteService
     protected function filterController($module, $names)
     {
         $names = array_filter($names, function ($item) use ($module) {
-            $basename = pathinfo($item, PATHINFO_BASENAME);
+            $basename = pathinfo(str_replace('\\', '/', $item), PATHINFO_BASENAME);
 
             //基类
             if (in_array($basename, $this->excludeController)) {
