@@ -9,6 +9,7 @@ declare(strict_types = 1);
 
 namespace app\common\curd;
 
+use app\common\Enum;
 use app\exception\DataInoperableException;
 use app\exception\EmptyParamsException;
 use app\exception\ErrorException;
@@ -837,8 +838,11 @@ abstract class BaseCurd
         if (!$this->logic) {
             $name = $this->getLogicClass() ?: (new \ReflectionClass($this))->getShortName();
 
-            $search = ['Index', 'Change', 'Delete', 'Edit', 'Read', 'Save', 'Update'];
-            $name   = str_replace($search, '', $name) . 'Logic';
+            $search = join('|', array_map(function ($v) {
+                return ucfirst($v);
+            }, Enum::CURD));
+
+            $name = preg_replace("/({$search})\$/", '', $name) . 'Logic';
 
             $class = 'app\logic\\' . $name;
 
