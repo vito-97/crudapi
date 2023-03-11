@@ -51,12 +51,17 @@ class MakeCurd extends Make
             $this->basic = $input->getOption('basic');
         }
 
-        foreach ($this->allow as $name) {
+        $names = explode(',', $input->getArgument('name'));
 
-            $this->currentCurd = $name;
-            $this->type        = 'curd ' . $name;
+        foreach ($this->allow as $cname) {
 
-            parent::execute($input, $output);
+            $this->currentCurd = $cname;
+            $this->type        = 'curd ' . $cname;
+
+            foreach ($names as $name) {
+                $input->setArgument('name', $name);
+                parent::execute($input, $output);
+            }
         }
 
         $output->writeln('生成CURD类完成');

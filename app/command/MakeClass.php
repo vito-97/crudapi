@@ -9,7 +9,9 @@
 namespace app\command;
 
 use think\console\command\Make;
+use think\console\Input;
 use think\console\input\Option;
+use think\console\Output;
 
 /**
  * 生成所需要的类库
@@ -32,7 +34,7 @@ class MakeClass extends Make
 
     //指定类型的后缀
     protected $suffix = [
-        'logic' => 'Logic',
+        'logic'    => 'Logic',
         'validate' => 'Validate',
     ];
 
@@ -44,6 +46,15 @@ class MakeClass extends Make
         $this->setName('make:class')
             ->addOption('type', 't', Option::VALUE_REQUIRED, '需要生成的文件类型' . join(' ', $this->types))
             ->setDescription('Create a new service class');
+    }
+
+    protected function execute(Input $input, Output $output)
+    {
+        $names = explode(',', $input->getArgument('name'));
+        foreach ($names as $name) {
+            $input->setArgument('name', $name);
+            parent::execute($input, $output);
+        }
     }
 
     protected function getStub(): string
