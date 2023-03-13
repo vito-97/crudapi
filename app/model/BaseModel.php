@@ -11,6 +11,7 @@ namespace app\model;
 use app\common\Enum;
 use app\common\Message;
 use app\exception\ErrorException;
+use app\exception\MessageException;
 use app\model\traits\LangTrait;
 use think\db\BaseQuery;
 use think\db\Query;
@@ -722,15 +723,15 @@ abstract class BaseModel extends Model
 
     /**
      * 检测模型是否有数据
-     * @param string $field
      * @return $this
-     * @throws ErrorException
+     * @throws MessageException
      */
-    protected function checkModelData($field = 'id')
+    protected function checkModelExists()
     {
 
-        if (!$this->getData($field)) {
-            throw new ErrorException(static::class . '模型未设置数据');
+        if (!$this->isExists()) {
+            $trace = debug_backtrace();
+            throw new MessageException(static::class . "模型方法[{$trace[1]['function']}]需要查询数据后调用，调用位置{$trace[2]['file']} in {$trace[2]['line']}");
         }
 
         return $this;
