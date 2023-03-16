@@ -54,6 +54,7 @@ class Timer extends Command
         $task->count         = 1;
         $task->onWorkerStart = [$this, 'start'];
         $task->onWorkerStop  = [$this, 'stop'];
+        Worker::$stdoutFile  = '/root/timer_log.txt';
 
         $task->runAll();
     }
