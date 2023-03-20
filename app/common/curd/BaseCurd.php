@@ -1019,6 +1019,7 @@ abstract class BaseCurd
         $labelCallback = array_merge($this->_labelCallback, $this->labelCallback);
 
         foreach ($labelCallback as $method => $item) {
+            $data  = null;
             $snake = Str::snake($method);
 
             $array = explode('_', $snake);
@@ -1043,7 +1044,7 @@ abstract class BaseCurd
                 $data   = Container::getInstance()->invokeMethod([$this, $method]);
             }
 
-            if (!empty($data)) {
+            if (!is_null($data)) {
                 $key   = $item['key'] ?? $item['field'];
                 $field = $item['field'] ?? $item['key'];
                 $this->setLabel($key, $item['name'], $field, $data);
