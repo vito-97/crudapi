@@ -24,7 +24,7 @@ class SystemConfigTab extends BaseModel
      */
     public function searchIndexAttr(Query $query, $value)
     {
-        return $query->where('title', 'like', "%{$value}%");
+        return $query->where('name', 'like', "%{$value}%");
     }
 
     /**
