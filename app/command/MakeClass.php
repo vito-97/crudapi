@@ -45,14 +45,19 @@ class MakeClass extends Make
         parent::configure();
         $this->setName('make:class')
             ->addOption('type', 't', Option::VALUE_REQUIRED, '需要生成的文件类型' . join(' ', $this->types))
+            ->addOption('namespace', null, Option::VALUE_OPTIONAL, '命名空间')
             ->setDescription('Create a new service class');
     }
 
     protected function execute(Input $input, Output $output)
     {
-        $names = explode(',', $input->getArgument('name'));
+        $names     = explode(',', $input->getArgument('name'));
+        $namespace = $input->getOption('namespace');
+        if ($namespace) {
+            $namespace .= '/';
+        }
         foreach ($names as $name) {
-            $input->setArgument('name', $name);
+            $input->setArgument('name', $namespace . $name);
             parent::execute($input, $output);
         }
     }

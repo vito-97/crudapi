@@ -40,6 +40,7 @@ class MakeCurd extends Make
         $this->setName('make:curd')
             ->addOption('only', null, Option::VALUE_OPTIONAL, '只生成的CURD')
             ->addOption('except', null, Option::VALUE_OPTIONAL, '排除的CURD')
+            ->addOption('namespace', null, Option::VALUE_OPTIONAL, '命名空间')
             ->addOption('basic', null, Option::VALUE_OPTIONAL, 'CURD基类');
     }
 
@@ -51,7 +52,8 @@ class MakeCurd extends Make
             $this->basic = $input->getOption('basic');
         }
 
-        $names = explode(',', $input->getArgument('name'));
+        $names     = explode(',', $input->getArgument('name'));
+        $namespace = $input->getOption('namespace');
 
         foreach ($this->allow as $cname) {
 
@@ -59,7 +61,7 @@ class MakeCurd extends Make
             $this->type        = 'curd ' . $cname;
 
             foreach ($names as $name) {
-                $input->setArgument('name', $name);
+                $input->setArgument('name', $namespace . $name);
                 parent::execute($input, $output);
             }
         }
