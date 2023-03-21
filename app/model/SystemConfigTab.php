@@ -17,15 +17,6 @@ class SystemConfigTab extends BaseModel
     use TreeTrait;
 
     /**
-     * 关联父类
-     * @return \think\model\relation\BelongsTo
-     */
-    public function parent()
-    {
-        return $this->belongsTo('SystemConfigTab', 'pid', 'id');
-    }
-
-    /**
      * 搜索
      * @param Query $query
      * @param $value
