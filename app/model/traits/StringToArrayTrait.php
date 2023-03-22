@@ -21,7 +21,7 @@ trait StringToArrayTrait
             $value = [];
 
             foreach ($array as $item) {
-                $val = explode('|', $item);
+                $val = explode('=', $item);
 
                 if (count($val) > 1) {
                     $value[trim($val[0])] = $val[1];
