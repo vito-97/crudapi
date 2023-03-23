@@ -128,6 +128,10 @@ abstract class BaseValidate extends Validate
 
         $rules = $scene ? $class->scene[$scene] : $class->rule;
 
+        if ('all' === $rules) {
+            $rules = $class->rule;
+        }
+
         foreach ($rules as $key => $value) {
             [$k] = $info = explode('|', is_string($key) ? $key : $value);
             $n        = $info[1] ?? $k;
@@ -239,9 +243,9 @@ abstract class BaseValidate extends Validate
      */
     protected function checkHas($value, $rule = '', $data = [], $field = '')
     {
-/*        if (empty($rule)) {
-            throw new ErrorException('checkHas 必须传入验证规则');
-        }*/
+        /*        if (empty($rule)) {
+                    throw new ErrorException('checkHas 必须传入验证规则');
+                }*/
 
         if ($rule) {
             $array = explode(',', $rule);
