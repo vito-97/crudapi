@@ -326,7 +326,7 @@ abstract class BaseCurd
                     throw new ErrorException('中间件不是一个方法或函数' . (is_string($call) ? "[$call]" : ''));
                 }
 
-                if (empty($response)) {
+                if (is_null($response)) {
                     throw new ErrorException('CURD中间件未返回' . (is_string($call) ? "[$call]" : ''));
                 }
 
