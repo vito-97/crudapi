@@ -185,7 +185,7 @@ trait LangTrait
     {
         $model = $this->getModelObj();
 
-        $langStatus = $model->getLangStatus ?? false;
+        $langStatus = $model->getLangStatus() ?? false;
 
         return $langStatus;
     }
