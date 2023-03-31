@@ -9,6 +9,7 @@
 namespace app\job;
 
 use think\facade\Cache;
+use think\facade\Request;
 use think\queue\Job;
 use think\facade\Log;
 
@@ -31,7 +32,7 @@ abstract class BaseJob
     public function fire(Job $job, $data)
     {
         if (empty($data)) {
-            Log::error(sprintf('[%s][%s] 队列无消息', __CLASS__, __FUNCTION__));
+            $this->logger(sprintf('[%s][%s] 队列无消息', __CLASS__, __FUNCTION__));
             return;
         }
 
@@ -47,24 +48,32 @@ abstract class BaseJob
         }
 
         // 执行业务处理
-        if ($this->execute($data, $job)) {
-            Log::record(sprintf('[%s][%s] 队列执行成功', __CLASS__, __FUNCTION__));
+        try {
+            $status = $this->execute($data, $job);
+        } catch (\Throwable $exception) {
+            $status = false;
+            $name   = get_class_name(static::class);
+            $this->logger("Job $name Error:" . $exception->getMessage());
+        }
+
+        Cache::store('redis')->delete($jobId); // 删除redis中的缓存
+
+        if ($status) {
+            $this->logger(sprintf('[%s][%s] 队列执行成功', __CLASS__, __FUNCTION__));
             $job->delete(); // 任务执行成功后删除
-            Cache::store('redis')->delete($jobId); // 删除redis中的缓存
         } else {
             // 检查任务重试次数
             if ($job->attempts() > $this->attempts) {
-                Log::error(sprintf('[%s][%s] 队列执行重试次数超过3次，执行失败', __CLASS__, __FUNCTION__));
+                $this->logger(sprintf('[%s][%s] 队列执行重试次数超过%d次，执行失败', __CLASS__, __FUNCTION__, $this->attempts));
                 // 第1种处理方式：重新发布任务,该任务延迟10秒后再执行；也可以不指定秒数立即执行
                 //$job->release(10);
                 // 第2种处理方式：原任务的基础上1分钟执行一次并增加尝试次数
                 //$job->failed();
                 // 第3种处理方式：删除任务
                 $job->delete(); // 任务执行后删除
-                Cache::store('redis')->delete($jobId); // 删除redis中的缓存
+            } else {
+                $job->release($this->delay);
             }
-
-            $job->release($this->delay);
         }
     }
 
@@ -92,4 +101,16 @@ abstract class BaseJob
      * @return bool 返回结果
      */
     abstract protected function execute($data, Job $job): bool;
+
+    /**
+     * 记录日志
+     * @param $msg
+     * @param string $type
+     * @return void
+     */
+    protected function logger($msg, $type = 'info')
+    {
+        Log::record($msg, $type);
+        dump($msg);
+    }
 }
