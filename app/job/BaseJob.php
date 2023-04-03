@@ -53,7 +53,7 @@ abstract class BaseJob
         } catch (\Throwable $exception) {
             $status = false;
             $name   = get_class_name(static::class);
-            $this->logger("Job $name Error:" . $exception->getMessage());
+            $this->logger("Job $name Error: {$exception->getMessage()} in {$exception->getFile()} line {$exception->getLine()}");
         }
 
         Cache::store('redis')->delete($jobId); // 删除redis中的缓存
