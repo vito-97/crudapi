@@ -32,7 +32,7 @@ abstract class BaseJob
     public function fire(Job $job, $data)
     {
         if (empty($data)) {
-            $this->logger(sprintf('[%s][%s] 队列无消息', __CLASS__, __FUNCTION__));
+            $this->logger(sprintf('[%s][%s] 队列无消息', static::class, __FUNCTION__));
             return;
         }
 
@@ -59,12 +59,12 @@ abstract class BaseJob
         Cache::store('redis')->delete($jobId); // 删除redis中的缓存
 
         if ($status) {
-            $this->logger(sprintf('[%s][%s] 队列执行成功', __CLASS__, __FUNCTION__));
+            $this->logger(sprintf('[%s][%s] 队列执行成功', static::class, __FUNCTION__));
             $job->delete(); // 任务执行成功后删除
         } else {
             // 检查任务重试次数
             if ($job->attempts() > $this->attempts) {
-                $this->logger(sprintf('[%s][%s] 队列执行重试次数超过%d次，执行失败', __CLASS__, __FUNCTION__, $this->attempts));
+                $this->logger(sprintf('[%s][%s] 队列执行重试次数超过%d次，执行失败', static::class, __FUNCTION__, $this->attempts));
                 // 第1种处理方式：重新发布任务,该任务延迟10秒后再执行；也可以不指定秒数立即执行
                 //$job->release(10);
                 // 第2种处理方式：原任务的基础上1分钟执行一次并增加尝试次数
