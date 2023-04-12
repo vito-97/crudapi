@@ -82,7 +82,6 @@ class Timer extends Command
             foreach ($task as $sec => $time) {
                 if ($now - $time >= $sec) {
                     $event = sprintf(EventName::CRONTAB_TASK, $sec);
-                    dump("执行${sec}秒的任务");
                     //执行事件
                     try {
                         Event::trigger($event);
