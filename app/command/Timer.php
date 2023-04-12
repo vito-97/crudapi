@@ -73,24 +73,27 @@ class Timer extends Command
     public function start()
     {
         $last = time();
-        $task = [6 => $last, 10 => $last, 30 => $last, 60 => $last, 180 => $last, 300 => $last];
+        $task = [1 => $last, 2 => $last, 3 => $last, 4 => $last, 6 => $last, 10 => $last, 30 => $last, 60 => $last, 180 => $last, 300 => $last];
 
         $this->timer = \Workerman\Lib\Timer::add($this->interval, function () use (&$task) {
             //每隔2秒执行一次
-            try {
-                $now = time();
+            $now = time();
 
-                foreach ($task as $sec => $time) {
-                    if ($now - $time >= $sec) {
-                        $event = sprintf(EventName::CRONTAB_TASK, $sec);
-                        //执行事件
+            foreach ($task as $sec => $time) {
+                if ($now - $time >= $sec) {
+                    $event = sprintf(EventName::CRONTAB_TASK, $sec);
+                    dump("执行${sec}秒的任务");
+                    //执行事件
+                    try {
                         Event::trigger($event);
-
+                    } catch (\Throwable $e) {
+                        dump('错误信息：' . $e->getMessage());
+                    } finally {
                         $task[$sec] = $now;
                     }
                 }
-            } catch (\Throwable $e) {
             }
+
         });
     }
 }
