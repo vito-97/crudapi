@@ -25,11 +25,10 @@ class UserAuthTokenMiddleware
      */
     protected $exclude = [
         'api/Login/login',
-        'api/Login/touristLogin',
     ];
 
     //用户登录状态
-    public function handle(Request $request, \Closure $next, $type = TokenService::USER)
+    public function handle(Request $request, \Closure $next, $type = TokenService::USER, $force = true)
     {
         $route = get_route();
 
@@ -47,8 +46,22 @@ class UserAuthTokenMiddleware
         if (!in_array($route, $this->exclude)) {
             $token = trim($request->header(Config::get('web.auth_token_key')));
 
-            if (empty($token)) {
-                throw new AccessTokenEmptyException();
+            //分割類型
+            if (strpos($token, '_')) {
+                [$customType, $token] = explode('_', $token);
+
+                if (empty($type)) {
+                    $type = $customType;
+                }
+            }
+
+            if (empty($token) || empty($type)) {
+                if ($force) {
+                    throw new AccessTokenEmptyException();
+                } else {
+                    $request->setUser(new UserService([], '', $type ?: TokenService::USER));
+                    return $next($request);
+                }
             }
 
             $tokenService = new TokenService($type);

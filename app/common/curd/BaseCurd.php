@@ -1039,6 +1039,11 @@ abstract class BaseCurd
                         $data = $this->getLogic()->getModel()->getSwitchEnum();
                         break;
                 }
+            } else if (isset($item['option'])) {
+                if (empty($item['key']) && empty($item['field'])) {
+                    $item['key'] = $method;
+                }
+                $data = $item['option'];
             } else {
                 $method = Str::camel($method);
                 $data   = Container::getInstance()->invokeMethod([$this, $method]);
