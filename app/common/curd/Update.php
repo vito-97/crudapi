@@ -39,6 +39,7 @@ class Update extends BaseCurd
 
         if ($this->withUser) {
             $this->setUser();
+            $this->setUserMap();
         }
 
         return $next();

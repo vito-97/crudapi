@@ -669,6 +669,23 @@ abstract class BaseCurd
     }
 
     /**
+     * 设置用户条件
+     * @return mixed
+     */
+    protected function setUserMap()
+    {
+        if ($this->withUser) {
+            $this->userID = $this->user->uid();
+
+            $field = is_string($this->withUser) ? $this->withUser : $this->userField;
+
+            $this->where[] = [$field, '=', $this->userID];
+        }
+
+        return $this->userID;
+    }
+
+    /**
      * 获取当前登录用户的角色
      * @return mixed
      */
