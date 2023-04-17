@@ -28,6 +28,15 @@ class Read extends BaseCurd
     protected $_readMiddleware = [];
     protected $readMiddleware = ['readMiddleware'];
 
+    protected function _init($next)
+    {
+        if ($this->withUser) {
+            $this->setUserMap();
+        }
+
+        return $next();
+    }
+
     /**
      * 获取数据详情
      * @return bool

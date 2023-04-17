@@ -35,6 +35,15 @@ class Delete extends BaseCurd
     //强制删除
     protected $force = false;
 
+    protected function _init($next)
+    {
+        if ($this->withUser) {
+            $this->setUserMap();
+        }
+
+        return $next();
+    }
+
     protected function query()
     {
         $this->with = $this->together;

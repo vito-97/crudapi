@@ -27,6 +27,15 @@ class Edit extends BaseCurd
     protected $_editMiddleware = [];
     protected $editMiddleware = ['editMiddleware'];
 
+    protected function _init($next)
+    {
+        if ($this->withUser) {
+            $this->setUserMap();
+        }
+
+        return $next();
+    }
+
     protected function query()
     {
         //ID有传则获取数据

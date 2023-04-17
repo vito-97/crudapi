@@ -31,6 +31,15 @@ class Change extends BaseCurd
     protected $_saveMiddleware = [];
     protected $saveMiddleware = ['saveMiddleware'];
 
+    protected function _init($next)
+    {
+        if ($this->withUser) {
+            $this->setUserMap();
+        }
+
+        return $next();
+    }
+
     /**
      * @var array 排除的ID
      */

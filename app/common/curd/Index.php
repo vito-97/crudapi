@@ -125,6 +125,10 @@ class Index extends BaseCurd
             $this->mode = self::PAGE_MODE;
         }
 
+        if ($this->withUser) {
+            $this->setUserMap();
+        }
+
         return $next();
     }
 
