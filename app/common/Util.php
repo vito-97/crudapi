@@ -13,12 +13,34 @@ class Util
 {
     /**
      * 生成订单号
-     * @param string $prefix 前缀
+     * @param int $datacenter
+     * @param int $workerid
      * @return string
      */
-    public static function orderNo($prefix = '')
+    public static function generateOrderNo(int $datacenter = -1, int $workerid = -1)
     {
-        return $prefix . date('YmdHis') . rand(100000, 999999);
+        $order_no = date('ymdHis');
+
+        // 取毫秒
+        $millisecond = substr(microtime(), 2, 3);
+
+        $datacenter = $datacenter > 31 || $datacenter < 0 ? mt_rand(0, 31) : $datacenter;
+        $workerid   = $workerid > 31 || $workerid < 0 ? mt_rand(0, 31) : $workerid;
+
+        $workerLength             = 5; // $datacenter 和 $workerid 占用的位数
+        $workerLeftMoveLength     = 12; // 随机位 12 位 即 4095
+        $datacenterLeftMoveLength = $workerLeftMoveLength + $workerLength; // 17 $workerid 5 位 即 31
+        $timestampLeftMoveLength  = $datacenterLeftMoveLength + $workerLength; // 22
+
+        // 毫秒时间戳 10 位 0 - 1023 （最高位可能是0, 生成后高位补0）
+        $ext = (string)(((intval($millisecond)) << $timestampLeftMoveLength)
+            | ($datacenter << $datacenterLeftMoveLength)
+            | ($workerid << $workerLeftMoveLength)
+            | (mt_rand(0, 4095))); // 随机位
+        // 前置补0 10位
+        $order_no .= str_pad($ext, 10, '0', STR_PAD_LEFT);
+
+        return $order_no;
     }
 
     /**
@@ -150,7 +172,7 @@ class Util
             }
 
             $array[$key][$subKey] = [];
-            $refs[$item[$pk]] = &$array[$key];
+            $refs[$item[$pk]]     = &$array[$key];
         }
 
         foreach ($array as $key => $item) {
