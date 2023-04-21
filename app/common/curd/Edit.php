@@ -55,10 +55,19 @@ class Edit extends BaseCurd
 
             $this->setData('detail', $obj);
         } else {
-            $this->setData('detail', []);
+            $this->setData('detail', $this->getDefaultDetail());
         }
 
         return true;
+    }
+
+    /**
+     * 获取默认的详情数据
+     * @return array
+     */
+    protected function getDefaultDetail(): array
+    {
+        return [];
     }
 
     /**
