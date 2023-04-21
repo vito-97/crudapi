@@ -1,4 +1,4 @@
-#å…è®¸å›¾ç‰‡è·¨åŸŸç¼–è¾‘
+#ÔÊĞíÍ¼Æ¬¿çÓò±à¼­
 location ~* .*\.(gif|jpg|jpeg|png|bmp|swf)$ {
   add_header Access-Control-Allow-Origin *;
   add_header Access-Control-Allow-Headers X-Requested-With;
