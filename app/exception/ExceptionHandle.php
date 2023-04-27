@@ -18,9 +18,6 @@ use think\exception\HttpException;
 use think\exception\HttpResponseException;
 use think\exception\RouteNotFoundException;
 use think\exception\ValidateException;
-use think\facade\Lang;
-use think\facade\Log;
-use think\facade\Request;
 use think\Response;
 use Throwable;
 
