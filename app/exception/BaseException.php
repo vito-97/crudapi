@@ -66,7 +66,7 @@ class BaseException extends Exception
         }
 
         if (!$message && $this->message) {
-            $message = $this->message;
+            $message = lang($this->message);
         }
 
         if (empty($message)) {
