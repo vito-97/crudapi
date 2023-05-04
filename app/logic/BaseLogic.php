@@ -258,7 +258,7 @@ abstract class BaseLogic
                     $endTime = strtotime(date('Y-12-t') . $endString);
                     break;
             }
-            $startTime = strtotime("-$num $type", $endTime);
+            $startTime = strtotime("-$num $type", $endTime + 1);
             $model     = $model->whereTime('create_time', 'between', [$startTime, $endTime]);
         }
 
@@ -809,6 +809,7 @@ abstract class BaseLogic
             return $dateResult;
         }
     }
+
     /**
      * 获取指定时间的数据
      * @param int $time
