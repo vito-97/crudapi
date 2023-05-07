@@ -711,3 +711,111 @@ function get_lang_set()
 {
     return Lang::getLangSet();
 }
+
+/**
+ * 调用异步方法
+ * @param string $name
+ * @param array $data
+ * @return mixed
+ */
+function send_async_task(string $name, array $data = [])
+{
+    $default = config('async_task.default', 'tpc');
+    $fn      = __FUNCTION__ . '_' . $default;
+    return call_user_func($fn, $name, $data);
+}
+
+/**
+ * TEXT协议方案
+ * 发送异步任务
+ * @param string $name 任务名称
+ * @param array $data 数据
+ * @return boolean
+ */
+function send_async_task_tcp(string $name, array $data = [])
+{
+    $status = false;
+    try {
+        $address      = 'tcp://127.0.0.1:2346';
+        $result       = json_encode([
+            'name' => $name,
+            'data' => $data
+        ]);
+        $errorCode    = null;
+        $errorMessage = null;
+        $client       = stream_socket_client($address, $errorCode, $errorMessage, 5);
+        $res          = @fwrite($client, $result . "\n");
+        $response     = @fread($client, 3);
+        $isSuccess    = trim($response) === 'ok';
+        fclose($client);
+
+        if ($res === false || !$isSuccess) {
+            \think\facade\Log::write('执行异步任务失败：' . $result);
+        }
+
+        //响应成功
+        if ($isSuccess) {
+            $status = true;
+        }
+    } catch (Throwable $e) {
+        \think\facade\Log::write('连接异步任务服务器失败：' . $result);
+        send_async_task_queue($name, $data);
+        throw new \app\exception\MessageException('TCP异步任务连接失败');
+    }
+
+    //调用失败则推入队列处理
+    if (!$status) {
+        send_async_task_queue($name, $data);
+    }
+
+    return $status;
+}
+
+/**
+ * redis列表方案
+ * 发送异步任务
+ * @param string $name 任务名称
+ * @param array $data 数据
+ * @return int
+ */
+function send_async_task_redis(string $name, array $data = [])
+{
+    $result = json_encode([
+        'name' => $name,
+        'data' => $data
+    ]);
+
+    $status = \think\facade\Cache::lpush('async_task', $result);
+
+    return $status;
+}
+
+/**
+ * 队列方案
+ * 发送异步任务
+ * @param string $name 任务名称
+ * @param array $data 数据
+ * @return int
+ */
+function send_async_task_queue(string $name, array $data = [])
+{
+    $result = [
+        'name' => $name,
+        'data' => $data
+    ];
+
+    \think\facade\Queue::push(\app\job\AsyncTaskJob::class, $result, 'async_task');
+
+    return true;
+}
+
+/**
+ * 毫秒睡眠
+ * @param int $ms
+ * @return true
+ */
+function msleep(int $ms)
+{
+    usleep($ms * 1000);
+    return true;
+}
