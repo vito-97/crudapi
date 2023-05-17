@@ -64,10 +64,10 @@ abstract class Storage
             if (!$this->configFile)
                 $this->configFile = Str::snake($this->name ?? (new \ReflectionClass($this))->getShortName());
 
-            $config = Config::get("{$this->configFile}.", []);
+            $config = Config::get("{$this->configFile}", []);
 
             if (!$this->name && !empty($config['default'])) {
-                $this->name = $config['name'];
+                $this->name = $config['default'];
             }
 
             if (!empty($config['stores'][$this->name])) {

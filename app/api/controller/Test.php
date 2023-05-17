@@ -10,6 +10,7 @@ namespace app\api\controller;
 
 use app\model\Adverts;
 use think\helper\Str;
+use think\Model;
 
 class Test extends BaseController
 {
@@ -24,6 +25,10 @@ class Test extends BaseController
         } else {
             return '测试方法不存在';
         }
+    }
+
+    public function version(){
+        phpinfo();
     }
 
     public function db()
