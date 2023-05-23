@@ -21,7 +21,7 @@ class UploadService
     //图片类型
     const IMAGE_FILE_EXT = ['jpg', 'jpeg', 'png', 'gif',];
     //文件类型
-    const FILE_EXT = ['txt', 'mp4', 'mp3', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'zip', 'rar', 'pdf',];
+    const FILE_EXT = ['txt', 'mp4', 'mp3', 'wav', 'ogg', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'zip', 'rar', 'pdf',];
 
     //允许上传的mime类型
     const MIME = [
