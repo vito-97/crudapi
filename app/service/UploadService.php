@@ -44,6 +44,8 @@ class UploadService
         'tgz'  => 'application/x-tar',
         'zip'  => 'application/zip',
         'mp3'  => 'audio/mpeg',
+        'ogg'  => 'audio/ogg',
+        'wav'  => 'audio/wav',
         'gif'  => 'image/gif',
         'jpeg' => 'image/jpeg',
         'jpe'  => 'image/jpeg',
@@ -105,8 +107,6 @@ class UploadService
         }
 
         $rules = [];
-
-
         foreach ($files as $key => $file) {
             $rules[$key] = ['fileExt' => $exts ?: array_merge(self::IMAGE_FILE_EXT, self::FILE_EXT), 'fileMime' => array_values(self::MIME)];
         }
@@ -139,6 +139,7 @@ class UploadService
                 'type'     => $file->extension(),
                 'width'    => $width,
                 'height'   => $height,
+                'module'   => app()->http->getName()
             ];
         }
 
