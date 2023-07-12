@@ -197,7 +197,7 @@ abstract class BaseModel extends Model
         $enum = $this->getFieldEnum($field);
 
         if (empty($enum)) {
-            throw new ErrorException("${field}字段没有enum");
+            throw new ErrorException("{$field}字段没有enum");
         }
 
         if (is_array($key)) {

@@ -510,7 +510,7 @@ abstract class BaseCurd
                 if (!strpos($field, '.')) {
                     if ($this->alias) {
                         $alias   = is_string($this->alias) ? $this->alias : $name;
-                        $item[0] = "${alias}.${field}";
+                        $item[0] = "{$alias}.{$field}";
                     } else {
                         $item[0] = $field;
                     }

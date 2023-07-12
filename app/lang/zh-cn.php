@@ -2,8 +2,8 @@
 /**
  * Created by Command.
  * User: Vito
- * Date: 2022/09/12
- * Time: 20:10
+ * Date: 2023/07/12
+ * Time: 17:38
  */
 use app\common\ErrorCode;
 use app\common\Message;
@@ -88,11 +88,21 @@ return [
 	'valid.dir' => '文件夹',
 	'valid.page' => '页码',
 	'valid.limit' => '限制数量',
+	'valid.index' => 'index',
+	'valid.is_show' => 'is_show',
+	'valid.pid' => '上级ID',
+	'valid.content' => 'content',
+	'valid.category_id' => 'category_id',
+	'valid.intro' => 'intro',
+	'valid.is_top' => 'is_top',
+	'valid.create_time' => 'create_time',
+	'valid.author' => 'author',
+	'valid.source' => 'source',
+	'valid.cover' => 'cover',
 	'valid.route' => '路由',
 	'valid.module' => '模块',
 	'valid.is_menu' => '是否为菜单',
 	'valid.icon' => '图标',
-	'valid.pid' => '上级ID',
 	'valid.sort' => '排序',
 	'valid.system_config_tab_key' => '系统配置菜单键',
 	'valid.system_config_key' => '变量键',

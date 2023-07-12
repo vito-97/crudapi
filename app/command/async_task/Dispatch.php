@@ -38,7 +38,7 @@ class Dispatch
                 if (method_exists($this, $method)) {
                     $this->$method($res['data']);
                 } else {
-                    $this->logger("未定义方法：${method}");
+                    $this->logger("未定义方法：{$method}");
                 }
             } else {
                 $this->logger('数据错误：' . $data);
@@ -64,7 +64,7 @@ class Dispatch
 
             //todo
         }, function () use ($id) {
-            $this->logger("设备${id}正在排队等待下发指令");
+            $this->logger("设备{$id}正在排队等待下发指令");
         });
     }
 

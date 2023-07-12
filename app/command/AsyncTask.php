@@ -48,7 +48,7 @@ class AsyncTask extends Command
 
         $default = $this->input->getOption('driver') ?: config('async_task.default');
 
-        $this->logger("使用异步任务驱动：${default}");
+        $this->logger("使用异步任务驱动：{$default}");
 
         $class = __NAMESPACE__ . '\\async_task\\' . Str::studly($default);
 

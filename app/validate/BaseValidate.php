@@ -285,7 +285,7 @@ abstract class BaseValidate extends Validate
                     ->cache(60)->useSoftDelete('delete_time', ['=', 0])->find();
 
                 if (!$has) {
-                    return ":attribute 选择的ID:${id}数据不存在";
+                    return ":attribute 选择的ID:{$id}数据不存在";
                 }
             }
         }
