@@ -18,5 +18,5 @@ class UserRead extends Read
     protected $append = [];
     //条件
     protected $where = [];
-    protected $with = ['agent'];
+    protected $with = [];
 }
