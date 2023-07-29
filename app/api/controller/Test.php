@@ -27,6 +27,12 @@ class Test extends BaseController
         }
     }
 
+    public function domain(){
+        dump($this->request->domain());
+        dump($this->request->panDomain());
+        dump($this->request->rootDomain());
+    }
+
     public function version(){
         phpinfo();
     }

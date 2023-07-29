@@ -28,11 +28,13 @@ class Save extends BaseCurd
 
     protected function _init($next)
     {
+        $response = $next();
+
         if ($this->withUser) {
             $this->setUser();
         }
 
-        return $next();
+        return $response;
     }
 
     /**

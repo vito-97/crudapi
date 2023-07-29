@@ -37,12 +37,14 @@ class Update extends BaseCurd
     {
         array_unshift($this->validate, IDMustBeIntValidate::class);
 
+        $response = $next();
+
         if ($this->withUser) {
             $this->setUser();
             $this->setUserMap();
         }
 
-        return $next();
+        return $response;
     }
 
     /**
