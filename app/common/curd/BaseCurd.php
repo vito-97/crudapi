@@ -844,11 +844,12 @@ abstract class BaseCurd
      */
     protected function callValidateMethod($key, $value, $method = self::VALIDATE_CHECK_METHOD)
     {
-        if (is_integer($key)) {
-            return Container::getInstance()->invokeMethod($value . '::' . $method);
-        } else {
+        $data = $this->getParams('param', false);
 
-            return Container::getInstance()->invokeMethod($key . '::' . $method, [$value]);
+        if (is_integer($key)) {
+            return Container::getInstance()->invokeMethod($value . '::' . $method, [$data]);
+        } else {
+            return Container::getInstance()->invokeMethod($key . '::' . $method, [$data, $value]);
         }
     }
 
