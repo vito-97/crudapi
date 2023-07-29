@@ -31,6 +31,8 @@ class Save extends BaseCurd
         $response = $next();
 
         if ($this->withUser) {
+            $field = is_string($this->withUser) ? $this->withUser : $this->userField;
+            $this->getParamsExcept[] = $field;
             $this->setUser();
         }
 
