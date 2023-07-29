@@ -164,6 +164,12 @@ abstract class BaseCurd
     protected $appendParams = [];
 
     /**
+     * 追加数据 覆盖已存在的
+     * @var array
+     */
+    protected $appendData = [];
+
+    /**
      * @var array 排除的ID
      */
     protected $exclude = [];
@@ -776,7 +782,7 @@ abstract class BaseCurd
 
         }
 
-        return array_merge($this->appendParams, $params);
+        return array_merge($this->appendParams, $params, $this->appendData);
     }
 
     /**
@@ -1086,7 +1092,8 @@ abstract class BaseCurd
             array_merge(
                 $this->field,
                 array_keys($this->append),
-                array_keys($this->appendParams)
+                array_keys($this->appendParams),
+                array_keys($this->appendData)
             )
         );
     }
