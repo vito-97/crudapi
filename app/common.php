@@ -261,59 +261,53 @@ function string2array($string, $format = '', $char = ',')
  */
 function date_time_diff($format, $startDate, $endDate)
 {
+    $format = strtolower($format);
+
     $startTime = is_string($startDate) ? strtotime($startDate) : $startDate;
     $endTime   = is_string($endDate) ? strtotime($endDate) : $endDate;
 
     $minTime = min($startTime, $endTime);
     $maxTime = max($startTime, $endTime);
 
-    $sd = date("d", $startTime);
-    $ed = date("d", $endTime);
+    $diffSeconds = $maxTime - $minTime;
 
-    $sm = date("m", $startTime);
-    $em = date("m", $endTime);
+    if ($diffSeconds <= 0) return 0;
 
-    $sy = date("Y", $startTime);
-    $ey = date("Y", $endTime);
-
-    $differ = $endTime - $startTime;
-    if ($differ <= 0) return 0;
-
-    switch (strtolower($format)) {
-
-        case 'd': // days
-        case 'day':
-            $divisor = 86400;
-            return (int)ceil($differ / $divisor);
-        case 'w': // weeks
-        case 'week':
-            return (int)ceil($differ / (7 * 86400));
-        case 'm': // months
-        case 'month':
-
-            $i = 1;
-
-            while (($minTime = strtotime("+1 MONTH", $minTime)) <= $maxTime) $i++;
-
-            return $i;
-
-        case "q": // quarter (3 months)
-        case 'quarter':
-
-            $i = 1;
-
-            while (($minTime = strtotime("+3 MONTH", $minTime)) <= $maxTime) $i++;
-
-            return $i;
-        case 'y': // year
-        case 'year':
-
-            $i = 1;
-            while (($minTime = strtotime("+1 YEAR", $minTime)) <= $maxTime) $i++;
-
-            return $i;
+    // 计算相差的天数
+    $diffDays = ceil($diffSeconds / (60 * 60 * 24));
+    if (in_array($format, ['day', 'd'])) {
+        return $diffDays;
     }
 
+    // 计算相差的周数
+    $diffWeeks = ceil($diffDays / 7);
+    if (in_array($format, ['week', 'w'])) {
+        return $diffWeeks;
+    }
+
+    // 计算相差的月数
+    $dateTime1  = new DateTime('@' . $minTime);
+    $dateTime2  = new DateTime('@' . $maxTime);
+    $diffMonths = ($dateTime2->format('Y') - $dateTime1->format('Y')) * 12 + ($dateTime2->format('m') - $dateTime1->format('m'));
+    $diffMonths = max(1, ceil($diffMonths));
+    if (in_array($format, ['month', 'm'])) {
+        return $diffMonths;
+    }
+
+    // 计算相差的季度数
+    $diffQuarters = max(1, ceil($diffMonths / 3));
+    if (in_array($format, ['quarter', 'q'])) {
+        return $diffQuarters;
+    }
+
+    // 计算相差的年数
+    $diffYears = max(1, $dateTime2->format('Y') - $dateTime1->format('Y'));
+
+    if (in_array($format, ['year', 'y'])) {
+        return $diffYears;
+    }
+
+    return 0;
 }
 
 /**
