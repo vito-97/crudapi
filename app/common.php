@@ -283,18 +283,11 @@ function date_time_diff($format, $startDate, $endDate)
 
         case 'd': // days
         case 'day':
-
             $divisor = 86400;
-
             return (int)ceil($differ / $divisor);
         case 'w': // weeks
         case 'week':
-
-            $i = 0;
-
-            while (($minTime = strtotime("+1 DAY", $minTime)) <= $maxTime) $i++;
-
-            return (int)ceil($i / 7);
+            return (int)ceil($differ / (7 * 86400));
         case 'm': // months
         case 'month':
 
