@@ -240,8 +240,8 @@ abstract class BaseValidate extends Validate
      */
     protected function checkUnique($value, $rule = '', $data = [], $field = '')
     {
-        if (empty($rule)) {
-            throw new ErrorException('checkUnique 必须传入验证规则');
+        if (!$rule) {
+            $rule = Str::snake(str_replace('Validate', '', get_class_name(static::class)));
         }
 
         $array = explode(',', $rule);
