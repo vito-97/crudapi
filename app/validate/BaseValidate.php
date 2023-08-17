@@ -241,7 +241,7 @@ abstract class BaseValidate extends Validate
     protected function checkUnique($value, $rule = '', $data = [], $field = '')
     {
         if (!$rule) {
-            $rule = Str::snake(str_replace('Validate', '', get_class_name(static::class)));
+            $rule = Str::snake(str_replace('Validate', '', get_class_name(static::class))) . ',' . $field;
         }
 
         $array = explode(',', $rule);
@@ -250,7 +250,11 @@ abstract class BaseValidate extends Validate
 
         $model = model($name);
 
-        $exists = $model->where($field, $value)->value($field);
+        $pk = $model->getPk();
+
+        $id = $data[$pk] ?? 0;
+
+        $exists = $model->where($field, $value)->where($pk, '<>', $id)->value($pk);
 
         return $exists ? ':attribute has exists' : true;
     }
