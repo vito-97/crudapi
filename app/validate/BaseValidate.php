@@ -230,6 +230,32 @@ abstract class BaseValidate extends Validate
     }
 
     /**
+     * 检测唯一，用的模型检测，会排除伪删除的数据
+     * @param $value
+     * @param $rule
+     * @param $data
+     * @param $field
+     * @return string|true
+     * @throws ErrorException
+     */
+    protected function checkUnique($value, $rule = '', $data = [], $field = '')
+    {
+        if (empty($rule)) {
+            throw new ErrorException('checkUnique 必须传入验证规则');
+        }
+
+        $array = explode(',', $rule);
+        $name  = $array[0];
+        $field = $array[1] ?? $field;
+
+        $model = model($name);
+
+        $exists = $model->where($field, $value)->value($field);
+
+        return $exists ? ':attribute has exists' : true;
+    }
+
+    /**
      * 检测数据是否存在于数据库里
      * @param $value
      * @param string $rule
