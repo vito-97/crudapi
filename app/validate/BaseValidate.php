@@ -37,6 +37,8 @@ abstract class BaseValidate extends Validate
 
     protected $checkHasWhere = [];
 
+    protected $uniqueWithoutScope = [];
+
     const SAVE_SCENE   = Enum::VALID_SAVE_SCENE;
     const UPDATE_SCENE = Enum::VALID_UPDATE_SCENE;
     const LIST_SCENE   = Enum::VALID_LIST_SCENE;
@@ -254,7 +256,9 @@ abstract class BaseValidate extends Validate
 
         $id = $data[$pk] ?? 0;
 
-        $exists = $model->where($field, $value)->where($pk, '<>', $id)->value($pk);
+        $withoutScope = $this->uniqueWithoutScope[$name] ?? [];
+
+        $exists = $model->withoutGlobalScope($withoutScope)->where($field, $value)->where($pk, '<>', $id)->value($pk);
 
         return $exists ? ':attribute has exists' : true;
     }
