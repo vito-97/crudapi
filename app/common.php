@@ -7,11 +7,11 @@ use think\helper\Str;
 
 /**
  * 获取模型
- * @param $name
+ * @param string $name 模型名称
  * @param mixed ...$args
  * @return \app\model\BaseModel
  */
-function model($name, ...$args)
+function model(string $name, ...$args)
 {
     $class = strpos('\\', $name) !== false ? $name : 'app\model\\' . Str::studly($name);
     $model = Container::getInstance()->invokeClass($class, $args);

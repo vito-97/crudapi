@@ -269,7 +269,7 @@ abstract class BaseLogic
             halt($result);
         }
 
-        return (float)$result['nums'] ?: 0;
+        return $result ? (float)$result['nums'] : 0;
     }
 
     /**
