@@ -220,14 +220,14 @@ abstract class BaseLogic
 
     /**
      * 统计
-     * @param string $field
+     * @param string|array $field
      * @param array $where
      * @param string $op
      * @param int $num 时间数
      * @param string $type 时间类型
      * @return int|mixed
      */
-    protected function total($field = '*', $where = [], $op = 'COUNT', $num = 0, $type = 'day')
+    public function total($field = '*', $where = [], $op = 'COUNT', $num = 0, $type = 'day')
     {
         $model = $this->getModel();
         $this->checkDateType($type);
@@ -260,16 +260,53 @@ abstract class BaseLogic
             }
             $startTime = strtotime("-$num $type", $endTime + 1);
             $model     = $model->whereTime('create_time', 'between', [$startTime, $endTime]);
+        } else if (!$where) {
+            $model = $model->whereRaw('1 = 1');
         }
 
         $fetchSql = false;
-        $result   = $model->fieldRaw($op . '(' . $field . ') AS `nums`')->fetchSql($fetchSql)->find();
+        $isMore   = is_array($field);
+        $fields   = [];
+        if ($isMore) {
+            $fieldRaw = [];
+            foreach ($field as $k => $v) {
+                $f = is_numeric($k) ? $v : $k;
+                $o = is_numeric($k) ? $op : $v;
+                $n = $f !== '*' ? $f : 'nums';
+                $this->checkFunOp($op);
+                $fieldRaw[] = "{$o}({$f}) AS `{$n}`";
+                $fields[]   = $n;
+            }
+            $fieldRaw = join(',', $fieldRaw);
+        } else {
+            $n        = 'nums';
+            $fieldRaw = $op . '(' . $field . ') AS `' . $n . '`';
+            $fields[] = $n;
+        }
+
+        $result = $model->fieldRaw($fieldRaw)->fetchSql($fetchSql)->find();
 
         if ($fetchSql) {
             halt($result);
         }
+        if ($isMore) {
+            if (!$result) {
+                $result = [];
 
-        return $result ? (float)$result['nums'] : 0;
+                foreach ($fields as $f) {
+                    $result[$f] = 0;
+                }
+            } else {
+                $result = $result->append([])->toArray();
+                foreach ($result as &$item) {
+                    $item = (float)$item;
+                }
+            }
+
+            return $result;
+        }
+
+        return $result ? (float)$result[$fields[0]] : 0;
     }
 
     /**
