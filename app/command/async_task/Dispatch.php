@@ -8,6 +8,7 @@
 
 namespace app\command\async_task;
 
+use think\Container;
 use think\facade\Cache;
 use think\helper\Str;
 
@@ -46,6 +47,21 @@ class Dispatch
 
         } catch (\Throwable $e) {
             $this->logger('程序运行错误：' . $e->getMessage() . ' in file ' . $e->getFile() . ' line ' . $e->getLine());
+
+            $trace = $e->getTrace();
+            foreach ($trace as $level) {
+                echo "{$level['function']} called at {$level['file']}:{$level['line']}\n";
+            }
+
+            try {
+                $status = Cache::ping() ? 'online' : 'offline';
+            } catch (\Throwable $e) {
+                $this->logger($e->getMessage());
+                Container::getInstance()->delete('think\Cache');
+                $status = 'offline';
+            }
+
+            $this->logger("Redis ping status: ${status}");
         }
     }
 

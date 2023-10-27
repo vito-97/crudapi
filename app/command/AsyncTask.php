@@ -25,7 +25,7 @@ class AsyncTask extends Command
     protected function configure()
     {
         // 指令配置
-        $this->setName('device_command')
+        $this->setName('async_task')
             ->addArgument('status', Argument::REQUIRED, 'start/stop/reload/status/connections')
             ->addOption('driver', null, Option::VALUE_OPTIONAL, '使用驱动类型')
             ->addOption('d', null, Option::VALUE_NONE, 'daemon（守护进程）方式启动')
@@ -56,6 +56,9 @@ class AsyncTask extends Command
 
         $dispatch = new Dispatch();
         $dispatch->clearCache();
+
+        // 删除已经连接的redis缓存
+        Container::getInstance()->delete('think\Cache');
     }
 
     protected function execute(Input $input, Output $output)

@@ -9,11 +9,17 @@
 namespace app\command\async_task;
 
 use Workerman\Connection\TcpConnection;
+use Workerman\Worker;
 
 class Tcp extends Base
 {
     protected $address = 'text://127.0.0.1:2346';
     protected $processCount = 100;
+
+    public function onStart(Worker $worker)
+    {
+        parent::onStart($worker);
+    }
 
     public function onMessage(TcpConnection $connection, $data)
     {
