@@ -675,7 +675,7 @@ abstract class BaseLogic
             'page'  => 0,
             'group' => null,
             //是否只获取当前页码最多的数量
-            'max'  => false
+            'max'   => false
         ];
 
         $args = array_merge($default, $args);
@@ -857,6 +857,23 @@ abstract class BaseLogic
                     $groupData[]                                 = $item[$g];
                 } else {
                     $dateResult[$item['create_date']] = $it;
+                }
+            }
+        }
+
+        //对数据为0的进行默认值赋值
+        foreach ($dateResult as &$value) {
+            if (!$value) {
+                if ($isMore) {
+                    $value = [];
+                    foreach ($fields as $f) {
+                        $value[$f] = 0;
+                    }
+                } elseif ($g) {
+                    $value = [];
+                    foreach ($groupData as $gp) {
+                        $value[$gp] = 0;
+                    }
                 }
             }
         }
