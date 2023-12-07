@@ -794,7 +794,7 @@ abstract class BaseLogic
         $group    = ['create_date'];
         $rawField = [
             $fieldRaw,
-            "DATE_FORMAT(FROM_UNIXTIME(create_time), \"{$dateFormat}\") AS create_date"
+            "FROM_UNIXTIME(create_time, \"{$dateFormat}\") AS create_date"
         ];
         if ($g) {
             $group[]    = $g;
