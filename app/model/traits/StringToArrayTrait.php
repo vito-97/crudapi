@@ -21,10 +21,20 @@ trait StringToArrayTrait
             $value = [];
 
             foreach ($array as $item) {
-                $val = explode('=', $item);
+                $char = ':';
+                if (strpos($item, '=')) {
+                    $char = '=';
+                }
+                $arr = explode($char, $item);
 
-                if (count($val) > 1) {
-                    $value[trim($val[0])] = $val[1];
+                if (count($arr) > 1) {
+                    [$k, $v] = array_map('trim', $arr);
+
+                    if (in_array($v, ['true', 'false'])) {
+                        $v = $v === 'true';
+                    }
+
+                    $value[$k] = $v;
                 }
             }
         }
