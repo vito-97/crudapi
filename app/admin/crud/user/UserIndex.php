@@ -21,13 +21,13 @@ class UserIndex extends Index
     protected $appendCallback = [];
     //查询条件
     protected $where = [];
-    protected $with = ['agent'];
+    protected $with = [];
     //字段
     protected $field = [];
     //排除字段
     protected $withoutField = false;
 
-    protected $queryField = ['sex', 'status', 'agent_id', 'type'];
+    protected $queryField = ['sex', 'status', 'type'];
 
     protected $validate = [
         UserValidate::class => Enum::VALID_LIST_SCENE,

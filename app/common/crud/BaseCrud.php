@@ -164,6 +164,12 @@ abstract class BaseCrud
     protected $appendParams = [];
 
     /**
+     * 追加数据 覆盖已存在的
+     * @var array
+     */
+    protected $appendData = [];
+
+    /**
      * @var array 排除的ID
      */
     protected $exclude = [];
@@ -510,9 +516,9 @@ abstract class BaseCrud
                 if (!strpos($field, '.')) {
                     if ($this->alias) {
                         $alias   = is_string($this->alias) ? $this->alias : $name;
-                        $item[0] = "${alias}.${field}";
+                        $item[0] = "{$alias}.{$field}";
                     } else {
-                        $item[0] = $field;
+                        $item[0] = '__TABLE__.' . $field;
                     }
                 }
 
@@ -776,7 +782,7 @@ abstract class BaseCrud
 
         }
 
-        return array_merge($this->appendParams, $params);
+        return array_merge($this->appendParams, $params, $this->appendData);
     }
 
     /**
@@ -838,11 +844,12 @@ abstract class BaseCrud
      */
     protected function callValidateMethod($key, $value, $method = self::VALIDATE_CHECK_METHOD)
     {
-        if (is_integer($key)) {
-            return Container::getInstance()->invokeMethod($value . '::' . $method);
-        } else {
+        $data = $this->getParams('param', false);
 
-            return Container::getInstance()->invokeMethod($key . '::' . $method, [$value]);
+        if (is_integer($key)) {
+            return Container::getInstance()->invokeMethod($value . '::' . $method, [$data]);
+        } else {
+            return Container::getInstance()->invokeMethod($key . '::' . $method, [$data, $value]);
         }
     }
 
@@ -1086,7 +1093,8 @@ abstract class BaseCrud
             array_merge(
                 $this->field,
                 array_keys($this->append),
-                array_keys($this->appendParams)
+                array_keys($this->appendParams),
+                array_keys($this->appendData)
             )
         );
     }

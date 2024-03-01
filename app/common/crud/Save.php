@@ -28,11 +28,15 @@ class Save extends BaseCrud
 
     protected function _init($next)
     {
+        $response = $next();
+
         if ($this->withUser) {
+            $field = is_string($this->withUser) ? $this->withUser : $this->userField;
+            $this->getParamsExcept[] = $field;
             $this->setUser();
         }
 
-        return $next();
+        return $response;
     }
 
     /**

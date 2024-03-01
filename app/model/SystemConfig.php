@@ -52,6 +52,15 @@ class SystemConfig extends BaseModel
         return $value;
     }
 
+    protected function setValueAttr($value)
+    {
+        if (is_string($value)) {
+            $value = Util::unlink($value);
+        }
+
+        return json_encode($value, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+    }
+
     protected function setListAttr($value, $data)
     {
         return json_encode($this->stringToArray($value));

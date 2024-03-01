@@ -19,6 +19,7 @@ class Queue extends Base
 
     public function onStart(Worker $worker)
     {
+        parent::onStart($worker);
         $connection = Config::get('queue.default', 'redis');
 
         $queue = 'async_task';

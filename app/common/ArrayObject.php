@@ -15,7 +15,7 @@ use think\contract\Arrayable;
 use think\contract\Jsonable;
 use JsonSerializable;
 
-class ArrayObject implements \ArrayAccess, Arrayable, Jsonable, IteratorAggregate,JsonSerializable
+class ArrayObject implements \ArrayAccess, Arrayable, Jsonable, IteratorAggregate, JsonSerializable
 {
     protected $data = [];
 
@@ -30,21 +30,26 @@ class ArrayObject implements \ArrayAccess, Arrayable, Jsonable, IteratorAggregat
         return new static($data);
     }
 
-    public function offsetExists($offset)
+    #[\ReturnTypeWillChange]
+    public function offsetExists($offset): bool
     {
         return isset($this->data[$offset]);
     }
 
+    // ArrayAccess
+    #[\ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         return $this->data[$offset] ?? '';
     }
 
+    #[\ReturnTypeWillChange]
     public function offsetSet($offset, $value)
     {
         $this->data[$offset] = $value;
     }
 
+    #[\ReturnTypeWillChange]
     public function offsetUnset($offset)
     {
         unset($this->data[$offset]);
@@ -106,6 +111,7 @@ class ArrayObject implements \ArrayAccess, Arrayable, Jsonable, IteratorAggregat
         return $this->offsetSet($name, $value);
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return $this->toArray();

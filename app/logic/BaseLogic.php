@@ -220,14 +220,14 @@ abstract class BaseLogic
 
     /**
      * 统计
-     * @param string $field
+     * @param string|array $field
      * @param array $where
      * @param string $op
      * @param int $num 时间数
      * @param string $type 时间类型
      * @return int|mixed
      */
-    protected function total($field = '*', $where = [], $op = 'COUNT', $num = 0, $type = 'day')
+    public function total($field = '*', $where = [], $op = 'COUNT', $num = 0, $type = 'day')
     {
         $model = $this->getModel();
         $this->checkDateType($type);
@@ -260,16 +260,53 @@ abstract class BaseLogic
             }
             $startTime = strtotime("-$num $type", $endTime + 1);
             $model     = $model->whereTime('create_time', 'between', [$startTime, $endTime]);
+        } else if (!$where) {
+            $model = $model->whereRaw('1 = 1');
         }
 
         $fetchSql = false;
-        $result   = $model->fieldRaw($op . '(' . $field . ') AS `nums`')->fetchSql($fetchSql)->find();
+        $isMore   = is_array($field);
+        $fields   = [];
+        if ($isMore) {
+            $fieldRaw = [];
+            foreach ($field as $k => $v) {
+                $f = is_numeric($k) ? $v : $k;
+                $o = is_numeric($k) ? $op : $v;
+                $n = $f !== '*' ? $f : 'nums';
+                $this->checkFunOp($op);
+                $fieldRaw[] = "{$o}({$f}) AS `{$n}`";
+                $fields[]   = $n;
+            }
+            $fieldRaw = join(',', $fieldRaw);
+        } else {
+            $n        = 'nums';
+            $fieldRaw = $op . '(' . $field . ') AS `' . $n . '`';
+            $fields[] = $n;
+        }
+
+        $result = $model->fieldRaw($fieldRaw)->fetchSql($fetchSql)->find();
 
         if ($fetchSql) {
             halt($result);
         }
+        if ($isMore) {
+            if (!$result) {
+                $result = [];
 
-        return (float)$result['nums'] ?: 0;
+                foreach ($fields as $f) {
+                    $result[$f] = 0;
+                }
+            } else {
+                $result = $result->append([])->toArray();
+                foreach ($result as &$item) {
+                    $item = (float)$item;
+                }
+            }
+
+            return $result;
+        }
+
+        return $result ? (float)$result[$fields[0]] : 0;
     }
 
     /**
@@ -628,13 +665,17 @@ abstract class BaseLogic
      */
     protected function totalDate($field, $where = [], array $args = [])
     {
+        $isMore = is_array($field);
+
         $default = [
             'num'   => 1,
             'op'    => 'SUM',
             'type'  => 'day',
             'now'   => 0,
             'page'  => 0,
-            'group' => null
+            'group' => null,
+            //是否只获取当前页码最多的数量
+            'max'   => false
         ];
 
         $args = array_merge($default, $args);
@@ -663,7 +704,7 @@ abstract class BaseLogic
             //当前的时间
             $endTime = time();
             //数据库保存的最小时间
-            $minTime = (int)($this->getModel()->where($where)->cache(3600)->min('create_time') ?: strtotime("-{$num} {$type}"));
+            $minTime = (int)($this->getModel()->where($where)->cache(is_dev() ? 10 : 3600)->min('create_time') ?: strtotime("-{$num} {$type}"));
             //获取偏移量
             $offset = ($page - 1) * $num;
             $now    = strtotime("-$offset {$type}");
@@ -693,6 +734,11 @@ abstract class BaseLogic
                     'limit'     => $num,
                     'list'      => [],
                 ];
+            }
+
+            //取最后一页最多的数量
+            if ($args['max'] && $page == $lastPage) {
+                $num = min($num, $total - ($page - 1) * $num);
             }
         }
 
@@ -727,10 +773,28 @@ abstract class BaseLogic
             $dateFormat = '%Y';
         }
 
+        $fields = [];
+        if ($isMore) {
+            $fieldRaw = [];
+            foreach ($field as $k => $v) {
+                $f = is_numeric($k) ? $v : $k;
+                $o = is_numeric($k) ? $op : $v;
+                $n = $f !== '*' ? $f : 'nums';
+                $this->checkFunOp($op);
+                $fieldRaw[] = "{$o}({$f}) AS `{$n}`";
+                $fields[]   = $n;
+            }
+            $fieldRaw = join(',', $fieldRaw);
+        } else {
+            $n        = 'nums';
+            $fieldRaw = $op . '(' . $field . ') AS `' . $n . '`';
+            $fields[] = $n;
+        }
+
         $group    = ['create_date'];
         $rawField = [
-            "{$op}({$field}) as nums",
-            "DATE_FORMAT(FROM_UNIXTIME(create_time), \"{$dateFormat}\") AS create_date"
+            $fieldRaw,
+            "FROM_UNIXTIME(create_time, \"{$dateFormat}\") AS create_date"
         ];
         if ($g) {
             $group[]    = $g;
@@ -775,17 +839,41 @@ abstract class BaseLogic
             dump('total sql');
             halt($result);
         }
+
+        $result->append([])->visible($fields);
+
         $groupData = [];
         foreach ($result as $item) {
             if (isset($dateResult[$item['create_date']])) {
+                $it = $isMore ? array_map(function ($v) {
+                    return (float)$v;
+                }, $item->toArray()) : (float)$item[$fields[0]];
+
                 if ($g) {
                     if (!is_array($dateResult[$item['create_date']])) {
                         $dateResult[$item['create_date']] = [];
                     }
-                    $dateResult[$item['create_date']][$item[$g]] = (float)$item['nums'];
+                    $dateResult[$item['create_date']][$item[$g]] = $it;
                     $groupData[]                                 = $item[$g];
                 } else {
-                    $dateResult[$item['create_date']] = (float)$item['nums'];
+                    $dateResult[$item['create_date']] = $it;
+                }
+            }
+        }
+
+        //对数据为0的进行默认值赋值
+        foreach ($dateResult as &$value) {
+            if (!$value) {
+                if ($isMore) {
+                    $value = [];
+                    foreach ($fields as $f) {
+                        $value[$f] = 0;
+                    }
+                } elseif ($g) {
+                    $value = [];
+                    foreach ($groupData as $gp) {
+                        $value[$gp] = 0;
+                    }
                 }
             }
         }

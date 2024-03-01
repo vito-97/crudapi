@@ -37,6 +37,8 @@ abstract class BaseValidate extends Validate
 
     protected $checkHasWhere = [];
 
+    protected $uniqueWithoutScope = [];
+
     const SAVE_SCENE   = Enum::VALID_SAVE_SCENE;
     const UPDATE_SCENE = Enum::VALID_UPDATE_SCENE;
     const LIST_SCENE   = Enum::VALID_LIST_SCENE;
@@ -230,6 +232,38 @@ abstract class BaseValidate extends Validate
     }
 
     /**
+     * 检测唯一，用的模型检测，会排除伪删除的数据
+     * @param $value
+     * @param $rule
+     * @param $data
+     * @param $field
+     * @return string|true
+     * @throws ErrorException
+     */
+    protected function checkUnique($value, $rule = '', $data = [], $field = '')
+    {
+        if (!$rule) {
+            $rule = Str::snake(str_replace('Validate', '', get_class_name(static::class))) . ',' . $field;
+        }
+
+        $array = explode(',', $rule);
+        $name  = $array[0];
+        $field = $array[1] ?? $field;
+
+        $model = model($name);
+
+        $pk = $model->getPk();
+
+        $id = $data[$pk] ?? 0;
+
+        $withoutScope = $this->uniqueWithoutScope[$name] ?? [];
+
+        $exists = $model->withoutGlobalScope($withoutScope)->where($field, $value)->where($pk, '<>', $id)->value($pk);
+
+        return $exists ? ':attribute has exists' : true;
+    }
+
+    /**
      * 检测数据是否存在于数据库里
      * @param $value
      * @param string $rule
@@ -285,7 +319,7 @@ abstract class BaseValidate extends Validate
                     ->cache(60)->useSoftDelete('delete_time', ['=', 0])->find();
 
                 if (!$has) {
-                    return ":attribute 选择的ID:${id}数据不存在";
+                    return ":attribute 选择的ID:{$id}数据不存在";
                 }
             }
         }

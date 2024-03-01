@@ -37,12 +37,16 @@ class Update extends BaseCrud
     {
         array_unshift($this->validate, IDMustBeIntValidate::class);
 
+        $response = $next();
+
         if ($this->withUser) {
+            $field = is_string($this->withUser) ? $this->withUser : $this->userField;
+            $this->getParamsExcept[] = $field;
             $this->setUser();
             $this->setUserMap();
         }
 
-        return $next();
+        return $response;
     }
 
     /**

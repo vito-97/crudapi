@@ -125,11 +125,13 @@ class Index extends BaseCrud
             $this->mode = self::PAGE_MODE;
         }
 
+        $response = $next();
+
         if ($this->withUser) {
             $this->setUserMap();
         }
 
-        return $next();
+        return $response;
     }
 
     /**

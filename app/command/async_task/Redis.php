@@ -16,7 +16,8 @@ class Redis extends Base
     // 需要将default_socket_timeout设置为-1
     public function onStart(Worker $worker)
     {
-        $cache = Cache::store();
+        parent::onStart($worker);
+        $cache = Cache::store('redis');
         $key   = 'async_task';
 
         while (true) {

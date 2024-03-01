@@ -19,15 +19,15 @@ trait UserScopeTrait
      */
     public function scopeType($query)
     {
-        if (self::USER_TYPE) {
-            $query->where('type', self::USER_TYPE);
+        if (static::USER_TYPE) {
+            $query->where('__TABLE__.type', static::USER_TYPE);
         }
     }
 
     protected function setTypeAttr($value)
     {
-        if (self::USER_TYPE) {
-            return self::USER_TYPE;
+        if (static::USER_TYPE) {
+            return static::USER_TYPE;
         }
 
         return $value;

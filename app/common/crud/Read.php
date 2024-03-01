@@ -30,11 +30,13 @@ class Read extends BaseCrud
 
     protected function _init($next)
     {
+        $response = $next();
+
         if ($this->withUser) {
             $this->setUserMap();
         }
 
-        return $next();
+        return $response;
     }
 
     /**
