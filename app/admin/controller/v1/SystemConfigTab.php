@@ -10,9 +10,9 @@ class SystemConfigTab extends BaseController
 {
     protected $name = '系统配置分类';
 
-    protected $registerCurd = true;
+    protected $registerCrud = true;
 
-    protected $registerCurdDir = true;
+    protected $registerCrudDir = true;
 
     protected function initialize()
     {

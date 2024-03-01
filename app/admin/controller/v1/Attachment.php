@@ -18,9 +18,9 @@ class Attachment extends BaseController
 
     const NOT_NEED_AUTH = ['upload'];
 
-    protected $registerCurd = true;
+    protected $registerCrud = true;
 
-    protected $registerCurdDir = true;
+    protected $registerCrudDir = true;
 
     protected function initialize()
     {

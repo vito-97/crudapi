@@ -15,9 +15,9 @@ class PostsCategory extends BaseController
 {
     protected $name = '文章分类';
 
-    protected $registerCurd = true;
+    protected $registerCrud = true;
 
-    protected $registerCurdDir = true;
+    protected $registerCrudDir = true;
     /**
      * 初始化
      */

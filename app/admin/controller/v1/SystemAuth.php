@@ -22,9 +22,9 @@ class SystemAuth extends BaseController
         'flush' => '刷新%s',
     ];
 
-    protected $registerCurd = true;
+    protected $registerCrud = true;
 
-    protected $registerCurdDir = 'system_auth';
+    protected $registerCrudDir = 'system_auth';
 
     protected function initialize()
     {

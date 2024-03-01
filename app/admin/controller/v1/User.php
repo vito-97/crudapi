@@ -10,9 +10,9 @@ class User extends BaseController
 {
     protected $name = '用户';
 
-    protected $registerCurd = true;
+    protected $registerCrud = true;
 
-    protected $registerCurdDir = true;
+    protected $registerCrudDir = true;
 
     protected function initialize()
     {

@@ -10,9 +10,9 @@ class SystemRole extends BaseController
 {
     protected $name = '角色';
 
-    protected $registerCurd = true;
+    protected $registerCrud = true;
 
-    protected $registerCurdDir = true;
+    protected $registerCrudDir = true;
 
     const NOT_NEED_AUTH = ['menu', 'auth'];
 

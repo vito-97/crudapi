@@ -11,8 +11,8 @@ namespace app\common;
 
 class Enum
 {
-    //CURD所有的操作方法
-    const CURD = ['index', 'save', 'read', 'edit', 'change', 'delete', 'update'];
+    //CRUD所有的操作方法
+    const CRUD = ['index', 'save', 'read', 'edit', 'change', 'delete', 'update'];
 
     //一天的时间戳
     const ONE_DAY_TIME = 86400;

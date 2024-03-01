@@ -9,11 +9,11 @@
 namespace app\admin\controller;
 
 use think\App;
-use app\common\traits\curd\Curd;
+use app\common\traits\crud\Crud;
 use app\common\traits\ResponseTrait;
 
 class BaseController extends \app\BaseController
 {
-    use Curd;
+    use Crud;
     use ResponseTrait;
 }

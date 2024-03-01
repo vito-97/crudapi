@@ -15,9 +15,9 @@ class UserOauth extends BaseController
 {
     protected $name = '第三方授权';
 
-    protected $registerCurd = ['index', 'delete', 'read', 'change'];
+    protected $registerCrud = ['index', 'delete', 'read', 'change'];
 
-    protected $registerCurdDir = true;
+    protected $registerCrudDir = true;
 
     protected function initialize()
     {

@@ -15,9 +15,9 @@ class Posts extends BaseController
 {
     protected $name = '文章';
 
-    protected $registerCurd = true;
+    protected $registerCrud = true;
 
-    protected $registerCurdDir = true;
+    protected $registerCrudDir = true;
 
     /**
      * 初始化

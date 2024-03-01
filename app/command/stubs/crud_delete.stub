@@ -1,0 +1,17 @@
+<?php
+/**
+ * Created by Command.
+ * User: Vito
+ */
+
+namespace {%namespace%};
+
+use app\{%basic%}\crud\Delete;
+
+class {%className%} extends Delete
+{
+    //排除的数据
+    protected $exclude = [];
+    //条件
+    protected $where = [];
+}

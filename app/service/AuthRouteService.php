@@ -262,38 +262,38 @@ class AuthRouteService
             return [];
         }
 
-        $excludeMethod = Enum::CURD;
+        $excludeMethod = Enum::CRUD;
 
         $properties = $reflection->getDefaultProperties();
 
-        //获取类的CURD
-        $curd = [];
+        //获取类的CRUD
+        $crud = [];
 
-        if (!empty($properties['curd'])) {
-            //手动指定CURD
-            $curd = array_keys($properties['curd']);
-        } elseif (!empty($properties['registerCurd'])) {
-            //自动注册CURD
-            if (true === $properties['registerCurd']) {
-                $curd = Enum::CURD;
+        if (!empty($properties['crud'])) {
+            //手动指定CRUD
+            $crud = array_keys($properties['crud']);
+        } elseif (!empty($properties['registerCrud'])) {
+            //自动注册CRUD
+            if (true === $properties['registerCrud']) {
+                $crud = Enum::CRUD;
             } else {
-                $curd = $properties['registerCurd'];
+                $crud = $properties['registerCrud'];
             }
         } else {
-            //判断类里是否有自己重写的CURD方法
-            foreach (Enum::CURD as $name) {
+            //判断类里是否有自己重写的CRUD方法
+            foreach (Enum::CRUD as $name) {
                 if ($reflection->hasMethod($name)) {
                     $method = $reflection->getMethod($name);
                     if ($method->class === $class) {
-                        $curd[] = $name;
+                        $crud[] = $name;
                     }
                 }
             }
         }
 
-        if ($curd) {
-            //排除没用到的CURD
-            $excludeMethod = array_diff(Enum::CURD, $curd);
+        if ($crud) {
+            //排除没用到的CRUD
+            $excludeMethod = array_diff(Enum::CRUD, $crud);
         }
 
         //获取所有公开的方法

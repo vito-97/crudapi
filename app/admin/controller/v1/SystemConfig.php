@@ -10,9 +10,9 @@ class SystemConfig extends BaseController
 {
     protected $name = '系统配置';
 
-    protected $registerCurd = true;
+    protected $registerCrud = true;
 
-    protected $registerCurdDir = true;
+    protected $registerCrudDir = true;
 
     protected $methodName = [
         'config' => '更新配置',

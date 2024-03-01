@@ -89,9 +89,9 @@ abstract class BaseController
         $this->version = $this->request->param('api_version');
         $this->user = $this->request->getUser();
 
-        //在需要调用CURD的方法才自动注册
-        if (in_array($this->request->action(), Enum::CURD) && empty($this->curd[$this->request->action()])) {
-            $this->registerCurd();
+        //在需要调用CRUD的方法才自动注册
+        if (in_array($this->request->action(), Enum::CRUD) && empty($this->crud[$this->request->action()])) {
+            $this->registerCrud();
         }
 
         // 控制器初始化

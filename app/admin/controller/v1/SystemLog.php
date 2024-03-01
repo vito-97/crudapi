@@ -10,9 +10,9 @@ class SystemLog extends BaseController
 {
     protected $name = '系统日志';
 
-    protected $registerCurd = ['index', 'read', 'delete'];
+    protected $registerCrud = ['index', 'read', 'delete'];
 
-    protected $registerCurdDir = true;
+    protected $registerCrudDir = true;
 
     protected function initialize()
     {

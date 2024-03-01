@@ -9,13 +9,13 @@
 namespace app\admin\controller\v1;
 
 use app\admin\controller\BaseController;
-use app\admin\curd\admin\AdminChange;
-use app\admin\curd\admin\AdminDelete;
-use app\admin\curd\admin\AdminEdit;
-use app\admin\curd\admin\AdminIndex;
-use app\admin\curd\admin\AdminRead;
-use app\admin\curd\admin\AdminSave;
-use app\admin\curd\admin\AdminUpdate;
+use app\admin\crud\admin\AdminChange;
+use app\admin\crud\admin\AdminDelete;
+use app\admin\crud\admin\AdminEdit;
+use app\admin\crud\admin\AdminIndex;
+use app\admin\crud\admin\AdminRead;
+use app\admin\crud\admin\AdminSave;
+use app\admin\crud\admin\AdminUpdate;
 use app\logic\AdminLogic;
 use app\logic\SystemRoleLogic;
 
@@ -29,7 +29,7 @@ class Admin extends BaseController
         'info' => '个人信息',
     ];
 
-    public $curd = [
+    public $crud = [
         'index'  => AdminIndex::class,
         'save'   => AdminSave::class,
         'change' => AdminChange::class,
