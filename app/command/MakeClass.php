@@ -12,6 +12,7 @@ use think\console\command\Make;
 use think\console\Input;
 use think\console\input\Option;
 use think\console\Output;
+use think\helper\Str;
 
 /**
  * 生成所需要的类库
@@ -51,11 +52,9 @@ class MakeClass extends Make
 
     protected function execute(Input $input, Output $output)
     {
-        $names     = explode(',', $input->getArgument('name'));
-        $namespace = $input->getOption('namespace');
-        if ($namespace) {
-            $namespace = rtrim('/', $namespace) . '/';
-        }
+        $names     = $this->getNames($input->getArgument('name'));
+        $namespace = $this->formatNamespace($input->getOption('namespace'));
+
         foreach ($names as $name) {
             $input->setArgument('name', $namespace . $name);
             parent::execute($input, $output);
@@ -117,5 +116,22 @@ class MakeClass extends Make
         }
 
         return $type;
+    }
+
+    protected function getNames($string)
+    {
+        $array = array_filter(explode(',', $string));
+        return array_map(function ($v) {
+            return Str::studly($v);
+        }, $array);
+    }
+
+    protected function formatNamespace($string)
+    {
+        if ($string) {
+            $string = rtrim($string, '/') . '/';
+        }
+
+        return $string;
     }
 }
