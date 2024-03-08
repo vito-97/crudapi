@@ -54,7 +54,7 @@ class MakeClass extends Make
         $names     = explode(',', $input->getArgument('name'));
         $namespace = $input->getOption('namespace');
         if ($namespace) {
-            $namespace .= '/';
+            $namespace = rtrim('/', $namespace) . '/';
         }
         foreach ($names as $name) {
             $input->setArgument('name', $namespace . $name);
