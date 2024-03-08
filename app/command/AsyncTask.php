@@ -6,6 +6,7 @@ namespace app\command;
 use app\command\async_task\Dispatch;
 use app\command\async_task\Redis;
 use app\command\async_task\Tcp;
+use app\service\LockerService;
 use think\console\Command;
 use think\console\Input;
 use think\console\input\Argument;
@@ -54,8 +55,7 @@ class AsyncTask extends Command
 
         $this->driver = Container::getInstance()->make($class);
 
-        $dispatch = new Dispatch();
-        $dispatch->clearCache();
+        LockerService::clearCache();
 
         // 删除已经连接的redis缓存
         Container::getInstance()->delete('think\Cache');

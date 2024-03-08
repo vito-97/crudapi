@@ -8,8 +8,11 @@
 
 namespace app\command\async_task;
 
+use app\common\EventName;
+use app\service\LockerService;
 use think\Container;
 use think\facade\Cache;
+use think\facade\Event;
 use think\helper\Str;
 
 class Dispatch
@@ -39,7 +42,7 @@ class Dispatch
                 if (method_exists($this, $method)) {
                     $this->$method($res['data']);
                 } else {
-                    $this->logger("未定义方法：{$method}");
+                    Event::trigger(sprintf(EventName::ASYNC_TASK, Str::snake($method)), $res['data']);
                 }
             } else {
                 $this->logger('数据错误：' . $data);
@@ -65,14 +68,13 @@ class Dispatch
         }
     }
 
-    protected function deviceExecCmd($data)
+    protected function asyncDemo($data)
     {
-        ['id' => $id, 'cmd' => $command] = $data;
+        ['id' => $id, 'other_var' => $otherVar] = $data;
 
-        $lockKey = 'async_device_exec_cmd_' . $id;
-
-        $this->lock($lockKey, function ($status) use ($id, $command, $data) {
-            if ('get' === $status) {
+        $lockKey = 'async_demo_' . $id;
+        LockerService::lock($lockKey, function ($status) use ($id, $data) {
+            if (LockerService::isGetLockStatus($status)) {
                 $this->logger('已经拿到锁');
                 $this->logger($data);
                 msleep(1000);
@@ -80,135 +82,8 @@ class Dispatch
 
             //todo
         }, function () use ($id) {
-            $this->logger("设备{$id}正在排队等待下发指令");
+            $this->logger("异步任务{$id}正在排队等待执行");
         });
-    }
-
-    /**
-     * 拿锁操作
-     * @param string $key
-     * @param $callback
-     * @param $wait
-     * @param int $expire
-     * @return string|true|null
-     */
-    protected function lock(string $key, $callback, $wait = null, int $expire = 60)
-    {
-        if ($wait && is_numeric($wait)) {
-            $expire = $wait;
-            $wait   = null;
-        }
-        $lockKey = $this->getLockKey($key);
-        $waitKey = $this->getLockWaitKey($key);
-        $waitId  = Str::random();
-        $has     = Cache::has($lockKey);
-        $status  = null;
-        // 已加锁
-        if ($has) {
-            Cache::rpush($waitKey, $waitId);
-            $wait && call_user_func($wait);
-        } else {
-            Cache::set($lockKey, 1, 60);
-            $status = true;
-        }
-
-        $i = 0;
-        while ($has) {
-            if (!Cache::has($lockKey)) {
-                //等待的队列里第一个不是现在等待的id
-                if (Cache::lindex($waitKey, 0) !== $waitId) {
-                    $i++;
-                    //10次代表该等待队列已失效则弹出
-                    if ($i >= 10) {
-                        Cache::lpop($waitKey);
-                        $i = 0;
-                    }
-                    //上锁
-                } else if (Cache::set($lockKey, 1, $expire)) {
-                    Cache::lpop($waitKey);
-                    $status = 'get';
-                    break;
-                }
-            }
-            msleep(rand(80, 120));
-        }
-
-        try {
-            call_user_func($callback, $status);
-        } finally {
-            $this->unlock($lockKey);
-        }
-
-        return $status;
-    }
-
-    /**
-     * 解锁
-     * @param $key
-     * @return void
-     */
-    protected function unlock($key)
-    {
-        Cache::delete($key);
-    }
-
-    /**
-     * 获取锁的键
-     * @param $key
-     * @return string
-     */
-    protected function getLockKey($key)
-    {
-        return 'lock:' . $key;
-    }
-
-    /**
-     * 获取锁的等待数键
-     * @param $key
-     * @return string
-     */
-    protected function getLockCountKey($key)
-    {
-        return 'lock_count:' . $key;
-    }
-
-    /**
-     * 获取锁的等待队列数组
-     * @param $key
-     * @return string
-     */
-    protected function getLockWaitKey($key)
-    {
-        return 'lock_wait:' . $key;
-    }
-
-    /**
-     * 清除缓存
-     * @return $this
-     */
-    public function clearCache(): Dispatch
-    {
-        $this->clearLockWait();
-        $this->clearLockCount();
-        return $this;
-    }
-
-    /**
-     * 清空锁的等待数
-     * @return void
-     */
-    public function clearLockCount()
-    {
-        Cache::delete('lock_count');
-    }
-
-    /**
-     * 清空锁的等待列表
-     * @return void
-     */
-    public function clearLockWait()
-    {
-        Cache::delete('lock_wait');
     }
 
     /**

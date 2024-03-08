@@ -20,8 +20,12 @@ class RedisStoreService
 {
     protected static $driver;
 
-    protected static $store = 'redis';
+    protected static string $store = 'redis';
 
+    public static function setStore($store)
+    {
+        self::$store = $store;
+    }
 
     /**
      * 获取驱动

@@ -43,7 +43,6 @@ class Base
      */
     protected function pingRedis()
     {
-        RedisStoreService::setStore('redis2');
         // 每隔一段时间发送一个命令给 Redis 服务器
         Timer::add(30, function () {
             //缓存还未初始化的话就不进行检测
