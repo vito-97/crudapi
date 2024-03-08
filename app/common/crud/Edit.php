@@ -20,14 +20,14 @@ class Edit extends BaseCrud
 
     protected $append = [];
 
-    protected $_middleware = [
+    protected $basicMiddleware = [
         'labelCallbackMiddleware',
     ];
 
-    protected $_editMiddleware = [];
+    protected $basicEditMiddleware = [];
     protected $editMiddleware = ['editMiddleware'];
 
-    protected function _init($next)
+    protected function basicInit($next)
     {
         $response = $next();
 
@@ -50,7 +50,7 @@ class Edit extends BaseCrud
 
             $this->formatModel($obj);
 
-            $middleware = array_merge($this->_editMiddleware, $this->editMiddleware);
+            $middleware = array_merge($this->basicEditMiddleware, $this->editMiddleware);
             $this->then($middleware, function ($obj) {
                 return $obj;
             }, $obj);

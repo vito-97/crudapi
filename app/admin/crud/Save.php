@@ -12,7 +12,7 @@ class Save extends \app\common\crud\Save
 {
     use LangTrait;
 
-    protected $_saveMiddleware = ['saveLangMiddleware'];
+    protected $basicSaveMiddleware = ['saveLangMiddleware'];
 
     public function saveLangMiddleware($next, $params)
     {

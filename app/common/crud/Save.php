@@ -22,11 +22,10 @@ class Save extends BaseCrud
     protected $appendParams = [];
     //保存模型
     protected $model;
-
+    protected $basicSaveMiddleware = [];
     protected $saveMiddleware = ['saveMiddleware'];
-    protected $_saveMiddleware = [];
 
-    protected function _init($next)
+    protected function basicInit($next)
     {
         $response = $next();
 
@@ -56,7 +55,7 @@ class Save extends BaseCrud
         // 启动事务
         Db::startTrans();
         try {
-            $middleware = array_merge($this->_saveMiddleware, $this->saveMiddleware);
+            $middleware = array_merge($this->basicSaveMiddleware, $this->saveMiddleware);
             $detail     = $this->then($middleware, function ($params) use ($model) {
 
                 if ($params instanceof Model) {

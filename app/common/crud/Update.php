@@ -27,20 +27,20 @@ class Update extends BaseCrud
 
     protected $model;
 
-    protected $_middleware = ['queryMiddleware'];
+    protected $basicMiddleware = ['queryMiddleware'];
 
     protected $saveMiddleware = ['saveMiddleware'];
 
-    protected $_saveMiddleware = [];
+    protected $basicSaveMiddleware = [];
 
-    protected function _init($next)
+    protected function basicInit($next)
     {
         array_unshift($this->validate, IDMustBeIntValidate::class);
 
         $response = $next();
 
         if ($this->withUser) {
-            $field = is_string($this->withUser) ? $this->withUser : $this->userField;
+            $field                   = is_string($this->withUser) ? $this->withUser : $this->userField;
             $this->getParamsExcept[] = $field;
             $this->setUser();
             $this->setUserMap();
@@ -73,7 +73,7 @@ class Update extends BaseCrud
         }
         Db::startTrans();
         try {
-            $middleware = array_merge($this->_saveMiddleware, $this->saveMiddleware);
+            $middleware = array_merge($this->basicSaveMiddleware, $this->saveMiddleware);
             $status     = $this->then($middleware, function (Model $obj, array $params) {
                 $logic = $this->getLogic();
                 $args  = $this->getQueryArgs(['where', 'together']);

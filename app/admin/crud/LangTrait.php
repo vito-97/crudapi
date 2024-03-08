@@ -22,8 +22,8 @@ trait LangTrait
     public function setLangLabel()
     {
         if ($this->langStatus()) {
-            $this->_labelCallback['get_lang_list_label']  = ['name' => '语言列表', 'field' => 'lang_list', 'key' => 'lang_list'];
-            $this->_labelCallback['get_lang_field_label'] = ['name' => '语言字段', 'field' => 'lang_field', 'key' => 'lang_field'];
+            $this->basicLabelCallback['get_lang_list_label']  = ['name' => '语言列表', 'field' => 'lang_list', 'key' => 'lang_list'];
+            $this->basicLabelCallback['get_lang_field_label'] = ['name' => '语言字段', 'field' => 'lang_field', 'key' => 'lang_field'];
         }
 
         return $this;

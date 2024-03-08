@@ -27,15 +27,15 @@ class Delete extends BaseCrud
      */
     protected $validate = [IDMustBeIntArrayValidate::class];
 
-    protected $_middleware = ['queryMiddleware'];
+    protected $basicMiddleware = ['queryMiddleware'];
 
-    protected $_deleteMiddleware = [];
+    protected $basicDeleteMiddleware = [];
     protected $deleteMiddleware = ['deleteMiddleware'];
 
     //强制删除
     protected $force = false;
 
-    protected function _init($next)
+    protected function basicInit($next)
     {
         $response = $next();
 
@@ -59,7 +59,7 @@ class Delete extends BaseCrud
         foreach ($objs as $obj) {
             Db::startTrans();
             try {
-                $middleware = array_merge($this->_deleteMiddleware, $this->deleteMiddleware);
+                $middleware = array_merge($this->basicDeleteMiddleware, $this->deleteMiddleware);
                 //删除数据
                 $this->then($middleware, function (Model $obj) {
                     $logic = $this->getLogic();

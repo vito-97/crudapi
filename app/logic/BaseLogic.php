@@ -15,11 +15,8 @@ use app\service\RedisStoreService;
 use app\service\user\AdminService;
 use app\service\user\BaseUserService;
 use app\service\user\UserService;
-use think\App;
 use think\Container;
 use think\db\Query;
-use think\db\Raw;
-use think\facade\Cache;
 use think\facade\Env;
 
 /**
@@ -36,7 +33,7 @@ abstract class BaseLogic
     /**
      * @var BaseModel
      */
-    protected $_model;
+    protected $modelInstance;
 
     /**
      * @var UserService|AdminService
@@ -98,9 +95,9 @@ abstract class BaseLogic
      */
     final public function getModel($args = [])
     {
-        $this->_model = Container::getInstance()->invokeClass($this->getModelName(), $args);
+        $this->modelInstance = Container::getInstance()->invokeClass($this->getModelName(), $args);
 
-        return $this->_model;
+        return $this->modelInstance;
     }
 
     /**

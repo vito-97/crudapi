@@ -214,7 +214,7 @@ abstract class BaseCrud
      * 'methodName' => ['name' => '用户','key' => 'user','field'=>'user_id']
      * @var array
      */
-    protected $_labelCallback = [];
+    protected $basicLabelCallback = [];
     protected $labelCallback = [];
 
     /**
@@ -234,12 +234,12 @@ abstract class BaseCrud
 
     //执行中间件
     const MIDDLEWARE = ['validateMiddleware'];
-    protected $_middleware = [];
+    protected $basicMiddleware = [];
     protected $middleware = [];
 
     //初始化中间件
-    const INIT_MIDDLEWARE = ['_init', 'init'];
-    protected $_init = [];
+    const INIT_MIDDLEWARE = ['basicInit', 'init'];
+    protected $basicInit = [];
     protected $init = [];
 
     //可选的条件参数
@@ -278,16 +278,16 @@ abstract class BaseCrud
     }
 
     /**
-     * 二级类初始化
+     * 基类初始化
      */
-    protected function _init($next)
+    protected function basicInit($next)
     {
         $response = $next();
         return $response;
     }
 
     /**
-     * 三级类初始化
+     * 控制器操作初始化
      */
     protected function init($next)
     {
@@ -374,7 +374,7 @@ abstract class BaseCrud
      */
     protected function getQueryMiddleware()
     {
-        return array_merge(self::MIDDLEWARE, $this->_middleware, $this->middleware);
+        return array_merge(self::MIDDLEWARE, $this->basicMiddleware, $this->middleware);
     }
 
     /**
@@ -383,7 +383,7 @@ abstract class BaseCrud
      */
     protected function getInitMiddleware()
     {
-        return array_merge(self::INIT_MIDDLEWARE, $this->_init, $this->init);
+        return array_merge(self::INIT_MIDDLEWARE, $this->basicInit, $this->init);
     }
 
     /**
@@ -1040,7 +1040,7 @@ abstract class BaseCrud
      */
     protected function labelCallback()
     {
-        $labelCallback = array_merge($this->_labelCallback, $this->labelCallback);
+        $labelCallback = array_merge($this->basicLabelCallback, $this->labelCallback);
 
         foreach ($labelCallback as $method => $item) {
             $data  = null;

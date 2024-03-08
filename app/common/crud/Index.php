@@ -92,7 +92,7 @@ class Index extends BaseCrud
 
     protected $mode = self::PAGE_MODE;
 
-    protected $_middleware = [
+    protected $basicMiddleware = [
         'appendCallbackMiddleware',
         'labelCallbackMiddleware',
         'formatMiddleware',
@@ -115,7 +115,7 @@ class Index extends BaseCrud
     //需要格式化的类型
     protected $format = '';
 
-    protected function _init($next)
+    protected function basicInit($next)
     {
         $this->page  = $this->getPage();
         $this->limit = $this->getLimit();

@@ -25,10 +25,10 @@ class Read extends BaseCrud
 
     protected $validate = [IDMustBeIntValidate::class];
 
-    protected $_readMiddleware = [];
+    protected $basicReadMiddleware = [];
     protected $readMiddleware = ['readMiddleware'];
 
-    protected function _init($next)
+    protected function basicInit($next)
     {
         $response = $next();
 
@@ -57,7 +57,7 @@ class Read extends BaseCrud
 
         $this->formatModel($obj);
 
-        $middleware = array_merge($this->_readMiddleware, $this->readMiddleware);
+        $middleware = array_merge($this->basicReadMiddleware, $this->readMiddleware);
         $this->then($middleware, function ($obj) {
             return $obj;
         }, $obj);

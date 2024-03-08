@@ -12,7 +12,7 @@ class Update extends \app\common\crud\Update
 {
     use LangTrait;
 
-    protected $_saveMiddleware = ['saveLangMiddleware'];
+    protected $basicSaveMiddleware = ['saveLangMiddleware'];
 
     public function saveLangMiddleware($next, $model, $params)
     {

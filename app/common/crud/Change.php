@@ -26,12 +26,12 @@ class Change extends BaseCrud
 
     protected $where = [];
 
-    protected $_middleware = ['queryMiddleware'];
+    protected $basicMiddleware = ['queryMiddleware'];
 
-    protected $_saveMiddleware = [];
+    protected $basicSaveMiddleware = [];
     protected $saveMiddleware = ['saveMiddleware'];
 
-    protected function _init($next)
+    protected function basicInit($next)
     {
         $response = $next();
 
@@ -69,7 +69,7 @@ class Change extends BaseCrud
             try {
                 $this->formatModel($obj);
 
-                $middleware = array_merge($this->_saveMiddleware, $this->saveMiddleware);
+                $middleware = array_merge($this->basicSaveMiddleware, $this->saveMiddleware);
                 $this->then($middleware, function (Model $obj, array $params) {
                     $logic = $this->getLogic();
                     return $logic->updateByID($obj, $params);

@@ -10,6 +10,7 @@ namespace app\command;
 
 use think\console\command\Make;
 use think\console\Input;
+use think\console\input\Argument;
 use think\console\input\Option;
 use think\console\Output;
 use think\helper\Str;
@@ -45,9 +46,9 @@ class MakeClass extends Make
     {
         parent::configure();
         $this->setName('make:class')
-            ->addOption('type', 't', Option::VALUE_REQUIRED, '需要生成的文件类型' . join(' ', $this->types))
+            ->addOption('type', null, Option::VALUE_REQUIRED, '需要生成的文件类型' . join('|', $this->types))
             ->addOption('namespace', null, Option::VALUE_OPTIONAL, '命名空间')
-            ->setDescription('Create a new service class');
+            ->setDescription('创建新的类');
     }
 
     protected function execute(Input $input, Output $output)
@@ -110,6 +111,10 @@ class MakeClass extends Make
     protected function getClassType()
     {
         $type = strtolower($this->input->getOption('type'));
+
+        if (empty($type)) {
+            throw new \InvalidArgumentException(sprintf('The type must be in %s.', join(',', $this->types)));
+        }
 
         if (!in_array($type, $this->types)) {
             throw new \InvalidArgumentException(sprintf('The type "%s" does not in %s.', $type, join(',', $this->types)));

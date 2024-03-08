@@ -59,7 +59,7 @@ abstract class BaseModel extends Model
     //转换语言
     protected $convertEnumLang = [];
 
-    protected $_dateFormat = 'Y-m-d H:i';
+    protected $defaultDateFormat = 'Y-m-d H:i';
 
     /**
      * 查询范围
