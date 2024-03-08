@@ -44,7 +44,6 @@ class MqttService
     /**
      * @var MqttClient
      */
-//    protected static $mqtt = [];
     protected static $mqtt;
 
     public function __construct()
@@ -65,8 +64,8 @@ class MqttService
                 ->setPassword($this->config['password'])
                 ->setKeepAliveInterval($this->config['keep_alive_interval'])
                 // Last Will 设置
-                ->setLastWillTopic('emqx/test/last-will')
-                ->setLastWillMessage('server disconnect')
+                ->setLastWillTopic('server')
+                ->setLastWillMessage('offline')
                 ->setLastWillQualityOfService(1);
 
             $this->setting = $connectionSettings;
@@ -99,22 +98,10 @@ class MqttService
     //常驻
     public function loop()
     {
-        $this->mqtt()->loop(true);
+        $this->mqtt()->loop();
         $this->mqtt()->disconnect();
 
         return $this;
-    }
-
-    /**
-     * 通过主题获取设备ID
-     * @param $string
-     * @return mixed|string
-     */
-    public function getDeviceIDByTopic($string)
-    {
-        $array = explode('/', $string);
-
-        return array_pop($array);
     }
 
     /**

@@ -9,22 +9,10 @@
 namespace app\command;
 
 use app\common\Enum;
-use app\common\ErrorCode;
-use app\common\EventName;
-use app\logic\DeviceLogic;
-use app\model\Device;
-use app\model\DeviceControl;
-use app\service\DeviceControlService;
-use app\service\DeviceService;
 use app\service\MqttService;
-use app\service\user\UserService;
 use think\console\Command;
 use think\console\Input;
 use think\console\Output;
-use think\Container;
-use think\facade\Env;
-use think\facade\Event;
-use think\facade\Request;
 
 class Mqtt extends Command
 {
@@ -58,16 +46,9 @@ class Mqtt extends Command
     {
         $this->output->writeln('开始订阅');
         $this->mqtt->setClientID(Enum::MQTT_SUBSCRIBE_CLIENT_ID);
-        $this->mqtt->subscribe(Enum::DEVICE_SUBSCRIBE_TOPIC, function ($topic, $message) {
+        $this->mqtt->subscribe(Enum::MQTT_SUBSCRIBE_TOPIC, function ($topic, $message) {
             try {
-
-                [, $imei] = explode('/', $topic);
-                $imei = trim($imei);
-
-                $hex      = str2hex($message);
-                $service  = new DeviceService();
-                $deviceNo = $service->deviceNo($imei);
-
+                //todo
             } catch (\Throwable $e) {
                 dump('Error:' . $e->getMessage() . ' in ' . $e->getFile() . ' on line ' . $e->getLine());
             }

@@ -18,25 +18,21 @@ class Enum
     const ONE_DAY_TIME = 86400;
 
     const SWITCH_OFF = 0;
-    const SWITCH_ON = 1;
+    const SWITCH_ON  = 1;
 
     const VALID_CREATE_SCENE = 'create';
-    const VALID_SAVE_SCENE = 'save';
+    const VALID_SAVE_SCENE   = 'save';
     const VALID_UPDATE_SCENE = 'update';
-    const VALID_LIST_SCENE = 'list';
+    const VALID_LIST_SCENE   = 'list';
     const VALID_DETAIL_SCENE = 'detail';
 
     //价格最终计算小于等于0时需要支付的金额
     const PRICE_ZERO_DEFAULT = 0.01;
-
-    //设备推送的主题
-    const DEVICE_SEND_TOPIC = '%s';
-    //设备接收的主题
-    const DEVICE_SUBSCRIBE_TOPIC = 'sed/#';
     //发送客户端ID
     const MQTT_SEND_CLIENT_ID = 'send_server';
     //接收客户端ID
     const MQTT_SUBSCRIBE_CLIENT_ID = 'subscribe_server';
+    const MQTT_SUBSCRIBE_TOPIC     = 'device/#';
 
     //记录日志
     const JOB_SYSTEM_LOG = 'system_log';
@@ -45,8 +41,8 @@ class Enum
     const MAX_LIMIT = 1000;
 
     const MODULE = [
-        'api'           => '接口',
-        'admin'         => '后台',
+        'api'   => '接口',
+        'admin' => '后台',
     ];
 
     //最大能保留账号多少个token
